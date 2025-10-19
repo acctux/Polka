@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Add to Favorites
+Comment=Add this location to your favorites list
+Exec=/home/nick/.local/bin/nemo/bookmarks/copy_to_favorites.sh %F
+Icon=folder-new
+Selection=any
+Extensions=any;
+Quote=double

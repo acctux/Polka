@@ -1,0 +1,10 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/red/drive_c/Program Files (x86)/Easy Red 2/Easy
+    Red 2.exe
+  prefix: /run/media/nick/Linuxcess/Games/red
+system:
+  disable_runtime: true
+  gamemode: true
+  mangohud: true
+wine:
+  version: system

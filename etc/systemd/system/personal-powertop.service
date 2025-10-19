@@ -1,0 +1,11 @@
+[Unit]
+Description=PCI Runtime Power Management Tuning
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/nick/.local/bin/services/personal-powertop.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=default.target

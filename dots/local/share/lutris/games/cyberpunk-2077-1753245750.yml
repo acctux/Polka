@@ -1,0 +1,6 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/cyber/drive_c/Program Files (x86)/DODI-Repacks/Cyberpunk
+    2077/bin/x64/Cyberpunk2077.exe
+  prefix: /run/media/nick/Linuxcess/Games/cyber
+wine:
+  version: proton-ge-custom

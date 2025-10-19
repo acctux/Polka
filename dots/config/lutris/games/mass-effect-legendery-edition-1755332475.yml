@@ -1,0 +1,10 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/mass/drive_c/Program Files (x86)/DODI-Repacks/Mass
+    Effect Legendary Edition/Game/Launcher/MassEffectLauncher.exe
+  prefix: /run/media/nick/Linuxcess/Games/mass
+system:
+  disable_runtime: true
+  gpu: card0
+  mangohud: true
+wine:
+  version: proton-ge-custom

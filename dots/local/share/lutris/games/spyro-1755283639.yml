@@ -1,0 +1,6 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/spyro/drive_c/Program Files (x86)/DODI-Repacks/Spyro
+    Reignited Trilogy/Spyro.exe
+  prefix: /run/media/nick/Linuxcess/Games/spyro
+wine:
+  version: proton-ge-custom

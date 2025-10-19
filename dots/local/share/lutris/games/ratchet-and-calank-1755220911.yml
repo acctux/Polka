@@ -1,0 +1,4 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/ratchet/drive_c/Program Files (x86)/game/RiftApart.exe
+wine:
+  version: proton-ge-custom

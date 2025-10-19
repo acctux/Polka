@@ -1,0 +1,69 @@
+window {
+    margin: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background-color: rgba(16, 16, 19, 0.95);
+    border: 2px solid #1e3a8a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px;
+    color: #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+#input {
+    margin: 6px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #101013;
+    color: #e5e7eb;
+    border: 1px solid #1e3a8a;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.2s ease;
+}
+
+#input:focus {
+    border-color: #1e3a8a;
+    outline: none;
+    box-shadow: 0 0 8px rgba(30, 58, 138, 0.5);
+}
+
+#entry {
+    margin: 6px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+#entry:hover {
+    background-color: #4b5563; /* Hover effect */
+    padding: 11px 15px; /* Mimic slight scale with padding */
+}
+
+#entry:selected {
+    background-color: #1e3a8a; /* Original selected color */
+    color: #ffffff; /* Original selected text color */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+#text {
+    color: #e5e7eb;
+    letter-spacing: 0.5px;
+}
+
+#text:selected {
+    color: #101013; /* Match #text color exactly */
+    letter-spacing: 0.5px; /* Match #text letter-spacing */
+    font-weight: normal; /* No bold effect */
+}
+
+/* Icon styling */
+#entry image {
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+#entry:selected image {
+    opacity: 1;
+}

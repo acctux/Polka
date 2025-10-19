@@ -1,0 +1,6 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/fable/drive_c/Program Files (x86)/DODI-Repacks/Fable
+    Anniversary/Binaries/Win32/Fable Anniversary.exe
+  prefix: /run/media/nick/Linuxcess/Games/fable
+wine:
+  version: proton-ge-custom

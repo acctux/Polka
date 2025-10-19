@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=Move to Dotfiles and Symlink
+Comment=Move this file/folder to /home/nick/Lit/dotfiles/Home and create a symlink
+Exec=/home/nick/.local/bin/nemo/stow/stow_it.sh %F
+Icon=folder-move
+Selection=s
+Extensions=any;
+Quote=double

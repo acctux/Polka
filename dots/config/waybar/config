@@ -1,0 +1,172 @@
+{
+  "layer": "top",
+  "position": "top",
+  "icon-theme": "WhiteSur-grey-dark",
+  "modules-left": [
+    "custom/logo",
+    "custom/favs",
+    "custom/folders",
+    "tray",
+    "network",
+    "backlight",
+    "pulseaudio",
+    "battery",
+  ],
+  "modules-center": ["hyprland/window"],
+  "modules-right": [
+    "temperature",
+    "hyprland/workspaces",
+    "clock",
+    "custom/power"
+  ],
+  // Hyprland Window
+  "hyprland/window": {
+	  "format": "{}",
+	  "max-length": 30,
+	  "separate-outputs": true,
+	  "offscreen-css": true,
+	  "offscreen-css-text": "(inactive)",
+	  "rewrite": {
+		  "(.*) — Mozilla Firefox": " $1",
+		  "(.*) - fish": "> [$1]",
+		  "(.*) - zsh": "> [$1]",
+		  "(.*) - $term": "> [$1]",
+	  },
+  },
+  "hyprland/workspaces": {
+    "format": "{icon}:{windows}",
+    "format-window-separator": "",
+    "on-scroll-up": "hyprctl dispatch workspace r+1",
+    "on-scroll-down": "hyprctl dispatch workspace r-1",
+    "on-click": "activate",
+    "active-only": false,
+    "all-outputs": true,
+    "workspace-taskbar": {
+        "enable": true,
+        "update-active-window": true,
+        "format": "{icon}",
+        "icon-size": 16,
+        "on-click-window": "$HOME/Lit/dots/local/bin/waybar/focus-window.sh {address} {button}"
+    },
+    "persistent-workspaces": {
+      "*": 4
+    }
+  },
+  "network": {
+	  "format": "{icon}",
+	  "format-wifi": "{icon}",
+	  "format-ethernet": "{icon}",
+	  "format-disconnected": "{icon}",
+	  "tooltip-format": "{ipaddr}  {bandwidthUpBits}  {bandwidthDownBits}",
+	  "format-linked": "󰈁 {ifname} (No IP)",
+	  "tooltip-format-wifi": "{essid} {icon} {signalStrength}%  {bandwidthUpBits}  {bandwidthDownBits}",
+	  "tooltip-format-ethernet": "{ifname} 󰌘",
+	  "tooltip-format-disconnected": "󰌙 Disconnected",
+	  "format-icons": [
+		  "󰤯", "󰤟", "󰤢", "󰤥", "󰤨"
+	  ],
+	  "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh"
+  },
+  "pulseaudio": {
+    "scroll-step": 2, // %, can be a float
+    "format": "{icon}",
+    "tooltip-format": "{volume}%",
+    "format-bluetooth": "{icon} {format_source}",
+    "format-bluetooth-muted": "{icon} {format_source}",
+    "format-muted": "{icon}",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "bluetooth": " ",
+      "muted": "󰖁",
+      "default": [
+        "󰕿",
+        "󰖀",
+        "󰕾",
+      ]
+    },
+    "on-click": "pavucontrol",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
+    "scroll-step": 2
+  },
+  "temperature": {
+    "critical-threshold": 80,
+    "format-critical": "{temperatureC}°C ",
+    "format": "{temperatureC}°C ",
+    "on-click": "alacritty -e btop",
+    "on-click-right": "alacritty -e /home/nick/.local/bin/waybar/nvidia-blacklist.sh"
+  },
+  "backlight": {
+    "format": "{icon}",
+    "tooltip-format": "{percent}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "scroll-step": 10
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 9,
+    "icons": {},
+  },
+  // Battery
+  "battery": {
+    "interval": 20,
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "  {capacity}%",
+    "format-plugged": "  {capacity}%",
+    "format-alt": "{icon}  {time}",
+    // "format-good": "", // An empty format will hide the module
+    "format-full": "",
+    "format-icons": [
+      " ",
+      " ",
+      " ",
+      " ",
+      " "
+    ]
+  },
+  "clock": {
+    "timezone": "America/New_York",
+    "tooltip-format": "{:%A, %B %d}",
+    "format-alt": "{:%a, %d %b %Y}",
+    "format": "{:%H:%M}",
+    "interval": 60
+  },
+  "custom/logo": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "sh -c '(sleep 0s; fuzzel)' & disown"
+  },
+  "custom/folders": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "/home/nick/.local/bin/waybar/favorite_dirs.sh"
+  },
+  "custom/power": {
+    "format": "󰤆",
+    "tooltip": false,
+    "on-click": "sh -c '(sleep 0s; wlogout)' & disown"
+  }
+}
+

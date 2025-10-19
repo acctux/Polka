@@ -1,0 +1,11 @@
+[Unit]
+Description=Logitech Configuration Daemon
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c 'sleep 2 && /usr/sbin/logid'
+User=root
+
+[Install]
+WantedBy=default.target

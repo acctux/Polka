@@ -1,0 +1,162 @@
+/* === Global Styles === */
+* {
+    min-height: 15px;
+    background-color: transparent;
+    font-size: 12px;
+    letter-spacing: 1.85px;
+    font-family: "FiraMono Nerd Font", sans-serif;
+    transition: all 0.75s ease;
+}
+
+/* === Waybar Window === */
+window#waybar {
+    background-color: #101013;
+    transition:
+        background-color 0.75s ease,
+        color 0.75s ease;
+}
+
+window#waybar.hidden {
+    opacity: 0.5;
+}
+
+/* === Workspaces === */
+#workspaces button {
+    all: initial;
+    transition: all 0.75s ease;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 0 9px;
+    margin: 0 3px;
+    box-shadow: inset 0 0 0 1px #0072FF;
+    color: #e5e7eb;
+}
+
+#workspaces button.active,
+#workspaces button:hover {
+    box-shadow: inset 0 0 0 1px #10b981;
+    color: #a5b4fc;
+}
+
+#workspaces button.urgent {
+    background-color: #c24646;
+    color: #fff;
+}
+
+/* === Shared Module Styles === */
+#battery,
+#backlight,
+#pulseaudio,
+#tray,
+#network,
+#clock,
+#window {
+    padding: 0 10px;
+}
+
+/* === Battery States === */
+#battery.critical,
+#battery.warning {
+    box-shadow: inset 0 0 0 1px #c24646;
+    color: #c24646;
+}
+
+#battery.good {
+    box-shadow: inset 0 0 0 1px #c24646;
+    color: #10b981;
+}
+
+#battery.charging {
+    box-shadow: inset 0 0 0 1px #10b981;
+    color: #10b981;
+}
+
+/* === Icon Button Styles === */
+#temperature {
+    border-right: 1px solid #a5b4fc;
+    padding: 0 15px;
+}
+
+#custom-power,
+#custom-logo,
+#custom-folders,
+#custom-favs {
+    font-size: 15px;
+    color: #a5b4fc;
+    padding: 0 15px 0 10px;
+}
+
+#custom-power {
+    font-size: 17px;
+}
+
+#custom-folders {
+    border-right: 1px solid #a5b4fc;
+    padding: 0 20px 0 5px;
+}
+
+#network {
+    font-size: 15px;
+    padding: 0 12px 0 6px;
+}
+
+#pulseaudio {
+    font-size: 17px;
+    padding: 0 10px 0 7px;
+}
+
+#backlight {
+    font-size: 17px;
+    padding: 0 10px 0 8px;
+}
+
+#tray {
+    padding: 0 5px 0 8px;
+}
+
+/* Reset Margins */
+#pulseaudio,
+#backlight,
+#network {
+    margin: 0;
+}
+
+/* === Tooltip Styles === */
+tooltip {
+    border-radius: 8px;
+    padding: 6px 12px;
+    background-color: #101013;
+    font-size: 12px;
+    color: #10b981;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.6);
+}
+
+tooltip label {
+    padding: 0;
+    background-color: transparent;
+    color: inherit;
+    font-weight: 500;
+}
+
+/* === Hover Effects === */
+button:hover,
+#backlight:hover,
+#network:hover,
+#pulseaudio:hover,
+#battery:hover {
+    box-shadow: inset 0 0 0 1px #10b981;
+    color: #a5b4fc;
+}
+
+#custom-logo:hover,
+#custom-favs:hover,
+#custom-folders:hover,
+#clock:hover,
+#temperature:hover {
+    color: #10b981;
+}
+
+#custom-power:hover {
+    color: #c24646;
+}
+

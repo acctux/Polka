@@ -1,0 +1,28 @@
+# Take a look at the mako manpage with the command:
+#   man 5 mako
+# To view all configuration options.
+
+font=CaskaydiaMono Nerd Font 11
+format=<b>%a ⏵</b> %s\n%b
+layer=overlay
+anchor=top-right
+background-color=#101013
+text-color=#D3DAE3
+width=300
+height=110
+margin=5
+padding=0,5,10,5
+border-size=1
+border-color=#0072FF
+border-radius=15
+icons=false
+max-icon-size=32
+default-timeout=5000
+ignore-timeout=1
+
+[urgency=normal]
+border-color=#0072FF
+
+[urgency=high]
+border-color=#DE4350
+default-timeout=0

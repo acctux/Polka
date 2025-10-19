@@ -1,0 +1,8 @@
+game:
+  exe: /run/media/nick/Linuxcess/Games/halo/drive_c/Program Files (x86)/DODI-Repacks/Halo
+    The Master Chief Collection/mcclauncher.exe
+  prefix: /run/media/nick/Linuxcess/Games/halo
+system:
+  disable_runtime: false
+wine:
+  version: proton-ge-custom

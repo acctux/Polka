@@ -1,0 +1,73 @@
+window {
+    margin: 12px; /* Increased for balanced spacing */
+    padding: 12px; /* More padding for a roomier feel */
+    border-radius: 10px; /* Softer corners for elegance */
+    background-color: rgba(16, 16, 19, 0.95); /* 95% transparent #101013 */
+    border: 1px solid #1e3a8a; /* Original border color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    color: #e5e7eb; /* Original text color */
+    transition: all 0.3s ease; /* Smooth transitions for dynamic changes */
+}
+
+#input {
+    margin: 6px; /* Slightly increased for consistency */
+    padding: 10px; /* More padding for comfort */
+    border-radius: 10px; /* Softer corners */
+    background-color: #101013; /* Original color, no transparency here */
+    color: #e5e7eb; /* Original text color */
+    border: 1px solid #1e3a8a; /* Original border color */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle inner shadow */
+    transition: border-color 0.2s ease; /* Smooth border transition on focus */
+}
+
+#input:focus {
+    border-color: #1e3a8a; /* Same border color, kept for consistency */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 8px rgba(30, 58, 138, 0.5); /* Subtle glow using #1e3a8a */
+}
+
+#entry {
+    margin: 6px; /* Consistent spacing */
+    padding: 10px 14px; /* More padding for better text alignment */
+    border-radius: 10px; /* Softer corners */
+    transition: all 0.2s ease; /* Smooth hover/selection transitions */
+}
+
+#entry:hover {
+    background-color: rgba(
+        30,
+        58,
+        138,
+        0.3
+    ); /* Subtle #1e3a8a with transparency for hover */
+    transform: scale(1.02); /* Subtle scale-up for interactivity */
+}
+
+#entry:selected {
+    background-color: #1e3a8a; /* Original selected color */
+    color: #ffffff; /* Original selected text color */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+#text {
+    color: #ed8796; /* Original pinkish-red */
+    letter-spacing: 0.5px; /* Slight letter spacing for readability */
+}
+
+#text:selected {
+    color: #e5e7eb; /* Original selected text color */
+    font-weight: 600; /* Slightly bolder for emphasis */
+}
+
+/* Optional: Icon styling for application launcher */
+#entry image {
+    margin-right: 8px; /* Space between icon and text */
+    opacity: 0.9; /* Subtle fade for icons */
+}
+
+#entry:selected image {
+    opacity: 1; /* Full opacity when selected */
+}

@@ -1,0 +1,6 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=Proton Mail Bridge
+Exec="protonmail-bridge" "--no-window"
+X-GNOME-Autostart-enabled=true

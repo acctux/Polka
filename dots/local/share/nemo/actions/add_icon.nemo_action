@@ -1,0 +1,7 @@
+[Nemo Action]
+Name=Add icon
+Comment=Add an icon to this location
+Exec=/home/nick/Lit/dotfiles/Home/.local/bin/nemo/icon/add-icon.sh %F
+Selection=any
+Extensions=any;
+Quote=double

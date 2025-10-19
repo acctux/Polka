@@ -1,0 +1,3 @@
+/home/nick/Lit/dotfiles
+/home/nick/.local/bin/wall/wallpapers
+/home/nick/.local

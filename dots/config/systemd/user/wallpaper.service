@@ -1,0 +1,6 @@
+[Unit]
+Description=Update wallpaper with quote
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/home/nick/.local/bin/wall/wall.py'

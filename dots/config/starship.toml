@@ -1,0 +1,329 @@
+# ~/.config/starship.toml
+
+format = """\
+${status}\
+${username}\
+${hostname}\
+${directory}\
+${git_branch}\
+${git_status}\
+${kubernetes}\
+${python}\
+${custom.pythonvenv}\
+${jobs}\
+${custom.story}\
+${character}\
+"""
+
+add_newline = false
+#right_format = """\
+#[\ue0b6](fg:black black)\
+#${cmd_duration}\
+#"""
+
+"$schema" = 'https://starship.rs/config-schema.json'
+# This setup generally uses characters from powerline
+# see https://github.com/ryanoasis/powerline-extra-symbols for codes
+
+[character]
+format = "[](bg:black)[$symbol](bold) "
+success_symbol = "[](fg:black black)"
+error_symbol = "[](fg:black black)"
+disabled = false
+
+[username]
+style_root = 'bg:black bold red'
+style_user = 'bg:black yellow'
+format = '[$user]($style)'
+
+[status]
+disabled = false
+style = "bg:black red"
+symbol = "✗"                 #"⏎"
+format = "[$symbol]($style)"
+
+[hostname]
+ssh_only = true
+style = 'bg:black bold dimmed green'
+format = "[ $hostname ]($style)"
+
+[directory]
+style = "bg:black white"
+# regular format style
+format = '[$path]($style)[$read_only]($read_only_style)'
+# same, but if at repo
+repo_root_format = '[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style )[$read_only ]($read_only_style)'
+repo_root_style = "bg:black bold white"
+# before repo applies basically to the truncation symbol
+before_repo_root_style = "bg:black blue"
+read_only = "[\uf023]"
+read_only_style = "bg:black red"
+truncate_to_repo = true
+#fish_style_pwd_dir_length = 3
+# MISSING: cannot change the separator between dirs (looks cluttered)
+# https://github.com/starship/starship/pull/1222
+#truncation_symbol = "…"
+truncation_length = 5
+
+[time]
+disabled = true
+style = "bg:black bold white"
+format = "[$time]($style) "
+
+[kubernetes] # ☸ 󱃾☀
+symbol = " " # module acts as separator
+disabled = false # but only when we deem it context-worthy
+detect_extensions = ["yaml"] #..let's see if i regret this as a condition
+detect_files = ["Cargo.toml", "Chart.yaml"] # maybe rust detection is better?
+style = "bg:black 117"
+format = '[[$symbol](bg:black 251)${context}[󰛢](bg:black bold white)${namespace}]($style)'
+contexts = [
+    { context_pattern = ".*eks-dev.*", context_alias = "dev" },
+    { context_pattern = ".*eks-sandbox.*", context_alias = "sbx" },
+    { context_pattern = ".*eks-production.*", context_alias = "prod", style = "bg:black 204" },
+    { context_pattern = ".*eks-play.*", context_alias = "play" },
+    { context_pattern = "k3d-.*(?P<k3d>[\\d]{2})", context_alias = "団${k3d}" },
+    { context_pattern = ".*" },
+]
+
+[git_branch]
+style = "bg:black bold 85"
+symbol = ' '                                      #󰳏/
+format = "[$symbol]($style)[$branch](bg:black 85)"
+truncation_length = 8
+truncation_symbol = "."
+
+[git_status]
+# module sometimes has NO output, so we have VARYING padding if we include spaces
+# https://github.com/starship/starship/issues/1724
+# to avoid a janky look, we avoid spaces in the string and thus compact module output..
+# this is consistent (albeit crammed into branch) but looks good if we use thin chars below
+format = '[${ahead}${behind}${modified}${conflicted}${stashed}${deleted}${renamed}${staged}${untracked}]($style)'
+style = "bg:black 85"
+conflicted = "≠"
+ahead = "⇡$count"                                                                                                 #↑
+behind = "⇣$count"                                                                                                #↓
+diverged = "⇕"
+untracked = "?"
+stashed = "󰏖"
+modified = '+'
+staged = ""                                                                                                      #●❦
+renamed = "󱞸"
+deleted = "󱡂"
+up_to_date = "✔"
+
+[cmd_duration]
+disabled = true
+min_time = 2_000
+format = '[took $duration ]($style)'
+style = 'bg:black bold yellow'
+
+[jobs] # got an EDITOR running?
+symbol = "▧ "
+style = "bg:black blue"
+format = "[ $number$symbol]($style)"
+
+[python]
+disabled = true                     # this adds padding even when no python detected
+style = "bg:black yellow"
+format = '[${virtualenv} ]($style)'
+
+# can benchmark with https://github.com/romkatv/zsh-prompt-benchmark
+
+[custom.pythonvenv]
+# alternative python.. better padding because the whole thing is off when no venv
+disabled = false
+when = ''' test -n "$VIRTUAL_ENV" '''
+#command = "echo -n ${VIRTUAL_ENV##*/}"
+symbol = ''                    # ..if i am always using the same venv name, icon is better
+style = "bg:black 75"
+format = '[ ${symbol}]($style)' # ${output} has venv folder
+
+[custom.story]
+command = '''rg -oe "[\\d]+" --color=never ~/.jira_story'''
+when = ''' test -f ~/.jira_story '''
+require_repo = true
+style = "bg:black yellow"
+symbol = ""
+format = '[ ${symbol}${output}]($style)'
+os = "Arch"
+# [aws]
+# symbol = "  "
+
+# [buf]
+# symbol = " "
+
+# [bun]
+# symbol = " "
+
+# [c]
+# symbol = " "
+
+# [cpp]
+# symbol = " "
+
+# [cmake]
+# symbol = " "
+
+# [conda]
+# symbol = " "
+
+# [crystal]
+# symbol = " "
+
+# [dart]
+# symbol = " "
+
+# [deno]
+# symbol = " "
+
+# [directory]
+# read_only = " 󰌾"
+
+# [docker_context]
+# symbol = " "
+
+# [elixir]
+# symbol = " "
+
+# [elm]
+# symbol = " "
+
+# [fennel]
+# symbol = " "
+
+# [fossil_branch]
+# symbol = " "
+
+# [gcloud]
+# symbol = "  "
+
+# [git_branch]
+# symbol = " "
+
+# [git_commit]
+# tag_symbol = '  '
+
+# [golang]
+# symbol = " "
+
+# [guix_shell]
+# symbol = " "
+
+# [haskell]
+# symbol = " "
+
+# [haxe]
+# symbol = " "
+
+# [hg_branch]
+# symbol = " "
+
+# [hostname]
+# ssh_symbol = " "
+
+# [java]
+# symbol = " "
+
+# [julia]
+# symbol = " "
+
+# [kotlin]
+# symbol = " "
+
+# [lua]
+# symbol = " "
+
+# [memory_usage]
+# symbol = "󰍛 "
+
+# [meson]
+# symbol = "󰔷 "
+
+# [nim]
+# symbol = "󰆥 "
+
+# [nix_shell]
+# symbol = " "
+
+# [nodejs]
+# symbol = " "
+
+# [ocaml]
+# symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Garuda = "󰛓 "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "
+
+# [package]
+# symbol = "󰏗 "
+
+# [perl]
+# symbol = " "
+
+# [php]
+# symbol = " "
+
+# [pijul_channel]
+# symbol = " "
+
+# [pixi]
+# symbol = "󰏗 "
+
+# [python]
+# symbol = " "
+
+# [rlang]
+# symbol = "󰟔 "
+
+# [ruby]
+# symbol = " "
+
+# [rust]
+# symbol = "󱘗 "
+
+# [scala]
+# symbol = " "
+
+# [swift]
+# symbol = " "
+
+# [zig]
+# symbol = " "
+
+# [gradle]
+# symbol = " "
