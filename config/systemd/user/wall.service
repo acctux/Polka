@@ -1,0 +1,6 @@
+[Unit]
+Description=Run Wall Script
+
+[Service]
+Type=oneshot
+ExecStart=/home/nick/Polka/local/bin/wall/wall.py

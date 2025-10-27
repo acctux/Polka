@@ -1,9 +1,0 @@
-#!/bin/bash
-
-sleep 5
-/usr/bin/logid
-sleep 5
-killall logid 
-/usr/bin/logid
-
-
