@@ -138,6 +138,7 @@
     "exec": "~/Polka/local/bin/waybar/boot_watch.sh",
     "signal": 6,
     "on-click": "~/Polka/local/bin/waybar/wlogout-nvidia-switch.sh",
+    "on-click-middle": "~/Polka/local/bin/waybar/wlogout-nvidia-switch.sh bios",
   },
   "custom/updates": {
     "format": " {}",
@@ -165,6 +166,6 @@
     "tooltip": false,
     "on-click": "sh -c '(sleep 0s; fuzzel)' & disown",
     "on-click-middle": "$HOME/.local/bin/wall/wall.py",
-    "on-click-right": "sh -c '(sleep 0s; wlogout)' & disown",
+    "on-click-right": "~/Polka/local/bin/waybar/wlogout.sh",
   },
 }

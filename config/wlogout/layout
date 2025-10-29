@@ -6,13 +6,6 @@
 }
 
 {
-    "label" : "bios",
-    "action" : "systemctl reboot --firmware-setup",
-    "text" : "Reboot into BIOS",
-    "keybind" : "e"
-}
-
-{
     "label" : "shutdown",
     "action" : "systemctl poweroff",
     "text" : "Shutdown",
