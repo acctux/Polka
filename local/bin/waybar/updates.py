@@ -8,11 +8,13 @@ import time
 KEYWORDS = ["linux-", "python-", "nvidia-", "fuse"]
 MAX_TOOLTIP_LINES = 26
 
+
 def check_lock_files():
     pacman_lock = "/var/lib/pacman/db.lck"
     checkup_lock = f"{os.getenv('TMPDIR','/tmp')}/checkup-db-{os.getuid()}/db.lck"
     while os.path.exists(pacman_lock) or os.path.exists(checkup_lock):
         time.sleep(1)
+
 
 def get_updates():
     """Return list of package names available for update."""
@@ -22,6 +24,7 @@ def get_updates():
         return packages
     except subprocess.CalledProcessError:
         return []
+
 
 def generate_tooltip(packages, max_lines, keywords):
     """Build tooltip text with bullet points, skipping packages containing keywords."""
@@ -40,6 +43,7 @@ def generate_tooltip(packages, max_lines, keywords):
 
     return "\n".join(tooltip_lines)
 
+
 def main():
     check_lock_files()
     packages = get_updates()
@@ -47,17 +51,9 @@ def main():
 
     if total_updates > 25:
         tooltip = generate_tooltip(packages, MAX_TOOLTIP_LINES, KEYWORDS)
-        output = {
-            "text": str(total_updates),
-            "tooltip": tooltip
-        }
+        output = {"text": str(total_updates), "tooltip": tooltip}
         print(json.dumps(output))
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-

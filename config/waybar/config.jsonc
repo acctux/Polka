@@ -17,10 +17,7 @@
     "battery",
   ],
   "modules-center": ["hyprland/workspaces"],
-  "modules-right": [
-    "temperature",
-    "clock",
-  ],
+  "modules-right": ["temperature", "clock"],
   "hyprland/workspaces": {
     "format": "{icon}:{windows}",
     "format-window-separator": "",
@@ -30,27 +27,26 @@
     "active-only": false,
     "all-outputs": true,
     "workspace-taskbar": {
-        "enable": true,
-        "update-active-window": true,
-        "format": "{icon}",
-        "icon-size": 18,
-        "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}"
+      "enable": true,
+      "update-active-window": true,
+      "format": "{icon}",
+      "icon-size": 18,
+      "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}",
     },
   },
   "network": {
-	  "format": "{icon}",
-	  "format-wifi": "{icon}",
-	  "format-ethernet": "{icon}",
-	  "format-disconnected": "{icon}",
-	  "tooltip-format": "{ipaddr}  {bandwidthUpBits}  {bandwidthDownBits}",
-	  "format-linked": "󰈁 {ifname} (No IP)",
-	  "tooltip-format-wifi": "{essid} {icon} {signalStrength}%  {bandwidthUpBits}  {bandwidthDownBits}",
-	  "tooltip-format-ethernet": "{ifname} 󰌘",
-	  "tooltip-format-disconnected": "󰌙 Disconnected",
-	  "format-icons": [
-		  "󰤯", "󰤟", "󰤢", "󰤥", "󰤨"
-	  ],
-	  "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh"
+    "format": "{icon}",
+    "format-wifi": "{icon}",
+    "format-ethernet": "{icon}",
+    "format-disconnected": "{icon}",
+    "tooltip-format": "{ipaddr}  {bandwidthUpBits}  {bandwidthDownBits}",
+    "format-linked": "󰤪",
+    "tooltip-format-wifi": "{essid} {icon} {signalStrength}%  {bandwidthUpBits}  {bandwidthDownBits}",
+    "tooltip-format-linked": "{ifname}  {bandwidthUpBits}  {bandwidthDownBits}",
+    "tooltip-format-ethernet": "{ifname} 󰌘",
+    "tooltip-format-disconnected": "󰌙 Disconnected",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
   },
   "pulseaudio": {
     "on-click": "pavucontrol",
@@ -66,22 +62,18 @@
     "format-icons": {
       "bluetooth": " ",
       "muted": "󰖁",
-      "default": [
-        "󰕿",
-        "󰖀",
-        "󰕾",
-      ]
+      "default": ["󰕿", "󰖀", "󰕾"],
     },
   },
   "custom/empty": {
-    "format": " "
+    "format": " ",
   },
   "temperature": {
     "critical-threshold": 80,
     "format-critical": "{temperatureC}°C ",
     "format": "{temperatureC}°C ",
     "on-click": "alacritty -e btop",
-    "on-click-right": "alacritty -e $HOME/.local/bin/waybar/nvidia-blacklist.sh"
+    "on-click-right": "alacritty -e $HOME/.local/bin/waybar/nvidia-blacklist.sh",
   },
   "backlight": {
     "format": "{icon}",
@@ -101,12 +93,12 @@
       "",
       "",
       "",
-      ""
+      "",
     ],
-    "scroll-step": 10
+    "scroll-step": 10,
   },
   "tray": {
-    "icon-size": 16,
+    "icon-size": 14,
     "spacing": 8,
   },
   "battery": {
@@ -114,27 +106,21 @@
     "states": {
       "good": 95,
       "warning": 30,
-      "critical": 15
+      "critical": 15,
     },
     "format": "{icon} {capacity}%",
     "format-charging": "󱐋 {capacity}%",
     "format-plugged": " {capacity}%",
     "format-alt": "{icon} {time}",
     "format-full": "",
-    "format-icons": [
-      " ",
-      " ",
-      " ",
-      " ",
-      " "
-    ]
+    "format-icons": [" ", " ", " ", " ", " "],
   },
   "clock": {
     "timezone": "America/New_York",
     "tooltip-format": "{:%A, %B %d}",
     "format-alt": "{:%a, %d %b %Y}",
     "format": "{:%H:%M}",
-    "interval": 60
+    "interval": 60,
   },
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/waybar/tw_count.py",
@@ -143,15 +129,15 @@
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,
-    "on-click": "alacritty -e taskwarrior-tui"
+    "on-click": "alacritty -e taskwarrior-tui",
   },
   "custom/tlp": {
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/Polka/local/bin/waybar/tlp_nvidia.py",
+    "exec": "~/Polka/local/bin/waybar/boot_watch.sh",
     "signal": 6,
-    "on-click": "sudo ~/Polka/local/bin/waybar/tlp_nvidia_toggle.py"
+    "on-click": "~/Polka/local/bin/waybar/wlogout-nvidia-switch.sh",
   },
   "custom/updates": {
     "format": " {}",
@@ -161,7 +147,7 @@
     "interval": 1800,
     "signal": 1,
     "hide-empty-text": true,
-    "on-click": "alacritty -e paru"
+    "on-click": "alacritty -e paru",
   },
   "custom/kdeconnect": {
     "format": "{}",
@@ -172,14 +158,13 @@
     "hide-empty-text": true,
     "on-click": "~/Polka/local/bin/kdeconnect/mountkde.sh",
     "on-click-middle": "kdeconnect-app",
-    "on-click-right": "kdeconnect-sms"
+    "on-click-right": "kdeconnect-sms",
   },
   "custom/logo": {
     "format": "",
     "tooltip": false,
     "on-click": "sh -c '(sleep 0s; fuzzel)' & disown",
     "on-click-middle": "$HOME/.local/bin/wall/wall.py",
-    "on-click-right": "sh -c '(sleep 0s; wlogout)' & disown"
-  }
+    "on-click-right": "sh -c '(sleep 0s; wlogout)' & disown",
+  },
 }
-

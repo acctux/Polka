@@ -7,8 +7,6 @@ TOOLTIP="Device not reachable"
 CLASS="disconnected"
 COUNT_FILE="/tmp/waybar/kdecount.txt"
 
-sleep 5
-
 check_kdeconnect() {
   mkdir -p /tmp/waybar/
   if pgrep -x "kdeconnectd" >/dev/null; then

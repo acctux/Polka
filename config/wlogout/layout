@@ -21,7 +21,7 @@
 
 {
     "label" : "reboot",
-    "action" : "systemctl reboot",
+    "action" : "systemctl reboot --boot-loader-entry=arch-blacklist-nvidia.conf",
     "text" : "Reboot",
     "keybind" : "r"
 }
@@ -31,11 +31,4 @@
     "action" : "systemctl suspend",
     "text" : "Suspend",
     "keybind" : "u"
-}
-
-{
-    "label" : "nogpu",
-    "action" : "systemctl reboot --boot-loader-entry=arch-blacklist-nvidia.conf",
-    "text" : "Reboot, nogpu",
-    "keybind" : "n"
 }
