@@ -19,6 +19,7 @@ BINDINGS_TO_UNCOMMENT = [
     "bindm = SHIFT, mouse:272, resizewindow",
 ]
 
+
 def start_user_services(services):
     """Restart specific user services/timers."""
     for svc in services:
@@ -29,21 +30,32 @@ def start_user_services(services):
             print(f"⚠️ Could not start {svc}: {e}")
     print("✅ Selected user services/timers started.")
 
+
 def revert_hyprland_source():
-    """Replace 'gamemode.conf' with 'looknfeel.conf' in Hyprland config."""
+    """Replace 'gamemode.conf' with 'looknfeel.conf' and restore input.conf line."""
     if not HYPRLAND_CONF.exists():
         print(f"❌ Config not found: {HYPRLAND_CONF}")
         return False
-    
+
     text = HYPRLAND_CONF.read_text()
+    modified = False
+
     if "source = gamemode.conf" in text:
-        new_text = text.replace("source = gamemode.conf", "source = looknfeel.conf")
-        HYPRLAND_CONF.write_text(new_text)
-        print(f"✅ Reverted Hyprland config: gamemode → looknfeel.")
+        text = text.replace("source = gamemode.conf", "source = looknfeel.conf")
+        modified = True
+
+    if "# source = input.conf" in text:
+        text = text.replace("# source = input.conf", "source = input.conf")
+        modified = True
+
+    if modified:
+        HYPRLAND_CONF.write_text(text)
+        print(f"✅ Reverted Hyprland config: {HYPRLAND_CONF}")
         return True
     else:
-        print("⚠️ No 'source = gamemode.conf' line found; no change made.")
+        print("⚠️ No 'gamemode.conf' or commented input line found; no change made.")
         return False
+
 
 def uncomment_hypr_bindings():
     """Uncomment previously commented window move/resize bindings."""
@@ -54,17 +66,21 @@ def uncomment_hypr_bindings():
     changed = False
     lines = INPUT_CONF.read_text().splitlines()
     new_lines = []
+
     for line in lines:
         stripped = line.strip()
         if any(stripped == f"# {b}" for b in BINDINGS_TO_UNCOMMENT):
-            new_lines.append(stripped[2:])
-            print(f"✅ Uncommented: {stripped}")
+            uncommented = stripped[2:]  # remove '# '
+            new_lines.append(uncommented)
+            print(f"✅ Uncommented: {uncommented}")
             changed = True
         else:
             new_lines.append(line)
 
-    INPUT_CONF.write_text("\n".join(new_lines))
+    if changed:
+        INPUT_CONF.write_text("\n".join(new_lines) + "\n")
     return changed
+
 
 def main():
     hypr_reloaded = False
@@ -80,6 +96,7 @@ def main():
     if hypr_reloaded:
         subprocess.run(["hyprctl", "reload"], check=False)
         print("🔄 Hyprland reloaded.")
+
 
 if __name__ == "__main__":
     main()

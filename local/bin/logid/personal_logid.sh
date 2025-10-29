@@ -2,10 +2,10 @@
 
 DEVICE="MX Master 3S"
 LOG="/tmp/logid.log"
-ATTEMPTS=10
+ATTEMPTS=20
 
 for i in $(seq 1 $ATTEMPTS); do
-  sleep 3
+  sleep 5
   if grep -q "found: $DEVICE" "$LOG"; then
     break
   else

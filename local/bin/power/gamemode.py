@@ -24,18 +24,27 @@ def stop_user_services(services):
 
 
 def replace_hyprland_source():
-    """Replace 'looknfeel.conf' with 'gamemode.conf' in Hyprland config."""
+    """Replace 'looknfeel.conf' with 'gamemode.conf' in Hyprland config and comment out input.conf."""
     if not HYPRLAND_CONF.exists():
         print(f"Config not found: {HYPRLAND_CONF}")
         return
 
     text = HYPRLAND_CONF.read_text()
+
+    modified = False
     if "source = looknfeel.conf" in text:
-        new_text = text.replace("source = looknfeel.conf", "source = gamemode.conf")
-        HYPRLAND_CONF.write_text(new_text)
-        print("Updated Hyprland config: looknfeel → gamemode.")
+        text = text.replace("source = looknfeel.conf", "source = gamemode.conf")
+        modified = True
+
+    if "source = input.conf" in text:
+        text = text.replace("source = input.conf", "# source = input.conf")
+        modified = True
+
+    if modified:
+        HYPRLAND_CONF.write_text(text)
+        print(f"Updated Hyprland config: {HYPRLAND_CONF}")
     else:
-        print("No 'source = looknfeel.conf' line found; no change made.")
+        print("No relevant 'source =' lines found; no change made.")
 
 
 def main():

@@ -19,7 +19,7 @@ compare_boot_entries_json() {
   esac
 
   if [[ "$WLOGOUT_ENTRY" == $CURRENT_ENTRY ]]; then
-    echo "{\"text\": \"$icon\", \"tooltip\": \"Current: $CURRENT_ENTRY\\nNext boot: $WLOGOUT_ENTRY\"}"
+    echo "{\"text\": \"$icon\", \"tooltip\": \"Current: $CURRENT_ENTRY\\nNext: $WLOGOUT_ENTRY\"}"
   else
     icon="⚠️"
     echo "{\"text\": \"$icon\", \"tooltip\": \"Restart required.\\nNext reboot: $WLOGOUT_ENTRY\"}"

@@ -49,7 +49,7 @@ def main():
     packages = get_updates()
     total_updates = len(packages)
 
-    if total_updates > 25:
+    if total_updates > 5:
         tooltip = generate_tooltip(packages, MAX_TOOLTIP_LINES, KEYWORDS)
         output = {"text": str(total_updates), "tooltip": tooltip}
         print(json.dumps(output))
