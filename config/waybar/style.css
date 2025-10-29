@@ -86,12 +86,15 @@ window#waybar.hidden {
 #backlight,
 #pulseaudio {
   font-size: 14px;
-  padding: 0 8px 0 6px;
+  padding: 0 8px 0 5px;
 }
 
+#pulseaudio {
+  padding: 0 7px 0 5px;
+}
 #custom-kdeconnect {
   font-size: 14px;
-  padding: 0 6px 0 6px;
+  padding: 0 7px 0 7px;
 }
 
 #tray {

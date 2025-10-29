@@ -40,7 +40,7 @@ button:hover {
 
 /* === Icon Assignments === */
 #lock {
-  background-size: 32%;
+  background-size: 33%;
   padding: 20px 40px;
   background-image: image(url("icons/lock.svg"));
 }
