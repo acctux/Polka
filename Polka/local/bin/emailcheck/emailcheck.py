@@ -22,7 +22,7 @@ PASSWORD = creds.get("PASSWORD", "")
 if not all([IMAP_HOST, IMAP_PORT, USERNAME, PASSWORD]):
     raise ValueError("Missing ProtonMail Bridge credentials in bridge_creds.txt")
 
-LAST_SUBJECT_FILE = "~/.cache/last_email_subject.txt"
+LAST_SUBJECT_FILE = os.path.expanduser("~/.cache/last_email_subject.txt")
 
 try:
     with open(LAST_SUBJECT_FILE, "r") as f:
