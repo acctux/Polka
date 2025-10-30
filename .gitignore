@@ -1,1 +1,11 @@
-secretdots/
+# Ignore everything
+/*
+
+# Allow these two directories
+!/Overload/
+!/Polka/
+
+# Allow contents inside them
+!/Overload/**
+!/Polka/**
+
