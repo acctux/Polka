@@ -20,17 +20,15 @@ from archinstall.lib.interactions.general_conf import (
 )
 from archinstall.lib.models import Bootloader
 from archinstall.lib.models.device import (
-    DiskLayoutType,
     EncryptionType,
 )
+from archinstall.lib.models.network import NicType, NetworkConfiguration
 from archinstall.lib.models.users import User
 from archinstall.lib.output import debug, error, info
 from archinstall.lib.packages.packages import check_package_upgrade
 from archinstall.lib.profile.profiles_handler import profile_handler
-from archinstall.lib.translationhandler import tr
 from archinstall.tui import Tui
 
-arch_config=""
 assert arch_config == ArchConfig(
     version=version("archinstall"),
     script="test_script",
@@ -130,7 +128,9 @@ assert arch_config == ArchConfig(
     timezone="UTC",
     services=["service_1", "service_2"],
     custom_commands=["echo 'Hello, World!'"],
-    )
+)
+
+
 def ask_user_questions() -> None:
     """
     First, we'll ask the user for a bunch of user input.
@@ -142,7 +142,7 @@ def ask_user_questions() -> None:
 
     upgrade = check_package_upgrade("archinstall")
     if upgrade:
-        text = tr("New version available") + f": {upgrade}"
+        text = "You Da Man" + f": {upgrade}"
         title_text = f"  ({text})"
 
     with Tui():
@@ -156,13 +156,13 @@ def ask_user_questions() -> None:
 
 def perform_installation(mountpoint: Path) -> None:
     """
-    Performs the installation steps on a block device.
+    Perf orms the installation steps on a block device.
     Only requirement is that the block devices are
     formatted and setup prior to entering this function.
     """
     info("Starting installation...")
 
-    config = arch_config.config
+    config = arch_config_handler.config
 
     if not config.disk_config:
         error("No disk configuration provided")
@@ -172,7 +172,7 @@ def perform_installation(mountpoint: Path) -> None:
     run_mkinitcpio = not config.uki
     locale_config = config.locale_config
     optional_repositories = (
-        [Repos"multilib"]
+        config.mirror_config.optional_repositories if config.mirror_config else []
     )
     mountpoint = disk_config.mountpoint if disk_config.mountpoint else mountpoint
 
@@ -182,19 +182,19 @@ def perform_installation(mountpoint: Path) -> None:
         kernels=config.kernels,
     ) as installation:
         # Mount all the drives to the desired mountpoint
-        if disk_config.config_type != DiskLayoutType.Pre_mount:
-            installation.mount_ordered_layout()
+        # if disk_config.config_type != DiskLayoutType.Pre_mount:
+        installation.mount_ordered_layout()
 
         installation.sanity_check()
 
-        if disk_config.config_type != DiskLayoutType.Pre_mount:
-            if (
-                disk_config.disk_encryption
-                and disk_config.disk_encryption.encryption_type
-                != EncryptionType.NoEncryption
-            ):
-                # generate encryption key files for the mounted luks devices
-                installation.generate_key_files()
+        # if disk_config.config_type != DiskLayoutType.Pre_mount:
+        if (
+            disk_config.disk_encryption
+            and disk_config.disk_encryption.encryption_type
+            != EncryptionType.NoEncryption
+        ):
+            # generate encryption key files for the mounted luks devices
+            installation.generate_key_files()
 
         if mirror_config := config.mirror_config:
             installation.set_mirrors(mirror_config, on_target=False)
@@ -225,7 +225,7 @@ def perform_installation(mountpoint: Path) -> None:
         if network_config:
             network_config.install_network_config(
                 installation,
-                config.profile_config,
+                NetworkConfiguration(NicType.NM),
             )
 
         if config.auth_config:

@@ -1,0 +1,141 @@
+{
+  "app_config": {
+    "audio_config": {
+      "audio": "pipewire"
+    },
+    "bluetooth_config": {
+      "enabled": true
+    }
+  },
+  "archinstall-language": "English",
+  "auth_config": {},
+  "bootloader": "Systemd-boot",
+  "custom_commands": [],
+  "disk_config": {
+    "btrfs_options": {
+      "snapshot_config": null
+    },
+    "config_type": "default_layout",
+    "device_modifications": [
+      {
+        "device": "/dev/vda",
+        "partitions": [
+          {
+            "btrfs": [],
+            "dev_path": null,
+            "flags": ["boot", "esp"],
+            "fs_type": "fat32",
+            "mount_options": [],
+            "mountpoint": "/boot",
+            "obj_id": "8e655a76-f4c2-4500-b51f-73f2be0b0ba1",
+            "size": {
+              "sector_size": {
+                "unit": "B",
+                "value": 512
+              },
+              "unit": "GiB",
+              "value": 1
+            },
+            "start": {
+              "sector_size": {
+                "unit": "B",
+                "value": 512
+              },
+              "unit": "MiB",
+              "value": 1
+            },
+            "status": "create",
+            "type": "primary"
+          },
+          {
+            "btrfs": [
+              {
+                "mountpoint": "/",
+                "name": "@"
+              },
+              {
+                "mountpoint": "/home",
+                "name": "@home"
+              },
+              {
+                "mountpoint": "/var/log",
+                "name": "@log"
+              },
+              {
+                "mountpoint": "/var/cache/pacman/pkg",
+                "name": "@pkg"
+              }
+            ],
+            "dev_path": null,
+            "flags": [],
+            "fs_type": "btrfs",
+            "mount_options": ["compress=zstd"],
+            "mountpoint": null,
+            "obj_id": "bb1ea099-d501-411c-94e4-b3dfe51de307",
+            "size": {
+              "sector_size": {
+                "unit": "B",
+                "value": 512
+              },
+              "unit": "B",
+              "value": 25767706624
+            },
+            "start": {
+              "sector_size": {
+                "unit": "B",
+                "value": 512
+              },
+              "unit": "B",
+              "value": 1074790400
+            },
+            "status": "create",
+            "type": "primary"
+          }
+        ],
+        "wipe": true
+      }
+    ],
+    "disk_encryption": {
+      "encryption_type": "luks",
+      "lvm_volumes": [],
+      "partitions": ["0aaabf09-e993-4562-b19a-21d28e6fe5ea"]
+    }
+  },
+  "hostname": "yulia",
+  "kernels": ["linux"],
+  "locale_config": {
+    "kb_layout": "us",
+    "sys_enc": "UTF-8",
+    "sys_lang": "en_US.UTF-8"
+  },
+  "mirror_config": {
+    "custom_repositories": [],
+    "custom_servers": [],
+    "mirror_regions": {},
+    "optional_repositories": ["multilib"]
+  },
+  "network_config": {
+    "type": "iso"
+  },
+  "ntp": true,
+  "packages": ["auth-tarball-from-git"],
+  "parallel_downloads": 0,
+  "profile_config": {
+    "gfx_driver": "Nvidia (open kernel module for newer GPUs, Turing+)",
+    "greeter": "ly",
+    "profile": {
+      "custom_settings": {
+        "Hyprland": {
+          "seat_access": "polkit"
+        }
+      },
+      "details": ["Hyprland"],
+      "main": "Desktop"
+    }
+  },
+  "script": null,
+  "services": [],
+  "swap": true,
+  "timezone": "US/Eastern",
+  "version": "3.0.11"
+}

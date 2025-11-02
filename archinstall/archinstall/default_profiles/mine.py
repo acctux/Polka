@@ -30,9 +30,14 @@ class DesktopProfile(Profile):
     @override
     def packages(self) -> list[str]:
         return [
+            "nano",
+            "vim",
             "openssh",
+            "htop",
             "wget",
             "iwd",
+            "wireless_tools",
+            "wpa_supplicant",
             "smartmontools",
             "xdg-utils",
         ]
