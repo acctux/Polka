@@ -46,7 +46,7 @@ from archinstall.lib.models.profile import ProfileConfiguration
 from archinstall.lib.translationhandler import translation_handler
 
 arch_config = ArchConfig(
-    version=version("3.0.11"),
+    version=version("archinstall"),
     script=None,
     app_config=ApplicationConfiguration(
         bluetooth_config=BluetoothConfiguration(enabled=True),
