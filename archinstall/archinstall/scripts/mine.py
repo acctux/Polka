@@ -1,16 +1,16 @@
-from importlib.metadata import version
 from pathlib import Path
 
-from archinstall.default_profiles.profile import GreeterType
+from archinstall.default_profiles.desktops.hyprland import HyprlandProfile
 from archinstall.lib.applications.application_handler import application_handler
-from archinstall.lib.args import ArchConfig, arch_config_handler
+from archinstall.lib.args import arch_config_handler
 from archinstall.lib.authentication.authentication_handler import auth_handler
 from archinstall.lib.configuration import ConfigurationOutput
-from archinstall.lib.disk.disk_menu import DiskLayoutConfigurationMenu
 from archinstall.lib.disk.filesystem import FilesystemHandler
-from archinstall.lib.disk.utils import disk_layouts
-from archinstall.lib.hardware import GfxDriver, SysInfo
-from archinstall.lib.installer import Installer, run_custom_user_commands
+from archinstall.lib.global_menu import GlobalMenu
+from archinstall.lib.installer import (
+    Installer,
+)
+from archinstall.lib.models import Bootloader
 from archinstall.lib.models.application import (
     ApplicationConfiguration,
     Audio,
@@ -18,80 +18,39 @@ from archinstall.lib.models.application import (
     BluetoothConfiguration,
 )
 from archinstall.lib.models.authentication import AuthenticationConfiguration
-from archinstall.lib.models.bootloader import Bootloader
-from archinstall.lib.models.device import DiskLayoutType, EncryptionType
-from archinstall.lib.models.locale import LocaleConfiguration
-from archinstall.lib.models.mirrors import MirrorConfiguration
+from archinstall.lib.models.mirrors import MirrorConfiguration, MirrorRegion
 from archinstall.lib.models.network import NetworkConfiguration, NicType
+from archinstall.lib.models.packages import Repository
 from archinstall.lib.models.profile import ProfileConfiguration
 from archinstall.lib.models.users import Password, User
 from archinstall.lib.output import debug, error, info
+from archinstall.lib.packages.packages import check_package_upgrade
 from archinstall.lib.profile.profiles_handler import profile_handler
-from archinstall.lib.translationhandler import translation_handler
-from archinstall.tui.curses_menu import Tui
+from archinstall.lib.translationhandler import tr
+from archinstall.tui import Tui
 
-ARCH_CONFIG = ArchConfig(
-    version=version("archinstall"),
-    script=None,
-    locale_config=LocaleConfiguration(
-        kb_layout="us",
-        sys_lang="en_US.UTF-8",
-        sys_enc="UTF-8",
-    ),
-    archinstall_language=translation_handler.get_language_by_abbr("en"),
-    disk_config=None,
-    profile_config=ProfileConfiguration(
-        profile=profile_handler.parse_profile_config(
-            {
-                "custom_settings": {
-                    "Niri": {
-                        "seat_access": "polkit",
-                    },
-                },
-                "details": ["Niri"],
-                "main": "Desktop",
-            }
-        ),
-        gfx_driver=GfxDriver.AllOpenSource,
-        greeter=GreeterType.Ly,
-    ),
-    mirror_config=MirrorConfiguration(
-        mirror_regions=[],
-        custom_servers=[],
-        optional_repositories=[],
-        custom_repositories=[],
-    ),
-    network_config=NetworkConfiguration(
-        type=NicType.NM,
-    ),
-    bootloader=Bootloader.Systemd,
-    uki=False,
-    app_config=ApplicationConfiguration(
-        bluetooth_config=BluetoothConfiguration(enabled=True),
-        audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
-    ),
-    auth_config=AuthenticationConfiguration(
-        root_enc_password=Password(plaintext="test"),
-        users=[
-            User(
-                username="nick",
-                password=Password(plaintext="test"),
-                sudo=True,
-                groups=["wheel"],
-            ),
-        ],
-        u2f_config=None,
-    ),
-    hostname="archlinux",
-    kernels=["linux"],
-    ntp=False,
-    packages=["git", "rsync", "reflector"],
-    parallel_downloads=0,
-    swap=True,
-    timezone="US/Eastern",
-    services=[],
-    custom_commands=[],
-)
+
+def ask_user_questions() -> None:
+    """
+    First, we'll ask the user for a bunch of user input.
+    Not until we're satisfied with what we want to install
+    will we continue with the actual installation steps.
+    """
+
+    title_text = None
+
+    upgrade = check_package_upgrade("archinstall")
+    if upgrade:
+        text = tr("New version available") + f": {upgrade}"
+        title_text = f"  ({text})"
+
+    with Tui():
+        global_menu = GlobalMenu(arch_config_handler.config)
+
+        if not arch_config_handler.args.advanced:
+            global_menu.set_enabled("parallel_downloads", False)
+
+        global_menu.run(additional_title=title_text)
 
 
 def perform_installation(mountpoint: Path) -> None:
@@ -101,6 +60,7 @@ def perform_installation(mountpoint: Path) -> None:
     formatted and setup prior to entering this function.
     """
     info("Starting installation...")
+
     config = arch_config_handler.config
 
     if not config.disk_config:
@@ -115,28 +75,76 @@ def perform_installation(mountpoint: Path) -> None:
     )
     mountpoint = disk_config.mountpoint if disk_config.mountpoint else mountpoint
 
+    mirrors = MirrorConfiguration(
+        mirror_regions=[MirrorRegion(name="", urls=[])],
+        custom_servers=[],
+        optional_repositories=[Repository.Multilib],
+        custom_repositories=[],
+    )
+    hostname = "yulia"
+    user = User(
+        "nick",
+        Password("test"),
+        True,
+        [
+            "wheel",
+            "power",
+            "input",
+            "audio",
+            "video",
+            "network",
+            "storage",
+            "rfkill",
+            "log",
+            "games",
+            "gamemode",
+        ],
+    )
+    auth_config = AuthenticationConfiguration(Password("test"))
+    network_config = NetworkConfiguration(NicType.NM, nics=[])
+    audio_config = AudioConfiguration(audio=Audio.PIPEWIRE)
+    bluetooth_config = BluetoothConfiguration(True)
+    profile_config = ProfileConfiguration(HyprlandProfile())
+    packages = [
+        "accountsservice",
+        "fuzzel",
+        "gnome-keyring",
+        "hypridle",
+        "hyprland",
+        "hyprlock",
+        "hyprpicker",
+        "hyprpolkitagent",
+        "hyprshot",
+        "kvantum",
+        "libgnome-keyring",
+        "mako",
+        "nwg-clipman",
+        "satty",
+        "swayosd",
+        "swww",
+        "uwsm",
+        "waybar",
+        "wl-clipboard",
+        "xdg-desktop-portal-gtk",
+        "xdg-desktop-portal-hyprland",
+    ]
+
+    timezone = "US/Eastern"
+    services = []
+    bootloader = Bootloader.Systemd
+
     with Installer(
         mountpoint,
         disk_config,
-        kernels=config.kernels,
+        base_packages=["base", "base-devel", "linux-firmware", "git", "nvim"],
+        kernels=["linux"],
     ) as installation:
         # Mount all the drives to the desired mountpoint
-        if disk_config.config_type != DiskLayoutType.Pre_mount:
-            installation.mount_ordered_layout()
+        installation.mount_ordered_layout()
 
         installation.sanity_check()
 
-        if disk_config.config_type != DiskLayoutType.Pre_mount:
-            if (
-                disk_config.disk_encryption
-                and disk_config.disk_encryption.encryption_type
-                != EncryptionType.NoEncryption
-            ):
-                # generate encryption key files for the mounted luks devices
-                installation.generate_key_files()
-
-        if mirror_config := config.mirror_config:
-            installation.set_mirrors(mirror_config, on_target=False)
+        installation.set_mirrors(mirrors, on_target=False)
 
         installation.minimal_installation(
             optional_repositories=optional_repositories,
@@ -145,85 +153,48 @@ def perform_installation(mountpoint: Path) -> None:
             locale_config=locale_config,
         )
 
-        if mirror_config := config.mirror_config:
-            installation.set_mirrors(mirror_config, on_target=True)
+        installation.set_mirrors(mirrors, on_target=True)
 
-        if config.swap:
-            installation.setup_swap("zram")
+        installation.setup_swap("zram")
 
-        if config.bootloader and config.bootloader != Bootloader.NO_BOOTLOADER:
-            if config.bootloader == Bootloader.Grub and SysInfo.has_uefi():
-                installation.add_additional_packages("grub")
+        installation.add_bootloader(bootloader, False)
 
-            installation.add_bootloader(config.bootloader, config.uki)
+        network_config.install_network_config(
+            installation,
+            config.profile_config,
+        )
 
-        # If user selected to copy the current ISO network configuration
-        # Perform a copy of the config
-        network_config = config.network_config
+        installation.create_users(user)
 
-        if network_config:
-            network_config.install_network_config(
-                installation,
-                config.profile_config,
-            )
+        auth_handler.setup_auth(installation, auth_config, hostname)
 
-        if config.auth_config:
-            if config.auth_config.users:
-                installation.create_users(config.auth_config.users)
-                auth_handler.setup_auth(
-                    installation, config.auth_config, config.hostname
-                )
+        application_handler.install_applications(
+            installation,
+            ApplicationConfiguration(bluetooth_config, audio_config),
+            [user],
+        )
 
-        if app_config := config.app_config:
-            application_handler.install_applications(installation, app_config)
+        profile_handler.install_profile_config(installation, profile_config)
 
-        if profile_config := config.profile_config:
-            profile_handler.install_profile_config(installation, profile_config)
+        installation.add_additional_packages(packages)
 
-        if config.packages and config.packages[0] != "":
-            installation.add_additional_packages(config.packages)
+        installation.set_timezone(timezone)
 
-        if timezone := config.timezone:
-            installation.set_timezone(timezone)
+        installation.activate_time_synchronization()
 
-        if config.ntp:
-            installation.activate_time_synchronization()
+        root_user = User("root", Password(plaintext="test"), False)
+        installation.set_user_password(root_user)
 
-        if config.auth_config and config.auth_config.root_enc_password:
-            root_user = User("root", config.auth_config.root_enc_password, False)
-            installation.set_user_password(root_user)
-
-        if (profile_config := config.profile_config) and profile_config.profile:
-            profile_config.profile.post_install(installation)
-
-        # If the user provided a list of services to be enabled, pass the list to the enable_service function.
-        # Note that while it's called enable_service, it can actually take a list of services and iterate it.
-        if servies := config.services:
-            installation.enable_service(servies)
-
-        if disk_config.has_default_btrfs_vols():
-            btrfs_options = disk_config.btrfs_options
-            snapshot_config = btrfs_options.snapshot_config if btrfs_options else None
-            snapshot_type = snapshot_config.snapshot_type if snapshot_config else None
-            if snapshot_type:
-                installation.setup_btrfs_snapshot(snapshot_type, config.bootloader)
-
-        # If the user provided custom commands to be run post-installation, execute them now.
-        if cc := config.custom_commands:
-            run_custom_user_commands(cc, installation)
+        installation.enable_service(services)
 
         installation.genfstab()
 
-        debug(f"Disk states after installing:\n{disk_layouts()}")
-
 
 def guided() -> None:
+    if not arch_config_handler.args.silent:
+        ask_user_questions()
 
-    config = ConfigurationOutput(ARCH_CONFIG)
-
-    with Tui():
-        disk_config = DiskLayoutConfigurationMenu(disk_layout_config=None).run()
-        arch_config_handler.config.disk_config = disk_config
+    config = ConfigurationOutput(arch_config_handler.config)
     config.write_debug()
     config.save()
 
