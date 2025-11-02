@@ -5,6 +5,7 @@ from archinstall.lib.applications.application_handler import application_handler
 from archinstall.lib.args import arch_config_handler
 from archinstall.lib.authentication.authentication_handler import auth_handler
 from archinstall.lib.configuration import ConfigurationOutput
+from archinstall.lib.disk.disk_menu import DiskLayoutConfigurationMenu
 from archinstall.lib.disk.filesystem import FilesystemHandler
 from archinstall.lib.global_menu import GlobalMenu
 from archinstall.lib.installer import (
@@ -191,15 +192,13 @@ def perform_installation(mountpoint: Path) -> None:
 
 
 def guided() -> None:
-    if not arch_config_handler.args.silent:
-        ask_user_questions()
+    with Tui():
+        disk_config = DiskLayoutConfigurationMenu(disk_layout_config=None).run()
+        arch_config_handler.config.disk_config = disk_config
 
     config = ConfigurationOutput(arch_config_handler.config)
     config.write_debug()
     config.save()
-
-    if arch_config_handler.args.dry_run:
-        exit(0)
 
     if not arch_config_handler.args.silent:
         aborted = False
