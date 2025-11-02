@@ -34,126 +34,178 @@ from archinstall.lib.models.application import (
 )
 from archinstall.lib.models.authentication import (
     AuthenticationConfiguration,
-    U2FLoginConfiguration,
-    U2FLoginMethod,
 )
-from archinstall.lib.models.device import DiskLayoutConfiguration
 from archinstall.lib.models.locale import LocaleConfiguration
 from archinstall.lib.models.mirrors import (
-    CustomRepository,
-    CustomServer,
     MirrorConfiguration,
-    MirrorRegion,
-    SignCheck,
-    SignOption,
 )
-from archinstall.lib.models.network import NetworkConfiguration, Nic, NicType
+from archinstall.lib.models.network import NetworkConfiguration, NicType
 from archinstall.lib.models.packages import Repository
-from archinstall.lib.models.profile import ProfileConfiguration
 from archinstall.lib.models.users import Password
+from archinstall.lib.models.profile import ProfileConfiguration
 from archinstall.lib.translationhandler import translation_handler
 
-arch_config = ""
 arch_config = ArchConfig(
-    version=version("archinstall"),
-    script="test_script",
+    version=version("3.0.11"),
+    script=None,
     app_config=ApplicationConfiguration(
         bluetooth_config=BluetoothConfiguration(enabled=True),
         audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
     ),
     auth_config=AuthenticationConfiguration(
-        root_enc_password=Password(enc_password="password_hash"),
+        root_enc_password=None,
         users=[
             User(
-                username="user_name",
-                password=Password(enc_password="password_hash"),
+                username="nick",
+                password=Password(plaintext="test"),
                 sudo=True,
                 groups=["wheel"],
             ),
         ],
-        u2f_config=U2FLoginConfiguration(
-            u2f_login_method=U2FLoginMethod.Passwordless,
-            passwordless_sudo=True,
-        ),
+        u2f_config=None,
     ),
     locale_config=LocaleConfiguration(
         kb_layout="us",
-        sys_lang="en_US",
+        sys_lang="en_US.UTF-8",
         sys_enc="UTF-8",
     ),
     archinstall_language=translation_handler.get_language_by_abbr("en"),
-    disk_config=DiskLayoutConfiguration(
-        config_type=DiskLayoutType.Default,
-        device_modifications=[],
-        lvm_config=None,
-        mountpoint=None,
-    ),
     profile_config=ProfileConfiguration(
         profile=profile_handler.parse_profile_config(
             {
                 "custom_settings": {
-                    "Hyprland": {
+                    "Niri": {
                         "seat_access": "polkit",
                     },
-                    "Sway": {
-                        "seat_access": "seatd",
-                    },
                 },
-                "details": [
-                    "Sway",
-                    "Hyprland",
-                ],
+                "details": ["Niri"],
                 "main": "Desktop",
             }
         ),
         gfx_driver=GfxDriver.AllOpenSource,
-        greeter=GreeterType.Lightdm,
+        greeter=GreeterType.Ly,
     ),
     mirror_config=MirrorConfiguration(
-        mirror_regions=[
-            MirrorRegion(
-                name="Australia",
-                urls=["http://archlinux.mirror.digitalpacific.com.au/$repo/os/$arch"],
-            ),
-        ],
-        custom_servers=[CustomServer("https://mymirror.com/$repo/os/$arch")],
-        optional_repositories=[Repository.Testing],
-        custom_repositories=[
-            CustomRepository(
-                name="myrepo",
-                url="https://myrepo.com/$repo/os/$arch",
-                sign_check=SignCheck.Required,
-                sign_option=SignOption.TrustAll,
-            ),
-        ],
+        mirror_regions=[],
+        custom_servers=[],
+        optional_repositories=[Repository.Multilib],
+        custom_repositories=[],
     ),
     network_config=NetworkConfiguration(
-        type=NicType.MANUAL,
-        nics=[
-            Nic(
-                iface="eno1",
-                ip="192.168.1.15/24",
-                dhcp=True,
-                gateway="192.168.1.1",
-                dns=[
-                    "192.168.1.1",
-                    "9.9.9.9",
-                ],
-            ),
-        ],
+        type=NicType.NM,
     ),
     bootloader=Bootloader.Systemd,
     uki=False,
-    hostname="archy",
-    kernels=["linux-zen"],
-    ntp=True,
-    packages=["firefox"],
-    parallel_downloads=66,
-    swap=False,
-    timezone="UTC",
-    services=["service_1", "service_2"],
-    custom_commands=["echo 'Hello, World!'"],
+    hostname="archlinux",
+    kernels=["linux"],
+    ntp=False,
+    packages=["git", "rsync", "reflector"],
+    parallel_downloads=0,
+    swap=True,
+    timezone="US/Eastern",
+    services=[],
+    custom_commands=[],
 )
+# arch_config = ArchConfig(
+#     version=version("archinstall"),
+#     script="test_script",
+#     app_config=ApplicationConfiguration(
+#         bluetooth_config=BluetoothConfiguration(enabled=True),
+#         audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
+#     ),
+#     auth_config=AuthenticationConfiguration(
+#         root_enc_password=Password(enc_password="password_hash"),
+#         users=[
+#             User(
+#                 username="user_name",
+#                 password=Password(enc_password="password_hash"),
+#                 sudo=True,
+#                 groups=["wheel"],
+#             ),
+#         ],
+#         u2f_config=U2FLoginConfiguration(
+#             u2f_login_method=U2FLoginMethod.Passwordless,
+#             passwordless_sudo=True,
+#         ),
+#     ),
+#     locale_config=LocaleConfiguration(
+#         kb_layout="us",
+#         sys_lang="en_US",
+#         sys_enc="UTF-8",
+#     ),
+#     archinstall_language=translation_handler.get_language_by_abbr("en"),
+#     disk_config=DiskLayoutConfiguration(
+#         config_type=DiskLayoutType.Default,
+#         device_modifications=[],
+#         lvm_config=None,
+#         mountpoint=None,
+#     ),
+#     profile_config=ProfileConfiguration(
+#         profile=profile_handler.parse_profile_config(
+#             {
+#                 "custom_settings": {
+#                     "Hyprland": {
+#                         "seat_access": "polkit",
+#                     },
+#                     "Sway": {
+#                         "seat_access": "seatd",
+#                     },
+#                 },
+#                 "details": [
+#                     "Sway",
+#                     "Hyprland",
+#                 ],
+#                 "main": "Desktop",
+#             }
+#         ),
+#         gfx_driver=GfxDriver.AllOpenSource,
+#         greeter=GreeterType.Lightdm,
+#     ),
+#     mirror_config=MirrorConfiguration(
+#         mirror_regions=[
+#             MirrorRegion(
+#                 name="Australia",
+#                 urls=["http://archlinux.mirror.digitalpacific.com.au/$repo/os/$arch"],
+#             ),
+#         ],
+#         custom_servers=[CustomServer("https://mymirror.com/$repo/os/$arch")],
+#         optional_repositories=[Repository.Testing],
+#         custom_repositories=[
+#             CustomRepository(
+#                 name="myrepo",
+#                 url="https://myrepo.com/$repo/os/$arch",
+#                 sign_check=SignCheck.Required,
+#                 sign_option=SignOption.TrustAll,
+#             ),
+#         ],
+#     ),
+#     network_config=NetworkConfiguration(
+#         type=NicType.MANUAL,
+#         nics=[
+#             Nic(
+#                 iface="eno1",
+#                 ip="192.168.1.15/24",
+#                 dhcp=True,
+#                 gateway="192.168.1.1",
+#                 dns=[
+#                     "192.168.1.1",
+#                     "9.9.9.9",
+#                 ],
+#             ),
+#         ],
+#     ),
+#     bootloader=Bootloader.Systemd,
+#     uki=False,
+#     hostname="archy",
+#     kernels=["linux-zen"],
+#     ntp=True,
+#     packages=["firefox"],
+#     parallel_downloads=66,
+#     swap=False,
+#     timezone="UTC",
+#     services=["service_1", "service_2"],
+#     custom_commands=["echo 'Hello, World!'"],
+# )
 
 
 def perform_installation(mountpoint: Path) -> None:
