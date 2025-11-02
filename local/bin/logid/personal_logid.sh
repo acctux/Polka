@@ -16,7 +16,7 @@ restart_logid() {
 run_attempts() {
   for i in $(seq 1 "$ATTEMPTS"); do
     if grep -q "${DEVICE}" "${LOG}"; then
-      if ! grep -q "disconnected" "${LOG}"; then
+      if ! grep -Eq "disconnected|Failed|Error" "${LOG}"; then
         return 0
       fi
     else
