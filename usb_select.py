@@ -187,14 +187,18 @@ def unmount_partition():
 
 
 # -------------------- Example Usage -------------------- #
-def mnt_cp_keys(KEY_DIR, KEY_FILES):
-    if KEY_DIR and KEY_FILES:
-        missing_files = check_usb_files(KEY_DIR, KEY_FILES)
-        if missing_files:
-            mount_selected(prompt_user_selection(find_keys_partition(get_lsblk_json())))
-            # copy_keys(KEY_DIR, KEY_FILES)
-            # unmount_partition()
-        else:
-            log.info("All required files present.")
-    else:
-        log.info("All required files present.")
+def mnt_cp_keys():
+    # if KEY_DIR and KEY_FILES:
+    #     missing_files = check_usb_files(KEY_DIR, KEY_FILES)
+    #     if missing_files:
+    mount_selected(prompt_user_selection(find_keys_partition(get_lsblk_json())))
+    # copy_keys(KEY_DIR, KEY_FILES)
+    # unmount_partition()
+
+
+#     else:
+#         log.info("All required files present.")
+# else:
+#     log.info("All required files present.")
+
+mnt_cp_keys()
