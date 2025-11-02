@@ -54,7 +54,7 @@ from archinstall.lib.models.users import Password
 from archinstall.lib.translationhandler import translation_handler
 
 arch_config = ""
-assert arch_config == ArchConfig(
+arch_config = ArchConfig(
     version=version("archinstall"),
     script="test_script",
     app_config=ApplicationConfiguration(
