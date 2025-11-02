@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from archinstall.default_profiles.minimal import MinimalProfile
+from archinstall.default_profiles.desktop import DesktopProfile
 from archinstall.lib.args import arch_config_handler
 from archinstall.lib.configuration import ConfigurationOutput
 from archinstall.lib.disk.disk_menu import DiskLayoutConfigurationMenu
@@ -46,7 +46,7 @@ def perform_installation(mountpoint: Path) -> None:
 
         installation.add_additional_packages(["nano", "wget", "git"])
 
-        profile_config = ProfileConfiguration(MinimalProfile())
+        profile_config = ProfileConfiguration(DesktopProfile())
         profile_handler.install_profile_config(installation, profile_config)
 
         user = User("devel", Password(plaintext="devel"), False)
