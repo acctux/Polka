@@ -1,111 +1,3 @@
-from pathlib import Path
-from importlib.metadata import version
-
-from archinstall import SysInfo
-from archinstall.lib.applications.application_handler import application_handler
-from archinstall.lib.args import arch_config_handler
-from archinstall.lib.authentication.authentication_handler import auth_handler
-from archinstall.lib.configuration import ConfigurationOutput
-from archinstall.lib.disk.disk_menu import DiskLayoutConfigurationMenu
-from archinstall.lib.disk.filesystem import FilesystemHandler
-from archinstall.lib.disk.utils import disk_layouts
-from archinstall.lib.installer import (
-    Installer,
-    accessibility_tools_in_use,
-    run_custom_user_commands,
-)
-from archinstall.lib.models import Bootloader
-from archinstall.lib.models.device import (
-    DiskLayoutType,
-    EncryptionType,
-)
-from archinstall.lib.models.users import User
-from archinstall.lib.output import debug, error, info
-from archinstall.lib.profile.profiles_handler import profile_handler
-from archinstall.tui import Tui
-from archinstall.default_profiles.profile import GreeterType
-from archinstall.lib.args import ArchConfig
-from archinstall.lib.hardware import GfxDriver
-from archinstall.lib.models.application import (
-    ApplicationConfiguration,
-    Audio,
-    AudioConfiguration,
-    BluetoothConfiguration,
-)
-from archinstall.lib.models.authentication import (
-    AuthenticationConfiguration,
-)
-from archinstall.lib.models.locale import LocaleConfiguration
-from archinstall.lib.models.mirrors import (
-    MirrorConfiguration,
-)
-from archinstall.lib.models.network import NetworkConfiguration, NicType
-from archinstall.lib.models.packages import Repository
-from archinstall.lib.models.users import Password
-from archinstall.lib.models.profile import ProfileConfiguration
-from archinstall.lib.translationhandler import translation_handler
-
-arch_config = ArchConfig(
-    version=version("archinstall"),
-    script=None,
-    app_config=ApplicationConfiguration(
-        bluetooth_config=BluetoothConfiguration(enabled=True),
-        audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
-    ),
-    auth_config=AuthenticationConfiguration(
-        root_enc_password=None,
-        users=[
-            User(
-                username="nick",
-                password=Password(plaintext="test"),
-                sudo=True,
-                groups=["wheel"],
-            ),
-        ],
-        u2f_config=None,
-    ),
-    locale_config=LocaleConfiguration(
-        kb_layout="us",
-        sys_lang="en_US.UTF-8",
-        sys_enc="UTF-8",
-    ),
-    archinstall_language=translation_handler.get_language_by_abbr("en"),
-    profile_config=ProfileConfiguration(
-        profile=profile_handler.parse_profile_config(
-            {
-                "custom_settings": {
-                    "Niri": {
-                        "seat_access": "polkit",
-                    },
-                },
-                "details": ["Niri"],
-                "main": "Desktop",
-            }
-        ),
-        gfx_driver=GfxDriver.AllOpenSource,
-        greeter=GreeterType.Ly,
-    ),
-    mirror_config=MirrorConfiguration(
-        mirror_regions=[],
-        custom_servers=[],
-        optional_repositories=[Repository.Multilib],
-        custom_repositories=[],
-    ),
-    network_config=NetworkConfiguration(
-        type=NicType.NM,
-    ),
-    bootloader=Bootloader.Systemd,
-    uki=False,
-    hostname="archlinux",
-    kernels=["linux"],
-    ntp=False,
-    packages=["git", "rsync", "reflector"],
-    parallel_downloads=0,
-    swap=True,
-    timezone="US/Eastern",
-    services=[],
-    custom_commands=[],
-)
 # arch_config = ArchConfig(
 #     version=version("archinstall"),
 #     script="test_script",
@@ -208,6 +100,39 @@ arch_config = ArchConfig(
 # )
 
 
+from importlib.metadata import version
+from pathlib import Path
+
+from archinstall.default_profiles.profile import GreeterType
+from archinstall.lib.applications.application_handler import application_handler
+from archinstall.lib.args import ArchConfig, arch_config_handler
+from archinstall.lib.authentication.authentication_handler import auth_handler
+from archinstall.lib.configuration import ConfigurationOutput
+from archinstall.lib.disk.disk_menu import DiskLayoutConfigurationMenu
+from archinstall.lib.disk.filesystem import FilesystemHandler
+from archinstall.lib.disk.utils import disk_layouts
+from archinstall.lib.hardware import GfxDriver, SysInfo
+from archinstall.lib.installer import Installer, run_custom_user_commands
+from archinstall.lib.models.application import (
+    ApplicationConfiguration,
+    Audio,
+    AudioConfiguration,
+    BluetoothConfiguration,
+)
+from archinstall.lib.models.authentication import AuthenticationConfiguration
+from archinstall.lib.models.bootloader import Bootloader
+from archinstall.lib.models.device import DiskLayoutType, EncryptionType
+from archinstall.lib.models.locale import LocaleConfiguration
+from archinstall.lib.models.mirrors import MirrorConfiguration
+from archinstall.lib.models.network import NetworkConfiguration, NicType
+from archinstall.lib.models.profile import ProfileConfiguration
+from archinstall.lib.models.users import Password, User
+from archinstall.lib.output import debug, error, info
+from archinstall.lib.profile.profiles_handler import profile_handler
+from archinstall.lib.translationhandler import translation_handler
+from archinstall.tui.curses_menu import Tui
+
+
 def perform_installation(mountpoint: Path) -> None:
     """
     Perf orms the installation steps on a block device.
@@ -216,25 +141,140 @@ def perform_installation(mountpoint: Path) -> None:
     """
     info("Starting installation...")
 
-    config = arch_config_handler.config
-
+    config = ArchConfig(
+        version=version("archinstall"),
+        script=None,
+        app_config=ApplicationConfiguration(
+            bluetooth_config=BluetoothConfiguration(enabled=True),
+            audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
+        ),
+        auth_config=AuthenticationConfiguration(
+            root_enc_password=None,
+            users=[
+                User(
+                    username="nick",
+                    password=Password(plaintext="test"),
+                    sudo=True,
+                    groups=["wheel"],
+                ),
+            ],
+            u2f_config=None,
+        ),
+        locale_config=LocaleConfiguration(
+            kb_layout="us",
+            sys_lang="en_US.UTF-8",
+            sys_enc="UTF-8",
+        ),
+        profile_config=ProfileConfiguration(
+            profile=profile_handler.parse_profile_config(
+                {
+                    "custom_settings": {
+                        "Niri": {
+                            "seat_access": "polkit",
+                        },
+                    },
+                    "details": ["Niri"],
+                    "main": "Desktop",
+                }
+            ),
+            gfx_driver=GfxDriver.AllOpenSource,
+            greeter=GreeterType.Ly,
+        ),
+        mirror_config=MirrorConfiguration(
+            mirror_regions=[],
+            custom_servers=[],
+            optional_repositories=[],
+            custom_repositories=[],
+        ),
+        network_config=NetworkConfiguration(
+            type=NicType.NM,
+        ),
+        bootloader=Bootloader.Systemd,
+        uki=False,
+        hostname="archlinux",
+        kernels=["linux"],
+        ntp=False,
+        packages=["git", "rsync", "reflector"],
+        parallel_downloads=0,
+        swap=True,
+        timezone="US/Eastern",
+        services=[],
+        custom_commands=[],
+    )
     if not config.disk_config:
         error("No disk configuration provided")
         return
 
+    app_config = ApplicationConfiguration(
+        bluetooth_config=BluetoothConfiguration(enabled=True),
+        audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
+    )
+    locale_config = LocaleConfiguration(
+        kb_layout="us",
+        sys_lang="en_US.UTF-8",
+        sys_enc="UTF-8",
+    )
+    profile_config = ProfileConfiguration(
+        profile=profile_handler.parse_profile_config(
+            {
+                "custom_settings": {
+                    "Niri": {
+                        "seat_access": "polkit",
+                    },
+                },
+                "details": ["Niri"],
+                "main": "Desktop",
+            }
+        ),
+        gfx_driver=GfxDriver.AllOpenSource,
+        greeter=GreeterType.Ly,
+    )
+    auth_config = AuthenticationConfiguration(
+        root_enc_password=None,
+        users=[
+            User(
+                username="nick",
+                password=Password(plaintext="test"),
+                sudo=True,
+                groups=["wheel"],
+            ),
+        ],
+        u2f_config=None,
+    )
+    mirror_config = MirrorConfiguration(
+        mirror_regions=[],
+        custom_servers=[],
+        optional_repositories=[],
+        custom_repositories=[],
+    )
+    network_config = NetworkConfiguration(
+        type=NicType.NM,
+    )
     disk_config = config.disk_config
     run_mkinitcpio = not config.uki
     locale_config = config.locale_config
     optional_repositories = (
         config.mirror_config.optional_repositories if config.mirror_config else []
     )
+    bootloader = Bootloader.Systemd
+    uki = False
+    hostname = "archlinux"
+    kernels = ["linux"]
+    ntp = False
+    packages = ["git", "rsync", "reflector"]
+    parallel_downloads = 0
+    swap = True
+    timezone = "US/Eastern"
+    services = []
+    custom_commands = []
     mountpoint = disk_config.mountpoint if disk_config.mountpoint else mountpoint
 
     with Installer(
         mountpoint,
         disk_config,
-        kernels=config.kernels,
+        kernels=kernels,
     ) as installation:
+        print(f"{config}")
         # Mount all the drives to the desired mountpoint
         if disk_config.config_type != DiskLayoutType.Pre_mount:
             installation.mount_ordered_layout()
@@ -250,27 +290,20 @@ def perform_installation(mountpoint: Path) -> None:
                 # generate encryption key files for the mounted luks devices
                 installation.generate_key_files()
 
-        if mirror_config := config.mirror_config:
-            installation.set_mirrors(mirror_config, on_target=False)
+        installation.set_mirrors(mirror_config, on_target=False)
 
         installation.minimal_installation(
             optional_repositories=optional_repositories,
             mkinitcpio=run_mkinitcpio,
-            hostname=arch_config_handler.config.hostname,
+            hostname=hostname,
             locale_config=locale_config,
         )
 
-        if mirror_config := config.mirror_config:
-            installation.set_mirrors(mirror_config, on_target=True)
+        installation.set_mirrors(mirror_config, on_target=True)
 
-        if config.swap:
-            installation.setup_swap("zram")
+        installation.setup_swap("zram")
 
-        if config.bootloader and config.bootloader != Bootloader.NO_BOOTLOADER:
-            if config.bootloader == Bootloader.Grub and SysInfo.has_uefi():
-                installation.add_additional_packages("grub")
-
-            installation.add_bootloader(config.bootloader, config.uki)
+        installation.add_bootloader(bootloader, uki)
 
         # If user selected to copy the current ISO network configuration
         # Perform a copy of the config
@@ -292,20 +325,14 @@ def perform_installation(mountpoint: Path) -> None:
         if app_config := config.app_config:
             application_handler.install_applications(installation, app_config)
 
-        if profile_config := config.profile_config:
-            profile_handler.install_profile_config(installation, profile_config)
+        profile_handler.install_profile_config(installation, profile_config)
 
-        if config.packages and config.packages[0] != "":
-            installation.add_additional_packages(config.packages)
+        installation.add_additional_packages(packages)
 
-        if timezone := config.timezone:
-            installation.set_timezone(timezone)
+        installation.set_timezone(timezone)
 
-        if config.ntp:
+        if ntp:
             installation.activate_time_synchronization()
-
-        if accessibility_tools_in_use():
-            installation.enable_espeakup()
 
         if config.auth_config and config.auth_config.root_enc_password:
             root_user = User("root", config.auth_config.root_enc_password, False)
