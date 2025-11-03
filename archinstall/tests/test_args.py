@@ -240,7 +240,7 @@ def test_config_file_parsing(
         packages=["firefox"],
         parallel_downloads=66,
         swap=False,
-        timezone="US/Eastern",
+        timezone="UTC",
         services=["service_1", "service_2"],
         custom_commands=["echo 'Hello, World!'"],
     )
