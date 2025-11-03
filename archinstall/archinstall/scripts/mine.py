@@ -25,6 +25,7 @@ from archinstall.lib.models.device import DiskLayoutType, EncryptionType
 from archinstall.lib.models.locale import LocaleConfiguration
 from archinstall.lib.models.mirrors import MirrorConfiguration
 from archinstall.lib.models.network import NetworkConfiguration, NicType
+from archinstall.lib.models.packages import Repository
 from archinstall.lib.models.profile import ProfileConfiguration
 from archinstall.lib.models.users import Password, User
 from archinstall.lib.output import debug, error, info
@@ -172,17 +173,17 @@ def _minimal() -> None:
                         "seat_access": "polkit",
                     },
                 },
-                "details": ["Niri"],
+                "details": ["Hyprland"],
                 "main": "Desktop",
             }
         ),
-        gfx_driver=GfxDriver.AllOpenSource,
+        gfx_driver=GfxDriver.AmdOpenSource,
         greeter=GreeterType.Ly,
     )
     mirror_config = MirrorConfiguration(
         mirror_regions=[],
         custom_servers=[],
-        optional_repositories=[],
+        optional_repositories=[Repository.Multilib],
         custom_repositories=[],
     )
     network_config = NetworkConfiguration(
@@ -212,13 +213,13 @@ def _minimal() -> None:
                     "rfkill",
                     "log",
                     "games",
-                    "gamemode",
+                    # "gamemode",
                 ],
             ),
         ],
         u2f_config=None,
     )
-    hostname = "archlinux"
+    hostname = "yulia"
     kernels = ["linux"]
     ntp = False
     packages = [
