@@ -20,115 +20,15 @@ from archinstall.lib.interactions.general_conf import (
 )
 from archinstall.lib.models import Bootloader
 from archinstall.lib.models.device import (
+    DiskLayoutType,
     EncryptionType,
 )
-from archinstall.lib.models.network import NicType, NetworkConfiguration
 from archinstall.lib.models.users import User
 from archinstall.lib.output import debug, error, info
 from archinstall.lib.packages.packages import check_package_upgrade
 from archinstall.lib.profile.profiles_handler import profile_handler
+from archinstall.lib.translationhandler import tr
 from archinstall.tui import Tui
-
-assert arch_config == ArchConfig(
-    version=version("archinstall"),
-    script="test_script",
-    app_config=ApplicationConfiguration(
-        bluetooth_config=BluetoothConfiguration(enabled=True),
-        audio_config=AudioConfiguration(audio=Audio.PIPEWIRE),
-    ),
-    auth_config=AuthenticationConfiguration(
-        root_enc_password=Password(enc_password="password_hash"),
-        users=[
-            User(
-                username="user_name",
-                password=Password(enc_password="password_hash"),
-                sudo=True,
-                groups=["wheel"],
-            ),
-        ],
-        u2f_config=U2FLoginConfiguration(
-            u2f_login_method=U2FLoginMethod.Passwordless,
-            passwordless_sudo=True,
-        ),
-    ),
-    locale_config=LocaleConfiguration(
-        kb_layout="us",
-        sys_lang="en_US",
-        sys_enc="UTF-8",
-    ),
-    archinstall_language=translation_handler.get_language_by_abbr("en"),
-    disk_config=DiskLayoutConfiguration(
-        config_type=DiskLayoutType.Default,
-        device_modifications=[],
-        lvm_config=None,
-        mountpoint=None,
-    ),
-    profile_config=ProfileConfiguration(
-        profile=profile_handler.parse_profile_config(
-            {
-                "custom_settings": {
-                    "Hyprland": {
-                        "seat_access": "polkit",
-                    },
-                    "Sway": {
-                        "seat_access": "seatd",
-                    },
-                },
-                "details": [
-                    "Sway",
-                    "Hyprland",
-                ],
-                "main": "Desktop",
-            }
-        ),
-        gfx_driver=GfxDriver.AllOpenSource,
-        greeter=GreeterType.Lightdm,
-    ),
-    mirror_config=MirrorConfiguration(
-        mirror_regions=[
-            MirrorRegion(
-                name="Australia",
-                urls=["http://archlinux.mirror.digitalpacific.com.au/$repo/os/$arch"],
-            ),
-        ],
-        custom_servers=[CustomServer("https://mymirror.com/$repo/os/$arch")],
-        optional_repositories=[Repository.Testing],
-        custom_repositories=[
-            CustomRepository(
-                name="myrepo",
-                url="https://myrepo.com/$repo/os/$arch",
-                sign_check=SignCheck.Required,
-                sign_option=SignOption.TrustAll,
-            ),
-        ],
-    ),
-    network_config=NetworkConfiguration(
-        type=NicType.MANUAL,
-        nics=[
-            Nic(
-                iface="eno1",
-                ip="192.168.1.15/24",
-                dhcp=True,
-                gateway="192.168.1.1",
-                dns=[
-                    "192.168.1.1",
-                    "9.9.9.9",
-                ],
-            ),
-        ],
-    ),
-    bootloader=Bootloader.Systemd,
-    uki=False,
-    hostname="archy",
-    kernels=["linux-zen"],
-    ntp=True,
-    packages=["firefox"],
-    parallel_downloads=66,
-    swap=False,
-    timezone="UTC",
-    services=["service_1", "service_2"],
-    custom_commands=["echo 'Hello, World!'"],
-)
 
 
 def ask_user_questions() -> None:
@@ -142,7 +42,7 @@ def ask_user_questions() -> None:
 
     upgrade = check_package_upgrade("archinstall")
     if upgrade:
-        text = "You Da Man" + f": {upgrade}"
+        text = tr("New version available") + f": {upgrade}"
         title_text = f"  ({text})"
 
     with Tui():
@@ -156,7 +56,7 @@ def ask_user_questions() -> None:
 
 def perform_installation(mountpoint: Path) -> None:
     """
-    Perf orms the installation steps on a block device.
+    Performs the installation steps on a block device.
     Only requirement is that the block devices are
     formatted and setup prior to entering this function.
     """
@@ -182,19 +82,19 @@ def perform_installation(mountpoint: Path) -> None:
         kernels=config.kernels,
     ) as installation:
         # Mount all the drives to the desired mountpoint
-        # if disk_config.config_type != DiskLayoutType.Pre_mount:
-        installation.mount_ordered_layout()
+        if disk_config.config_type != DiskLayoutType.Pre_mount:
+            installation.mount_ordered_layout()
 
         installation.sanity_check()
 
-        # if disk_config.config_type != DiskLayoutType.Pre_mount:
-        if (
-            disk_config.disk_encryption
-            and disk_config.disk_encryption.encryption_type
-            != EncryptionType.NoEncryption
-        ):
-            # generate encryption key files for the mounted luks devices
-            installation.generate_key_files()
+        if disk_config.config_type != DiskLayoutType.Pre_mount:
+            if (
+                disk_config.disk_encryption
+                and disk_config.disk_encryption.encryption_type
+                != EncryptionType.NoEncryption
+            ):
+                # generate encryption key files for the mounted luks devices
+                installation.generate_key_files()
 
         if mirror_config := config.mirror_config:
             installation.set_mirrors(mirror_config, on_target=False)
@@ -225,7 +125,7 @@ def perform_installation(mountpoint: Path) -> None:
         if network_config:
             network_config.install_network_config(
                 installation,
-                NetworkConfiguration(NicType.NM),
+                config.profile_config,
             )
 
         if config.auth_config:
