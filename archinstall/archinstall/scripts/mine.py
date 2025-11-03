@@ -1,6 +1,8 @@
 from pathlib import Path
 
+
 from archinstall.default_profiles.minimal import MinimalProfile
+from archinstall.lib.disk.device_handler import device_handler
 from archinstall.default_profiles.profile import GreeterType
 from archinstall.lib.applications.application_handler import application_handler
 from archinstall.lib.args import arch_config_handler
@@ -19,9 +21,18 @@ from archinstall.lib.models.application import (
 from archinstall.lib.models.authentication import AuthenticationConfiguration
 from archinstall.lib.models.bootloader import Bootloader
 from archinstall.lib.models.device import (
+    DeviceModification,
+    DiskEncryption,
     DiskLayoutConfiguration,
     DiskLayoutType,
     EncryptionType,
+    FilesystemType,
+    ModificationStatus,
+    PartitionFlag,
+    PartitionModification,
+    PartitionType,
+    Size,
+    Unit,
 )
 from archinstall.lib.models.locale import LocaleConfiguration
 from archinstall.lib.models.mirrors import MirrorConfiguration, MirrorRegion
@@ -34,6 +45,9 @@ from archinstall.lib.profile.profiles_handler import profile_handler
 from archinstall.lib.translationhandler import translation_handler
 from archinstall.tui.curses_menu import Tui
 
+##################################################
+# ---------------- Base Config -------------------
+##################################################
 base_packages = ["base", "base-devel", "linux", "linux-firmware"]
 my_version = "archinstall"
 # app_config
@@ -124,7 +138,6 @@ my_country_urls = [
     "https://mirrors.sonic.net/archlinux/$repo/os/$arch",
     "https://mirror.umd.edu/archlinux/$repo/os/$arch",
 ]
-custom_servers = []
 my_optional_repositories = [Repository.Multilib]
 my_network_config_type = NicType.NM
 my_bootloader = Bootloader.Systemd
@@ -134,29 +147,15 @@ my_kernels = ["linux"]
 my_ntp = False
 my_packages = [
     "git",
+    "iwd",
+    "networkmanager",
     "rsync",
     "reflector",
-    "accountsservice",
-    "fuzzel",
-    "gnome-keyring",
-    "hypridle",
-    "hyprland",
-    "hyprlock",
-    "hyprpicker",
-    "hyprpolkitagent",
-    "hyprshot",
-    "kvantum",
-    "libgnome-keyring",
-    "mako",
-    "nwg-clipman",
-    "satty",
-    "swayosd",
-    "swww",
-    "uwsm",
-    "waybar",
-    "wl-clipboard",
-    "xdg-desktop-portal-gtk",
-    "xdg-desktop-portal-hyprland",
+    "pacman-contrib",
+    "reflector",
+    "rsync",
+    "zsh-completions",
+    "xdg-user-dirs",
 ]
 my_parallel_downloads = 10
 my_swap = True
@@ -165,23 +164,264 @@ my_services = []
 my_cc = []
 
 
+##################################################
+# -------------- Extended Config -----------------
+##################################################
+my_shell = "zsh"
+packages_second = [
+    "accountsservice",
+    "acpi",
+    "acpid",
+    "alacritty",
+    "alsa-firmware",
+    "alsa-utils",
+    "ananicy-cpp",
+    "aria2",
+    "avahi",
+    "baobab",
+    "bash-completion",
+    "bat-extras",
+    "bc",
+    "blueman",
+    "bluez-tools",
+    "bolt",
+    "brightnessctl",
+    "btop",
+    "capitaine-cursors",
+    "ccache",
+    "cdrtools",
+    "cheese",
+    "clang",
+    "csvkit",
+    "dbeaver",
+    "diffuse",
+    "dosfstools",
+    "dxvk-mingw-git",
+    "eslint",
+    "etckeeper",
+    "exfatprogs",
+    "expac",
+    "expect",
+    "eza",
+    "fd",
+    "fdupes",
+    "firejail",
+    "firewalld",
+    "fuzzel",
+    "fzf",
+    "gamemode",
+    "gimp",
+    "git-delta",
+    "github-cli",
+    "gnome-keyring",
+    "gnucash",
+    "gnuchess",
+    "gst-plugin-pipewire",
+    "gthumb",
+    "handbrake",
+    "haruna",
+    "hdparm",
+    "hunspell-en_us",
+    "hwdetect",
+    "hyphen-en",
+    "hypridle",
+    "hyprland",
+    "hyprlock",
+    "hyprpicker",
+    "hyprpolkitagent",
+    "hyprshot",
+    "jre-openjdk",
+    "kdeconnect",
+    "keepassxc",
+    "ktimer",
+    "kvantum",
+    "lazygit",
+    "ldns",
+    "less",
+    "lib32-gamemode",
+    "lib32-mangohud",
+    "libgnome-keyring",
+    "localsend",
+    "logiops",
+    "logrotate",
+    "luarocks",
+    "lua-sec",
+    "lutris",
+    "ly",
+    "mako",
+    "man-db",
+    "mangohud",
+    "man-pages",
+    "mariadb",
+    "mgba-qt",
+    "miller",
+    "navi",
+    "nemo-fileroller",
+    "neovim-lspconfig",
+    "network-manager-applet",
+    "nss-mdns",
+    "ntfs-3g",
+    "ntp",
+    "nwg-clipman",
+    "ocrmypdf",
+    "okular",
+    "openresolv",
+    "otf-firamono-nerd",
+    "parallel",
+    "pavucontrol",
+    "pipewire-alsa",
+    "pipewire-jack",
+    "pipewire-pulse",
+    "pkgdiff",
+    "pkgfile",
+    "playerctl",
+    "powertop",
+    "proton-ge-custom-bin",
+    "protonmail-bridge",
+    "pv",
+    "pychess",
+    "qalculate-qt",
+    "qbittorrent",
+    "qt5-tools",
+    "qt6-multimedia-ffmpeg",
+    "rebuild-detector",
+    "rocm-smi-lib",
+    "rpcs3-git",
+    "rust-analyzer",
+    "satty",
+    "scrcpy",
+    "sd",
+    "shellcheck",
+    "shfmt",
+    "smartmontools",
+    "sof-firmware",
+    "sshfs",
+    "starship",
+    "steam",
+    "swayosd",
+    "swww",
+    "tesseract-data-eng",
+    "tlp",
+    "tmux",
+    "trash-cli",
+    "tree-sitter-bash",
+    "tree-sitter-python",
+    "ttf-caladea",
+    "ttf-cascadia-mono-nerd",
+    "ttf-jetbrains-mono-nerd",
+    "udisks2-btrfs",
+    "umu-launcher",
+    "unbound",
+    "unrar",
+    "uv",
+    "uwsm",
+    "vkd3d",
+    "watchexec",
+    "waybar",
+    "wget",
+    "wine-mono",
+    "wine-staging",
+    "winetricks",
+    "wireplumber",
+    "wl-clipboard",
+    "xdg-desktop-portal-gtk",
+    "xdg-desktop-portal-hyprland",
+    "yq",
+    "yt-dlp",
+    "zoxide",
+    "zsh-autocomplete",
+    "zsh-syntax-highlighting",
+]
+groups_second = [
+    "wheel",
+    "power",
+    "input",
+    "audio",
+    "video",
+    "network",
+    "storage",
+    "rfkill",
+    "log",
+    "games",
+    # "gamemode",
+]
+
 # For Profiile Configuration
-#
-# profile_config = ProfileConfiguration(
-#     profile=profile_handler.parse_profile_config(
-#         {
-#             "custom_settings": {
-#                 "Niri": {
-#                     "seat_access": "polkit",
-#                 },
+# profile = profile_handler.parse_profile_config(
+#     {
+#         "custom_settings": {
+#             "Niri": {
+#                 "seat_access": "polkit",
 #             },
-#             "details": ["Hyprland"],
-#             "main": "Desktop",
-#         }
-#     ),
-#     gfx_driver=GfxDriver.AmdOpenSource,
-#     greeter=GreeterType.Ly,
+#         },
+#         "details": ["Hyprland"],
+#         "main": "Desktop",
+#     }
 # )
+
+
+##################################################
+# -------------- Assemble Config -----------------
+##################################################
+my_version = "archinstall"
+my_app_config = ApplicationConfiguration(
+    bluetooth_config=BluetoothConfiguration(enabled=bluetooth_enable),
+    audio_config=AudioConfiguration(audio=audio_config),
+)
+my_auth_config = AuthenticationConfiguration(
+    root_enc_password=Password(plaintext=my_root_password),
+    users=[
+        User(
+            username=my_username,
+            password=Password(plaintext=my_password),
+            sudo=my_sudo,
+            groups=my_groups,
+        ),
+    ],
+)
+my_locale_config = LocaleConfiguration(
+    kb_layout=my_kb_layout,
+    sys_lang=my_sys_lang,
+    sys_enc=my_sys_enc,
+)
+archinstall_language = translation_handler.get_language_by_abbr(arch_inst_lang)
+disk_config = DiskLayoutConfiguration(
+    config_type=DiskLayoutType.Manual,
+    device_modifications=[],
+    lvm_config=None,
+    mountpoint=None,
+)
+my_profile_config = ProfileConfiguration(
+    profile=my_profile,
+    gfx_driver=my_gfx_driver,
+    greeter=my_greeter,
+)
+my_mirror_config = MirrorConfiguration(
+    mirror_regions=[
+        MirrorRegion(
+            name=my_country_name,
+            urls=my_country_urls,
+        ),
+    ],
+    custom_servers=[],
+    optional_repositories=my_optional_repositories,
+)
+network_config = NetworkConfiguration(
+    type=my_network_config_type,
+)
+bootloader = my_bootloader
+uki = my_uki
+hostname = my_hostname
+kernels = my_kernels
+ntp = my_ntp
+packages = my_packages
+parallel_downloads = my_parallel_downloads
+swap = my_swap
+timezone = my_timezone
+services = my_services
+custom_commands = my_cc
+
+
 def perform_installation(mountpoint: Path) -> None:
     """
     Performs the installation steps on a block device.
@@ -189,7 +429,79 @@ def perform_installation(mountpoint: Path) -> None:
     formatted and setup prior to entering this function.
     """
     info("Starting installation...")
+    # we're creating a new ext4 filesystem installation
+    fs_type = FilesystemType("ext4")
+    device_path = Path("/dev/vda")
 
+    # get the physical disk device
+    device = device_handler.get_device(device_path)
+
+    if not device:
+        raise ValueError("No device found for given path")
+
+    # create a new modification for the specific device
+    device_modification = DeviceModification(device, wipe=True)
+
+    # create a new boot partition
+    boot_partition = PartitionModification(
+        status=ModificationStatus.Create,
+        type=PartitionType.Primary,
+        start=Size(1, Unit.MiB, device.device_info.sector_size),
+        length=Size(512, Unit.MiB, device.device_info.sector_size),
+        mountpoint=Path("/boot"),
+        fs_type=FilesystemType.Fat32,
+        flags=[PartitionFlag.BOOT],
+    )
+    device_modification.add_partition(boot_partition)
+
+    # create a root partition
+    root_partition = PartitionModification(
+        status=ModificationStatus.Create,
+        type=PartitionType.Primary,
+        start=Size(513, Unit.MiB, device.device_info.sector_size),
+        length=Size(20, Unit.GiB, device.device_info.sector_size),
+        mountpoint=None,
+        fs_type=fs_type,
+        mount_options=[],
+    )
+    device_modification.add_partition(root_partition)
+
+    start_home = root_partition.length
+    length_home = device.device_info.total_size - start_home
+
+    # create a new home partition
+    home_partition = PartitionModification(
+        status=ModificationStatus.Create,
+        type=PartitionType.Primary,
+        start=start_home,
+        length=length_home,
+        mountpoint=Path("/home"),
+        fs_type=fs_type,
+        mount_options=[],
+    )
+    device_modification.add_partition(home_partition)
+
+    disk_config = DiskLayoutConfiguration(
+        config_type=DiskLayoutType.Default,
+        device_modifications=[device_modification],
+    )
+
+    # disk encryption configuration (Optional)
+    disk_encryption = DiskEncryption(
+        encryption_password=Password(plaintext="enc_password"),
+        encryption_type=EncryptionType.Luks,
+        partitions=[home_partition],
+        hsm_device=None,
+    )
+
+    disk_config.disk_encryption = disk_encryption
+
+    # initiate file handler with the disk config and the optional disk encryption config
+    fs_handler = FilesystemHandler(disk_config)
+
+    # perform all file operations
+    # WARNING: this will potentially format the filesystem and delete all data
+    fs_handler.perform_filesystem_operations(show_countdown=False)
     config = arch_config_handler.config
 
     if not config.disk_config:
@@ -304,69 +616,17 @@ def perform_installation(mountpoint: Path) -> None:
 
         installation.genfstab()
 
+        installation.user_set_shell(my_username, my_shell)
+
+        installation.add_additional_packages(packages_second)
+
 
 def _minimal() -> None:
-    # ------------- Assemble Config -----------------
-    my_version = "archinstall"
-    my_app_config = ApplicationConfiguration(
-        bluetooth_config=BluetoothConfiguration(enabled=bluetooth_enable),
-        audio_config=AudioConfiguration(audio=audio_config),
-    )
-    my_auth_config = AuthenticationConfiguration(
-        root_enc_password=Password(plaintext="my_root_password"),
-        users=[
-            User(
-                username=my_username,
-                password=Password(plaintext="my_password"),
-                sudo=my_sudo,
-                groups=my_groups,
-            ),
-        ],
-    )
-    my_locale_config = LocaleConfiguration(
-        kb_layout=my_kb_layout,
-        sys_lang=my_sys_lang,
-        sys_enc=my_sys_enc,
-    )
-    archinstall_language = translation_handler.get_language_by_abbr(arch_inst_lang)
-    disk_config = DiskLayoutConfiguration(
-        config_type=DiskLayoutType.Default,
-        device_modifications=[],
-        lvm_config=None,
-        mountpoint=None,
-    )
-    my_profile_config = ProfileConfiguration(
-        profile=my_profile,
-        gfx_driver=my_gfx_driver,
-        greeter=my_greeter,
-    )
-    my_mirror_config = MirrorConfiguration(
-        mirror_regions=[
-            MirrorRegion(
-                name=my_country_name,
-                urls=my_country_urls,
-            ),
-        ],
-        custom_servers=[],
-        optional_repositories=my_optional_repositories,
-    )
-    network_config = NetworkConfiguration(
-        type=my_network_config_type,
-    )
-    bootloader = my_bootloader
-    uki = my_uki
-    hostname = my_hostname
-    kernels = my_kernels
-    ntp = my_ntp
-    packages = my_packages
-    parallel_downloads = my_parallel_downloads
-    swap = my_swap
-    timezone = my_timezone
-    services = my_services
-    custom_commands = my_cc
 
     # ------------- Write Config -----------------
     arch_config_handler.config.version = my_version
+    arch_config_handler.config.app_config = my_app_config
+    arch_config_handler.config.auth_config = my_auth_config
     arch_config_handler.config.locale_config = my_locale_config
     arch_config_handler.config.archinstall_language = archinstall_language
     arch_config_handler.config.profile_config = my_profile_config
@@ -374,8 +634,6 @@ def _minimal() -> None:
     arch_config_handler.config.network_config = network_config
     arch_config_handler.config.bootloader = bootloader
     arch_config_handler.config.uki = uki
-    arch_config_handler.config.app_config = my_app_config
-    arch_config_handler.config.auth_config = my_auth_config
     arch_config_handler.config.hostname = hostname
     arch_config_handler.config.kernels = kernels
     arch_config_handler.config.ntp = ntp
