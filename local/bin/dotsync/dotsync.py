@@ -1,129 +1,132 @@
 #!/usr/bin/env python3
 """
 dotsync — Deploy dotfiles from Polka → ~/
-All files/folders are always deployed to HOME with a leading dot.
-Safely handles symlinks and real files, skips directories in SKIP.
+All files/folders are deployed to $HOME with a leading dot.
 """
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 import fnmatch
-from concurrent.futures import ThreadPoolExecutor
-
-# === CONFIG ===
-DOTDIRS = [
-    Path.home() / "Polka",
-    Path.home() / "Polka/secretdots",
-]
-DOTDIRS = [d for d in DOTDIRS if d.is_dir()]
-
-# Names of directories/files to skip
-SKIP = {".git", ".gitignore", "etc", "secretdots"}
-
-print = lambda *a, **k: __builtins__.print("[Polka]", *a, **k)
 
 
-# === CORE FUNCTIONS ===
-def targets(src: Path) -> set[Path]:
-    """Return relative paths of files to deploy, skipping SKIP."""
-    res = set()
-    for f in src.rglob("*"):
-        if not f.is_file():
-            continue
-        rel = f.relative_to(src)
-        if any(fnmatch.fnmatch(p, pat) for p in rel.parts for pat in SKIP):
-            continue
-        # prepend dot to the first part
-        rel = Path(f".{rel.parts[0]}", *rel.parts[1:])
-        res.add(rel)
-    return res
+# ────────────────────── CONFIG ──────────────────────
+DOTDIR_NAME = "Polka"
+SKIP = {"*.git*", ".DS_Store", "__pycache__"}
+SYMLINK_DIRS = {
+    "config/systemd/user",
+    "config/nvim",
+    "local/bin",
+}
+# ───────────────────────────────────────────────────
+
+HOME = Path.home()
+DOTDIR = HOME / DOTDIR_NAME
 
 
-def check_overlap(sources):
-    """Ensure multiple sources do not deploy to same destination."""
-    cache = {}
-    for src in sources:
-        if not src.is_dir():
-            continue
-        cache[src] = {Path.home() / p for p in targets(src)}
-    seen = list(cache.items())
-    for i, (s1, t1) in enumerate(seen):
-        for s2, t2 in seen[i + 1:]:
-            overlap = t1 & t2
-            if overlap:
-                raise ValueError(f"Overlap: {s1} vs {s2}: {', '.join(map(str, overlap))}")
-    return cache
+def log(msg: str) -> None:
+    print("[Polka]", msg)
 
 
-def rm(p: Path):
-    """Safely remove a path."""
-    try:
-        if p.is_symlink() or p.is_file():
-            print(f"Remove: {p}")
-            p.unlink(missing_ok=True)
-        else:
-            print(f"Skipping directory: {p}")
-    except Exception as e:
-        print(f"Failed to remove {p}: {e}")
+def safe_rm(path: Path) -> None:
+    """Remove file, symlink, or directory safely."""
+    if not path.exists():
+        return
+    if path.is_symlink() or path.is_file():
+        log(f"Remove: {path}")
+        path.unlink(missing_ok=True)
+    elif path.is_dir():
+        log(f"Remove tree: {path}")
+        shutil.rmtree(path)
 
 
-def link(src: Path, dst: Path):
-    """Create a relative symlink from src → dst."""
+def make_link(src: Path, dst: Path) -> None:
+    """Create relative symlink src → dst."""
     dst.parent.mkdir(parents=True, exist_ok=True)
     rel = os.path.relpath(src, dst.parent)
-    print(f"Link: {dst} → {rel}")
+    if dst.is_symlink() and dst.readlink() == rel:
+        log(f"Already linked: {dst} → {rel}")
+        return
+    safe_rm(dst)
+    log(f"Link: {dst} → {rel}")
     dst.symlink_to(rel)
 
 
-def deploy_dir(src: Path):
-    """Deploy all files from src → HOME with threads."""
-    def job(f: Path):
-        if not f.is_file():
-            return
-        rel = f.relative_to(src)
-        if any(fnmatch.fnmatch(p, pat) for p in rel.parts for pat in SKIP):
-            return
-        dst = Path.home() / Path(f".{rel.parts[0]}", *rel.parts[1:])
-        rm(dst)
-        link(f, dst)
-
-    with ThreadPoolExecutor() as pool:
-        pool.map(job, src.rglob("*"))
+def should_skip(rel: Path) -> bool:
+    """Skip if any part of path matches SKIP patterns."""
+    return any(fnmatch.fnmatch(part, pat) for part in rel.parts for pat in SKIP)
 
 
-def reload_hypr():
-    """Reload Hyprland if available."""
+def is_in_symlink_dir(rel: Path) -> bool:
+    """True if rel is inside any SYMLINK_DIRS."""
+    return any(rel.is_relative_to(Path(d)) for d in SYMLINK_DIRS)
+
+
+# ────────────────────── PATH HELPERS ──────────────────────
+def dst_from_rel(rel: Path) -> Path:
+    """Convert relative path (e.g. bin/myscript) → ~/.bin/myscript"""
+    return HOME.joinpath("." + rel.parts[0], *rel.parts[1:])
+
+
+def dst_from_name(name: str) -> Path:
+    """Convert SYMLINK_DIRS entry (e.g. local/bin) → ~/.local/bin"""
+    parts = name.split("/")
+    return HOME.joinpath("." + parts[0], *parts[1:])
+
+
+# ───────────────────────────────────────────────────────────
+
+
+def reload_hypr() -> None:
     try:
-        print("Reload Hyprland...")
-        subprocess.run(["hyprctl", "reload"], check=True)
+        subprocess.run(
+            ["hyprctl", "reload"],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        log("Hyprland reloaded")
     except FileNotFoundError:
-        print("hyprctl not found — skipping.")
-    except Exception as e:
-        print(f"Reload failed: {e}")
+        log("hyprctl not found – skipping reload")
+    except subprocess.CalledProcessError as e:
+        log(f"Hyprland reload failed: {e}")
 
 
-# === MAIN ===
-def main():
-    print("Starting Polka...")
-
-    if not DOTDIRS:
-        print("Nothing to deploy.")
+def polka() -> None:
+    if not DOTDIR.is_dir():
+        log(f"Error: {DOTDIR} not found or not a directory!")
         return
 
-    try:
-        check_overlap(DOTDIRS)
-    except ValueError as e:
-        print(f"Error: {e}")
-        return
+    # ── 1. Deploy individual files (skip SYMLINK_DIRS) ──
+    for src_path in DOTDIR.rglob("*"):
+        if not src_path.is_file():
+            continue
 
-    for src_dir in DOTDIRS:
-        print(f"Deploy dotfiles: {src_dir} → {Path.home()}")
-        deploy_dir(src_dir)
+        rel = src_path.relative_to(DOTDIR)
+        if should_skip(rel):
+            continue
+        if is_in_symlink_dir(rel):
+            continue
+
+        dst = dst_from_rel(rel)
+        safe_rm(dst)
+        make_link(src_path, dst)
+
+    # ── 2. Deploy whole directories as symlinks ──
+    for name in SYMLINK_DIRS:
+        src = DOTDIR / name
+        if not src.exists():
+            log(f"Skip missing dir: {src}")
+            continue
+
+        dst = dst_from_name(name)
+        safe_rm(dst)
+        make_link(src, dst)
 
     reload_hypr()
-    print("Done!")
+    log("Deployment complete!")
 
 
 if __name__ == "__main__":
-    main()
+    polka()

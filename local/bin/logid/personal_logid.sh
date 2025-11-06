@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 
+LOGID_CACHE_D="$HOME/.cache"
+LOG="$LOGID_CACHE_D/logid_check.log"
+
 DEVICE="MX Master 3S"
-LOG="$HOME/.cache/logid_check.log"
 ATTEMPTS=5
+START_DELAY=3
 LOGID_DELAY=3
 
-LOGID_PID=0
 restart_logid() {
-  sudo logid restart >"$LOG" 2>&1 &
-  LOGID_PID=$!
-  echo "$LOGID_PID" >>"$LOG"
-  sleep "$LOGID_DELAY"
+    sudo logid restart >"$LOG" 2>&1 &
+    sleep "$LOGID_DELAY"
 }
 
 run_attempts() {
+  sleep "$START_DELAY"
   for i in $(seq 1 "$ATTEMPTS"); do
-    if grep -q "${DEVICE}" "${LOG}"; then
-      if ! grep -Eq "disconnected|Failed|Error|Failure" "${LOG}"; then
+	restart_logid
+    if ! rg "Failed" "${LOG}"; then
+      if pgrep -x "logid"; then
         return 0
       fi
-    else
-      restart_logid
     fi
   done
 }
 
 main() {
-  sleep $LOGID_DELAY
-  rm "${LOG}"
+  mkdir -p $LOGID_CACHE_D
   run_attempts
-  sleep $START_DELAY
-  if grep -Eq "disconnected|Failed|Error|Failure" "${LOG}"; then
-    restart_logid
-  fi
+  START_DELAY=15
+  LOGID_DELAY=10
+  restart_logid
+  run_attempts
 }
+
 main
