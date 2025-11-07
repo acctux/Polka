@@ -40,9 +40,9 @@ button:hover {
 
 /* === Icon Assignments === */
 #lock {
-  background-size: 33%;
+  background-size: 31%;
   padding: 20px 40px;
-  background-image: image(url("icons/lock.svg"));
+  background-image: image(url("icons/lock_white.png"));
 }
 
 #suspend {
@@ -52,7 +52,7 @@ button:hover {
 
 #shutdown {
   background-size: 29%;
-  background-image: image(url("icons/shutdown.svg"));
+  background-image: image(url("icons/shutdown_white.png"));
 }
 
 #reboot {

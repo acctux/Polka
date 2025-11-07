@@ -1,8 +1,10 @@
 # ~/.zshrc
-export PATH="./.venv/bin:$PATH"
-
 eval "$(starship init zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+eval "$(mcfly init zsh)"
+eval "$(direnv hook zsh)"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Ignore commands that start with spaces and duplicates.
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -21,10 +23,7 @@ setopt autocd extendedglob
 setopt correct
 setopt interactivecomments
 
-fpath+=("/usr/share/zsh-completions")
-fpath+=("/usr/share/zsh/site-functions")
-autoload -Uz compinit
-compinit
+export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
 
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -57,14 +56,8 @@ fvim() {
     fi
   done
 
-  # Open appropriately
-  if $need_root; then
-    echo "🔒 Editing system files with sudoedit..."
-    sudoedit -- "${files[@]}"
-  else
-    nvim -- "${files[@]}"
-  fi
-}
+# pkgfile "command not found" handler
+source /usr/share/doc/pkgfile/command-not-found.zsh
 
 alias ls='eza -a --icons=always'
 alias ll='eza -al --icons=always'

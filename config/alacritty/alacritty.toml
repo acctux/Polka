@@ -5,6 +5,7 @@ WINIT_X11_SCALE_FACTOR = "1"
 [window]
 dynamic_padding = true
 decorations = "full"
+opacity = 1.00
 title = "Alacritty@yulia"
 decorations_theme_variant = "Dark"
 
