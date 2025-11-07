@@ -5,7 +5,8 @@ WINIT_X11_SCALE_FACTOR = "1"
 [window]
 dynamic_padding = true
 decorations = "full"
-title = "Alacritty@yulia"
+title = "Alacritty@CachyOS"
+opacity = 0.8
 decorations_theme_variant = "Dark"
 
 [window.dimensions]
@@ -24,46 +25,46 @@ multiplier = 3
 draw_bold_text_with_bright_colors = true
 
 [colors.primary]
-background = "#101013"
-foreground = "#d3dae3"
+background = "0x2E3440"
+foreground = "0xD8DEE9"
 
 [colors.normal]
-black = "#21222c"
-red = "#ff5555"
-green = "#50fa7b"
-yellow = "#f1fa8c"
-blue = "#0072ff"
-magenta = "#ff79c6"
-cyan = "#8be9fd"
-white = "#bfbfbf"
+black = "0x3B4252"
+red = "0xBF616A"
+green = "0xA3BE8C"
+yellow = "0xEBCB8B"
+blue = "0x81A1C1"
+magenta = "0xB48EAD"
+cyan = "0x88C0D0"
+white = "0xE5E9F0"
 
 [colors.bright]
-black = "#4d4d4d"
-red = "#ff6e6e"
-green = "#10b981"
-yellow = "#ffffa5"
-blue = "#a5b4fc"
-magenta = "#ff92df"
-cyan = "#a4ffff"
-white = "#ffffff"
+black = "0x4C566A"
+red = "0xBF616A"
+green = "0xA3BE8C"
+yellow = "0xEBCB8B"
+blue = "0x81A1C1"
+magenta = "0xB48EAD"
+cyan = "0x8FBCBB"
+white = "0xECEFF4"
 
 [font]
-size = 10.5
+size = 12
 
 [font.normal]
-family = "FiraMono Nerd Font"
+family = "monospace"
 style = "Regular"
 
 [font.bold]
-family = "FiraMono Nerd Font"
+family = "monospace"
 style = "Bold"
 
 [font.italic]
-family = "FiraMono Nerd Font"
+family = "monospace"
 style = "Italic"
 
 [font.bold_italic]
-family = "FiraMono Nerd Font"
+family = "monospace"
 style = "Bold Italic"
 
 [selection]
