@@ -1,6 +1,7 @@
 # ~/.config/starship.toml
 
 format = """\
+${os.symbol}\
 ${status}\
 ${username}\
 ${hostname}\
