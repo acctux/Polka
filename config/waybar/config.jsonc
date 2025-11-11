@@ -155,7 +155,7 @@
     "on-click": "alacritty -e taskwarrior-tui",
   },
   "custom/nowplaying": {
-    "exec": "~/Polka/local/bin/next/now-playing.sh",
+    "exec": "~/Polka/local/bin/waybar/now-playing.sh",
     "format": " {text}",
     "return-type": "json",
     "interval": 8,
