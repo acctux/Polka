@@ -27,6 +27,52 @@ symlink_dirs = [
     "local/bin",
 ]
 
+pass_dots = "~/Lit/docs/base"
+symlink_items = [
+    {"src": f"{pass_dots}/task/", "dest": "~/.task"},
+    {"src": f"{pass_dots}/zsh_history", "dest": "~/.zsh_history"},
+    {
+        "src": f"{pass_dots}/fonts/calibri.ttf",
+        "dest": "~/.local/share/fonts/calibri.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/calibrib.ttf",
+        "dest": "~/.local/share/fonts/calibrib.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/calibrii.ttf",
+        "dest": "~/.local/share/fonts/calibrii.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/calibril.ttf",
+        "dest": "~/.local/share/fonts/calibril.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/calibrili.ttf",
+        "dest": "~/.local/share/fonts/calibrili.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/calibriz.ttf",
+        "dest": "~/.local/share/fonts/calibriz.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/times.ttf",
+        "dest": "~/.local/share/fonts/times.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/timesbd.ttf",
+        "dest": "~/.local/share/fonts/timesbd.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/timesbi.ttf",
+        "dest": "~/.local/share/fonts/timesbi.ttf",
+    },
+    {
+        "src": f"{pass_dots}/fonts/timesi.ttf",
+        "dest": "~/.local/share/fonts/timesi.ttf",
+    },
+]
+
 
 def log(msg: str) -> None:
     print("[Polka]", msg)
@@ -78,7 +124,7 @@ def valid_src(rel: Path, skip_patterns) -> bool:
     )
 
 
-def deploy(src: Path, dots: Path, dest: Path, skip_patterns) -> bool:
+def deploy_base(src: Path, dots: Path, dest: Path, skip_patterns) -> bool:
     rel = src.relative_to(dots)
     if valid_src(rel, skip_patterns):
         return False
@@ -110,13 +156,37 @@ def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
     return True
 
 
+def deploy_item(src: Path, dest: Path) -> bool:
+    """
+    Deploy a file or directory as a symlink from src to dest.
+    Uses relative paths for safer dotfile deployment.
+    """
+    if not src.exists():
+        log(f"Skipping missing source: {src}")
+        return False
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if dest.is_symlink() and dest.resolve(strict=False) == src.resolve():
+        return False
+    if dest.exists() or dest.is_symlink():
+        try:
+            dest.unlink()
+            log(f"Removed existing: {dest}")
+        except IsADirectoryError:
+            shutil.rmtree(dest)
+            log(f"Removed existing directory: {dest}")
+    rel_src = os.path.relpath(src, dest.parent)
+    dest.symlink_to(rel_src, target_is_directory=src.is_dir())
+    log(f"Linked: {dest} → {rel_src}")
+    return True
+
+
 def reload_hypr() -> None:
     if shutil.which("hyprctl"):
         subprocess.run(["hyprctl", "reload"], check=False)
         log("Hyprland reloaded")
 
 
-def polka(dots_name: str, dest: Path, skip_patterns: list[str]) -> None:
+def polka(dots_name: str, dest: Path, skip_patterns: list[str], symlink_items) -> None:
     dots = Path.home() / dots_name
     if not dots.is_dir():
         log(f"Error: {dots} does not exist!")
@@ -143,8 +213,16 @@ def polka(dots_name: str, dest: Path, skip_patterns: list[str]) -> None:
             skipped += 1
             continue
 
-        if deploy(src, dots, dest, skip_patterns):
+        if deploy_base(src, dots, dest, skip_patterns):
             linked += 1
+
+    for item in symlink_items:
+        src = Path(item["src"]).expanduser()
+        dest = Path(item["dest"]).expanduser()
+        if deploy_item(src, dest):
+            linked += 1
+        else:
+            skipped += 1
 
     # 3. Reload + Summary
     if shutil.which("hyprctl"):
@@ -156,4 +234,4 @@ def polka(dots_name: str, dest: Path, skip_patterns: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    polka(dots_name, dest, skip_patterns)
+    polka(dots_name, dest, skip_patterns, symlink_items)

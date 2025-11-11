@@ -16,8 +16,14 @@
     "custom/updates",
     "battery",
   ],
-  "modules-center": ["hyprland/workspaces"],
-  "modules-right": ["custom/nowplaying", "temperature", "clock"],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "custom/nowplaying",
+    "temperature",
+    "clock"
+  ],
   "hyprland/workspaces": {
     "format": "{icon}:{windows}",
     "format-window-separator": "",
@@ -45,7 +51,13 @@
     "tooltip-format-linked": "{ifname}  {bandwidthUpBits}  {bandwidthDownBits}",
     "tooltip-format-ethernet": "{ifname} 󰌘",
     "tooltip-format-disconnected": "󰌙 Disconnected",
-    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
     "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
   },
   "pulseaudio": {
@@ -62,7 +74,11 @@
     "format-icons": {
       "bluetooth": " ",
       "muted": "󰖁",
-      "default": ["󰕿", "󰖀", "󰕾"],
+      "default": [
+        "󰕿",
+        "󰖀",
+        "󰕾"
+      ],
     },
   },
   "custom/empty": {
@@ -113,13 +129,20 @@
     "format-plugged": " {capacity}%",
     "format-alt": "{icon} {time}",
     "format-full": "",
-    "format-icons": [" ", " ", " ", " ", " "],
+    "format-icons": [
+      " ",
+      " ",
+      " ",
+      " ",
+      " "
+    ],
   },
   "clock": {
     "timezone": "America/New_York",
     "tooltip-format": "{:%A, %B %d}",
     "format-alt": "{:%a, %d %b %Y}",
     "format": "{:%H:%M}",
+    "on-click-right": "gsimplecal",
     "interval": 60,
   },
   "custom/taskwarrior": {
