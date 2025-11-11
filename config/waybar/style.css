@@ -49,6 +49,7 @@ window#waybar.hidden {
 #backlight,
 #custom-tlp,
 #custom-kdeconnect,
+#custom-notification,
 #network,
 #pulseaudio {
   border-radius: 3px;
