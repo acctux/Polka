@@ -7,7 +7,7 @@
     "custom/empty",
     "tray",
     "custom/kdeconnect",
-    "custom/tlp",
+    // "custom/tlp",
     "network",
     "backlight",
     "pulseaudio",
