@@ -14,7 +14,7 @@
 
 {
     "label" : "reboot",
-    "action" : "systemctl reboot --boot-loader-entry=arch-blacklist-nvidia.conf",
+    "action" : "systemctl reboot",
     "text" : "Reboot",
     "keybind" : "r"
 }
