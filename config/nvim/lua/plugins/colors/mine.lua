@@ -1,5 +1,5 @@
 local meta = {
-  name = "my_dark",
+  name = "onedark_dark",
   background = "dark",
 }
 

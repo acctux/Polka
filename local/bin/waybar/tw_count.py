@@ -26,13 +26,15 @@ for task in data:
 tasks.sort(key=lambda x: x[1], reverse=True)
 
 count = len(tasks)
-
 # Add extra blank line between tasks
 tooltip = f"Active: {count}\n\n" + "\n\n".join(f"•{desc}" for desc, _ in tasks)
 
 output = {"text": str(count), "tooltip": tooltip}
 
-if urgent:
-    output["class"] = "critical"
+if count != 0:
+    if urgent:
+        output["class"] = "critical"
+    else:
+        output["class"] = "todo"
 
 print(json.dumps(output))

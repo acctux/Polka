@@ -1,0 +1,6 @@
+[Unit]
+Description=Reset Hyprsunset to Default Profile
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/hyprsunset-reset-default.sh

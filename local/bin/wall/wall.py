@@ -13,22 +13,28 @@ WALLPAPER_DIR = HOME / ".local/bin/wall/wallpapers"
 QUOTES_FILE = HOME / ".local/bin/wall/quotes.txt"
 FONT_PATH = Path("/usr/share/fonts/OTF/FiraMonoNerdFontMono-Medium.otf")
 CACHE_FILE = HOME / ".cache/wallpaper_with_quote.png"
-TEMP_RESIZED_FILE = HOME / ".cache/wallpaper_resized.png"  # Temporary file for resized image
+TEMP_RESIZED_FILE = (
+    HOME / ".cache/wallpaper_resized.png"
+)  # Temporary file for resized image
 
-MAX_CHARS = 300  # Maximum characters per line for text wrapping
+MAX_CHARS = 80  # Maximum characters per line for text wrapping
 TEXT_COLOR = (229, 231, 235, 179)  # Text color with 60% opacity
-SHADOW_COLOR = (16, 16, 19, 217)   # Shadow color with 80% opacity
-SHADOW_BLUR_RADIUS = 1             # Blur radius for text shadow
-VERT_MARGIN = 20                   # Vertical margin for text placement
+SHADOW_COLOR = (16, 16, 19, 217)  # Shadow color with 80% opacity
+SHADOW_BLUR_RADIUS = 1  # Blur radius for text shadow
+VERT_MARGIN = 1057  # Vertical margin for text placement
+X_OFFSET = -370
+
 
 def get_screen_size() -> tuple[int, int]:
     """Detect screen size using hyprctl (Hyprland)."""
     try:
-        output = subprocess.run(["hyprctl", "monitors"], capture_output=True, text=True, check=True).stdout
+        output = subprocess.run(
+            ["hyprctl", "monitors"], capture_output=True, text=True, check=True
+        ).stdout
         for line in output.splitlines():
             if "@" in line and "x" in line:
-                res_part = line.strip().split('@')[0].strip()
-                width, height = map(int, res_part.split('x'))
+                res_part = line.strip().split("@")[0].strip()
+                width, height = map(int, res_part.split("x"))
                 print(f"[INFO] Detected screen size via hyprctl: {width}x{height}")
                 return width, height
     except Exception as e:
@@ -37,9 +43,9 @@ def get_screen_size() -> tuple[int, int]:
     print("[WARNING] Using default screen size: 1920x1080")
     return 1920, 1080
 
+
 def choose_random_file(
-    directory: Path,
-    exts: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".webp")
+    directory: Path, exts: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".webp")
 ) -> Optional[Path]:
     """
     Select a random image file from the specified directory with given extensions.
@@ -56,7 +62,9 @@ def choose_random_file(
             print(f"[ERROR] Not a directory: {directory}")
             return None
 
-        files = [f for f in directory.iterdir() if f.is_file() and f.suffix.lower() in exts]
+        files = [
+            f for f in directory.iterdir() if f.is_file() and f.suffix.lower() in exts
+        ]
         if not files:
             print(f"[WARNING] No image files found in: {directory}")
             return None
@@ -68,6 +76,7 @@ def choose_random_file(
     except Exception as e:
         print(f"[ERROR] Failed to select file from {directory}: {e}")
         return None
+
 
 def get_random_quote(file_path: Path) -> str:
     """
@@ -95,6 +104,7 @@ def get_random_quote(file_path: Path) -> str:
 
     except Exception as e:
         print(f"[ERROR] Failed to read quotes from file: {e}")
+
 
 def resize_image_to_screen(image_path: Path) -> Path:
     """
@@ -149,7 +159,8 @@ def resize_image_to_screen(image_path: Path) -> Path:
     image.save(TEMP_RESIZED_FILE, format="PNG")
     return TEMP_RESIZED_FILE
 
-def draw_quote(image_path: Path, quote: str) -> Path:
+
+def draw_quote(image_path: Path, quote: str, x_offset: int) -> Path:
     """
     Overlay a quote onto an image with a shadow effect and save to cache.
 
@@ -192,19 +203,21 @@ def draw_quote(image_path: Path, quote: str) -> Path:
     # Draw shadow
     for line in lines:
         line_width = draw_text.textlength(line, font=font)
-        x = (width - line_width) // 2
+        x = (width - line_width) // 2 + x_offset
         draw_shadow.text((x, y), line, font=font, fill=SHADOW_COLOR)
         y += font_size
 
     # Apply blur to shadow
-    blurred_shadow = shadow_layer.filter(ImageFilter.GaussianBlur(radius=SHADOW_BLUR_RADIUS))
+    blurred_shadow = shadow_layer.filter(
+        ImageFilter.GaussianBlur(radius=SHADOW_BLUR_RADIUS)
+    )
     combined = Image.alpha_composite(base, blurred_shadow)
 
     # Draw text
     y = height - VERT_MARGIN - font_size * len(lines)
     for line in lines:
         line_width = draw_text.textlength(line, font=font)
-        x = (width - line_width) // 2
+        x = (width - line_width) // 2 + x_offset
         draw_text.text((x, y), line, font=font, fill=TEXT_COLOR)
         y += font_size
 
@@ -214,6 +227,7 @@ def draw_quote(image_path: Path, quote: str) -> Path:
     final.save(CACHE_FILE, format="PNG")
 
     return CACHE_FILE
+
 
 def set_wallpaper(image_path: Path) -> bool:
     """
@@ -235,6 +249,7 @@ def set_wallpaper(image_path: Path) -> bool:
         print(f"[ERROR] Failed to set wallpaper: {e}")
         return False
 
+
 def main():
     """
     Main function to select a random wallpaper, resize it, overlay a random quote, and set it as the desktop wallpaper.
@@ -249,13 +264,14 @@ def main():
     quote = get_random_quote(QUOTES_FILE)
 
     # Overlay quote on the resized wallpaper
-    final_img = draw_quote(resized_wallpaper, quote)
+    final_img = draw_quote(resized_wallpaper, quote, X_OFFSET)
 
     # Set the final image as wallpaper
     if final_img.exists() and set_wallpaper(final_img):
         print("[INFO] Wallpaper updated successfully.")
     else:
         print("[ERROR] Failed to update wallpaper.")
+
 
 if __name__ == "__main__":
     main()

@@ -7,9 +7,10 @@ dnd=$(swaync-client -D 2>/dev/null || echo false)
 if [[ "$count" -gt 0 ]]; then
   notif_icon="󰂚 "
   notif_class="notif"
-elif [[ "$dnd" == "true" ]]; then
-  notif_icon="󰂠 "
-  notif_class="dnd"
+  if [[ "$dnd" == "true" ]]; then
+    notif_icon="󰂠 "
+    notif_class="dnd"
+  fi
 else
   notif_icon=""
   notif_class="none"

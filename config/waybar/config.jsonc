@@ -60,6 +60,19 @@
     ],
     "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
   },
+  "custom/playerctl": {
+	  "format": "<span>{}</span>",
+	  "return-type": "json",
+	  "max-length": 25,
+	  "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}}  {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+	  "on-click-middle": "playerctl play-pause",
+	  "on-click": "playerctl previous",
+	  "on-click-right": "playerctl next",
+	  "scroll-step": 5.0,
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+	  "smooth-scrolling-threshold": 1,
+  },
   "pulseaudio": {
     "on-click": "pavucontrol",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
@@ -112,11 +125,11 @@
       "",
     ],
     "scroll-step": 10,
-    "on-click": "/home/nick/Polka/local/bin/hyprshade/toggle-hyprshade.sh",
+    "on-click": "/home/nick/Polka/local/bin/hyprsunset/toggle-hyprsunset.sh",
   },
   "tray": {
-    "icon-size": 14,
-    "spacing": 8,
+    "icon-size": 16,
+    "spacing": 6,
   },
   "battery": {
     "interval": 60,
@@ -149,7 +162,7 @@
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/waybar/tw_count.py",
     "return-type": "json",
-    "format": " {}",
+    "format": " <span size='10pt'>{}</span>",
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,
@@ -157,7 +170,7 @@
   },
   "custom/settings": {
     "exec": "~/Polka/local/bin/waybar/settings.sh",
-    "format": "<span size='9pt'>{text}</span>",
+    "format": "<span size='10pt'>{text}</span>",
     "return-type": "json",
     "interval": 4,
     "escape": true,
@@ -198,7 +211,7 @@
     "format": "",
     "tooltip": false,
     "on-click": "sh -c '(sleep 0s; fuzzel)' & disown",
-    "on-click-middle": "$HOME/.local/bin/wall/wall.py",
+    "on-click-middle": "~/Polka/local/bin/wall/wall.py",
     "on-click-right": "~/Polka/local/bin/waybar/wlogout.sh",
   },
 }
