@@ -15,7 +15,7 @@
 
 #!/bin/bash
 
-VISIBLE_MIN=8
+VISIBLE_MIN=12
 SCROLL_FILE="$HOME/.cache/nowplaying_scroll_pos"
 MEDIA_FILE="$HOME/.cache/nowplaying_last_track"
 
@@ -53,10 +53,10 @@ else
   [[ -z "$scroll_pos" ]] && scroll_pos=0
 fi
 
-scroll_pos=$((scroll_pos + 8))
+scroll_pos=$((scroll_pos + 4))
 # Loop handling with 2s pause
 if ((scroll_pos > ${#track})); then
-  sleep 2
+  sleep 1
   scroll_pos=0
 fi
 echo "$scroll_pos" >"$SCROLL_FILE"

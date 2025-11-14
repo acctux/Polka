@@ -1,97 +1,112 @@
 {
   "$schema": "/etc/xdg/swaync/configSchema.json",
+
   "positionX": "right",
   "positionY": "top",
-	"cssPriority": "user",
+  "layer": "overlay",
+  "layer-shell": true,
+  "layer-shell-cover-screen": false,
+  "ignore-gtk-theme": true,
 
-  "control-center-width": 380,
-  "control-center-height": 860, 
-  "control-center-margin-top": 2,
-  "control-center-margin-bottom": 2,
-  "control-center-margin-right": 1,
+  "control-center-layer": "top",
+  "cssPriority": "user",
+  "control-center-width": 350,
+  "control-center-margin-top": 0,
+  "control-center-margin-bottom": 20,
+  "control-center-margin-right": 0,
   "control-center-margin-left": 0,
 
-  "notification-window-width": 400,
-  "notification-icon-size": 48,
-  "notification-body-image-height": 160,
+  "notification-2fa-action": true,
+  "notification-inline-replies": true,
+  "notification-window-width": 500,
+  "notification-body-image-height": 200,
   "notification-body-image-width": 200,
+  "notification-grouping": true,
+  "notification-window-preferred-output": "HDMI-A-1",
+  "notification-window-height": -1,
 
-  "timeout": 4,
-  "timeout-low": 2,
-  "timeout-critical": 6,
-  
+  "timeout": 20,
+  "timeout-low": 10,
+  "timeout-critical": 0,
   "fit-to-screen": false,
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
   "transition-time": 200,
-  "hide-on-clear": false,
-  "hide-on-action": false,
+  "hide-on-clear": true,
+  "hide-on-action": true,
+
   "script-fail-notify": true,
   "scripts": {
-    "example-script": {
-      "exec": "echo 'Do something...'",
-      "urgency": "Normal"
+    "sound-script": {
+      "exec": "bash ~/.config/swaync/scripts/notify_sound.sh > /tmp/swaync-notify-sound.log",
+      "app-name": ".*google-chrome.*"
     }
   },
-  "notification-visibility": {
-    "example-name": {
-      "state": "muted",
-      "urgency": "Low",
-      "app-name": "Spotify"
-    }
-  },
+
   "widgets": [
-    "label",
     "buttons-grid",
     "mpris",
+    "volume",
     "title",
-    "dnd",
-    "notifications"
+    "notifications",
+    "inhibitors"
   ],
+
   "widget-config": {
     "title": {
       "text": "Notifications",
       "clear-all-button": true,
-      "button-text": " 󰎟 "
+      "button-text": "Clear"
     },
-    "dnd": {
-      "text": "Do not disturb"
-    },
-    "label": {
-      "max-lines": 1,
-      "text": " "
+    "notifications": {
+      "vexpand": false
     },
     "mpris": {
-      "image-size": 96,
-      "image-radius": 12
+      "autohide": true,
+      "loop-carousel": true,
+      "show-album-art": "when-available"
     },
     "volume": {
-      "label": "󰕾",
-        "show-per-app": true
+      "label": "",
+      "show-per-app": true
+    },
+    "backlight": {
+      "label": "󰃞"
+    },
+    "inhibitors": {
+      "text": "Inhibitors",
+      "button-text": "Clear All",
+      "clear-all-button": true
     },
     "buttons-grid": {
       "actions": [
         {
-          "label": " ",
-          "command": "amixer set Master toggle"
+          "label": "󰂛",
+          "command": "swaync-client -d",
+          "type": "toggle",
+          "tooltip": "DND",
+          "update-command": "echo $(swaync-client --get-dnd)"
         },
         {
-          "label": "",
-          "command": "amixer set Capture toggle"
+          "label": "",
+          "command": "hyprlock",
+          "tooltip": "Lock"
         },
         {
-          "label": " ",
-          "command": "nm-connection-editor"
+          "label": "󱖐",
+          "command": "systemctl suspend",
+          "tooltip": "Suspend"
         },
         {
-          "label": "󰂯",
-          "command": "blueman-manager"
+          "label": "󰜉",
+          "command": "systemctl reboot",
+          "tooltip": "Reboot"
         },
         {
-          "label": "󰏘",
-          "command": "nwg-look"
+          "label": "⏻",
+          "command": "systemctl poweroff",
+          "tooltip": "Power Off"
         }
-        
       ]
     }
   }

@@ -20,10 +20,9 @@
     "hyprland/workspaces"
   ],
   "modules-right": [
-    "custom/notification",
-    "custom/nowplaying",
     "temperature",
-    "clock"
+    "clock",
+    "custom/settings"
   ],
   "hyprland/workspaces": {
     "format": "{icon}:{windows}",
@@ -156,17 +155,14 @@
     "signal": 8,
     "on-click": "alacritty -e taskwarrior-tui",
   },
-  "custom/nowplaying": {
-    "exec": "~/Polka/local/bin/waybar/now-playing.sh",
-    "format": " {text}",
+  "custom/settings": {
+    "exec": "~/Polka/local/bin/waybar/settings.sh",
+    "format": "<span size='9pt'>{text}</span>",
     "return-type": "json",
-    "interval": 8,
+    "interval": 4,
     "escape": true,
-    "hide-empty-text": true,
-    "on-click": "playerctl play-pause",
-    "on-click-right": "playerctl next",
-    "on-click-middle": "playerctl previous",
-    "tooltip-format": "{text}\nLeft: 󰏤\nRight: 󰒭\nMiddle: 󰒮",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
   },
   "custom/tlp": {
     "format": "{}",
@@ -191,33 +187,12 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/Polka/local/bin/waybar/kdewaybar.sh",
+    "exec": "~/Polka/local/bin/kdeconnect/kdewaybar.sh",
     "interval": 30,
     "hide-empty-text": true,
     "on-click": "~/Polka/local/bin/kdeconnect/mountkde.sh",
     "on-click-middle": "kdeconnect-app",
     "on-click-right": "kdeconnect-sms",
-  },
-  "custom/notification": {
-    "tooltip": false,
-    "format": "{} {icon}",
-    "format-icons": {
-      "notification": " ",
-      "none": "",
-      "dnd-notification": " ",
-      "dnd-none": "󰂛 ",
-      "inhibited-notification": " ",
-      "inhibited-none": " ",
-      "dnd-inhibited-notification": " ",
-      "dnd-inhibited-none": " "
-  },
-  "return-type": "json",
-  "exec-if": "which swaync-client",
-  "exec": "count=$(swaync-client -swb | jq -r '.count'); if [ \"$count\" -eq 0 ]; then echo ''; else swaync-client -swb; fi",
-  "hide-empty-text": true,
-  "on-click": "sleep 0.1 && swaync-client -t -sw",
-  "on-click-right": "sleep 0.1 && swaync-client -d -sw",
-  "escape": true
   },
   "custom/logo": {
     "format": "",

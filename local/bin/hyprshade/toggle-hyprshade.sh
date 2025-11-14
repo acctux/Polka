@@ -1,9 +1,8 @@
 #!/bin/bash
 
 STATE_FILE="$HOME/.hyprsunset_state"
-WARM_TEMPS=(6000 4500 2500 1000)
+WARM_TEMPS=(6000 3500 2000 1000)
 MAX_STEP=${#WARM_TEMPS[@]}
-
 STATE=$(cat "$STATE_FILE" 2>/dev/null || echo 0)
 
 if pgrep -x hyprsunset >/dev/null; then

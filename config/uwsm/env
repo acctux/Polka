@@ -24,7 +24,15 @@ export CLUTTER_BACKEND=wayland
 export SDL_VIDEODRIVER=wayland
 export MOZ_ENABLE_WAYLAND=1
 
+export GBM_BACKEND=nvidia-drm
+export LIBVA_DRIVER_NAME=nvidia
+export SDL_VIDEODRIVER=wayland
+# export WLR_DRM_NO_ATOMIC=1
+# export __GL_VRR_ALLOWED=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
 export __NV_PRIME_RENDER_OFFLOAD=1
 export __VK_LAYER_NV_optimus=NVIDIA_only
-export WLR_DRM_DEVICES=/dev/dri/card1:/dev/dri/card0
-export AMD_VULKAN_ICD=RADV
+
+# Firefox hardware acceleration (see nvidia-vaapi-driver)
+export MOZ_DISABLE_RDD_SANDBOX=1
+export EGL_PLATFORM=wayland
