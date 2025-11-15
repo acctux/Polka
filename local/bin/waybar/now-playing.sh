@@ -20,7 +20,8 @@ SCROLL_FILE="$HOME/.cache/nowplaying_scroll_pos"
 MEDIA_FILE="$HOME/.cache/nowplaying_last_track"
 
 # Fetch info
-player_status=$(playerctl status 2>/dev/null)
+player_status=$(playerctl -a status 2>/dev/null | grep -i Playing | head -n1)
+echo "Status: '$player_status'"
 if [[ $? -ne 0 || -z "$player_status" ]]; then
   # No media player or not playing anything
   rm -f "$SCROLL_FILE" "$MEDIA_FILE"
@@ -33,12 +34,9 @@ if [[ "$player_status" == "Paused" ]]; then
   exit 0
 fi
 
-artist=$(playerctl metadata xesam:artist 2>/dev/null)
-title=$(playerctl metadata xesam:title 2>/dev/null)
-
-if [[ -z "$artist" && -z "$title" ]]; then
-  exit 0
-fi
+artist=$(playerctl -a metadata xesam:artist 2>/dev/null | head -n1)
+title=$(playerctl -a metadata xesam:title 2>/dev/null | head -n1)
+[[ -z "$artist" && -z "$title" ]] && exit 0
 
 track="•$title •$artist "
 
@@ -74,4 +72,6 @@ else
 fi
 
 # Output JSON for Waybar
-echo "{\"text\": \"$display_text\", \"class\": \"${player_status,,}\"}"
+
+safe_text=$(printf '%s' "$display_text" | jq -R .)
+echo "{\"text\": $safe_text}"

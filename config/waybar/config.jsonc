@@ -22,7 +22,6 @@
   "modules-right": [
     "temperature",
     "clock",
-    "custom/settings"
   ],
   "hyprland/workspaces": {
     "format": "{icon}:{windows}",
@@ -168,24 +167,6 @@
     "signal": 8,
     "on-click": "alacritty -e taskwarrior-tui",
   },
-  "custom/settings": {
-    "exec": "~/Polka/local/bin/waybar/settings.sh",
-    "format": "<span size='10pt'>{text}</span>",
-    "return-type": "json",
-    "interval": 4,
-    "escape": true,
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
-  },
-  "custom/tlp": {
-    "format": "{}",
-    "escape": true,
-    "return-type": "json",
-    "exec": "~/Polka/local/bin/waybar/boot_watch.sh",
-    "signal": 6,
-    "on-click": "~/Polka/local/bin/waybar/wlogout-nvidia-switch.sh",
-    "on-click-middle": "~/Polka/local/bin/waybar/wlogout-nvidia-switch.sh bios",
-  },
   "custom/updates": {
     "format": " {}",
     "escape": true,
@@ -208,10 +189,14 @@
     "on-click-right": "kdeconnect-sms",
   },
   "custom/logo": {
-    "format": "",
-    "tooltip": false,
+    "format": "<span size='10pt'>{text}</span>",
+    "return-type": "json",
+    "interval": 4,
+    "escape": true,
+    "signal": 6,
+    "exec": "~/Polka/local/bin/waybar/settings.sh",
     "on-click": "sh -c '(sleep 0s; fuzzel)' & disown",
     "on-click-middle": "~/Polka/local/bin/wall/wall.py",
-    "on-click-right": "~/Polka/local/bin/waybar/wlogout.sh",
+    "on-click-right": "swaync-client -t -sw",
   },
 }
