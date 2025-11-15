@@ -101,7 +101,7 @@
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
     "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
     "signal": 6,
-    "format": "{}",
+    "format": "<span size='10pt'>{}</span>",
     "tooltip": false
   },
   "temperature": {

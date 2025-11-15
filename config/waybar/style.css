@@ -157,6 +157,8 @@ tooltip {
 }
 
 #custom-logo.music {
+	padding-right: 4px;
+	padding-left: 6px;
   color: #00ff99;
 }
 

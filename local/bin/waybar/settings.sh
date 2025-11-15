@@ -28,7 +28,7 @@ fi
 # --- Combine ---
 if [[ -n "$music_text" ]]; then
   # Append notification icon
-  text="$notif_icon$music_text"
+  text="$notif_icon $music_text"
   alt="$music_text"
   main_class="music"
 else
