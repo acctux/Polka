@@ -5,10 +5,10 @@ count=$(swaync-client -c 2>/dev/null || echo 0)
 dnd=$(swaync-client -D 2>/dev/null || echo false)
 
 if [[ "$count" -gt 0 ]]; then
-  notif_icon="󰂚"
+  notif_icon=" 󰂚"
   notif_class="notif"
   if [[ "$dnd" == "true" ]]; then
-    notif_icon="󰂠"
+    notif_icon=" 󰂠"
     notif_class="dnd"
   fi
 else
