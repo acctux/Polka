@@ -15,7 +15,7 @@
 
 #!/bin/bash
 
-VISIBLE_MIN=12
+VISIBLE_MIN=10
 SCROLL_FILE="$HOME/.cache/nowplaying_scroll_pos"
 MEDIA_FILE="$HOME/.cache/nowplaying_last_track"
 
@@ -38,7 +38,7 @@ artist=$(playerctl -a metadata xesam:artist 2>/dev/null | head -n1)
 title=$(playerctl -a metadata xesam:title 2>/dev/null | head -n1)
 [[ -z "$artist" && -z "$title" ]] && exit 0
 
-track="•$title •$artist "
+track="•$title•$artist"
 
 # Reset scroll if new track
 last_track=$(cat "$MEDIA_FILE" 2>/dev/null)
@@ -60,7 +60,7 @@ fi
 echo "$scroll_pos" >"$SCROLL_FILE"
 
 # Dynamic visible length
-visible_chars=$((${#track} * 1 / 5))
+visible_chars=$((${#track} * 1 / 8))
 [[ $visible_chars -lt $VISIBLE_MIN ]] && visible_chars=$VISIBLE_MIN
 
 # Create scrolling text

@@ -14,14 +14,15 @@
     "custom/empty",
     "custom/taskwarrior",
     "custom/updates",
-    "battery",
   ],
   "modules-center": [
     "hyprland/workspaces"
   ],
   "modules-right": [
     "temperature",
+    "custom/kb-switch",
     "clock",
+    "battery",
   ],
   "hyprland/workspaces": {
     "format": "{icon}:{windows}",
@@ -96,12 +97,18 @@
   "custom/empty": {
     "format": " ",
   },
+  "custom/kb-switch": {
+    "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
+    "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
+    "signal": 6,
+    "format": "{}",
+    "tooltip": false
+  },
   "temperature": {
     "critical-threshold": 80,
-    "format-critical": "{temperatureC}°C ",
-    "format": "{temperatureC}°C ",
+    "format-critical": "{temperatureC}°C",
+    "format": "{temperatureC}°C",
     "on-click": "alacritty -e btop",
-    "on-click-right": "alacritty -e $HOME/.local/bin/waybar/nvidia-blacklist.sh",
   },
   "backlight": {
     "format": "{icon}",
@@ -127,7 +134,7 @@
     "on-click": "/home/nick/Polka/local/bin/hyprsunset/toggle-hyprsunset.sh",
   },
   "tray": {
-    "icon-size": 16,
+    "icon-size": 14,
     "spacing": 6,
   },
   "battery": {
@@ -189,13 +196,13 @@
     "on-click-right": "kdeconnect-sms",
   },
   "custom/logo": {
-    "format": "<span size='10pt'>{text}</span>",
+    "format": "<span size='9pt'>{text}</span>",
     "return-type": "json",
     "interval": 4,
     "escape": true,
     "signal": 6,
     "exec": "~/Polka/local/bin/waybar/settings.sh",
-    "on-click": "sh -c '(sleep 0s; fuzzel)' & disown",
+    "on-click": "walker -t mine",
     "on-click-middle": "~/Polka/local/bin/wall/wall.py",
     "on-click-right": "swaync-client -t -sw",
   },

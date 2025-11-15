@@ -1,8 +1,8 @@
 /* === Global Styles === */
 * {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  font-family: "FiraMono Nerd Font", monospace;
+  font-family: "JetBrains Mono Nerd Font", monospace;
   transition: all 0.75s ease;
   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
 }
@@ -25,7 +25,6 @@ button {
   min-height: 0;
   box-shadow: none;
 }
-
 
 tooltip label {
   padding: 0 2px;
@@ -69,6 +68,8 @@ tooltip {
 #clock,
 #keyboard-state,
 #temperature,
+#custom-kb-switch,
+#language,
 #window,
 #custom-taskwarrior,
 #custom-settings,
@@ -78,7 +79,6 @@ tooltip {
 }
 
 #backlight,
-#battery,
 #network,
 #custom-kdeconnect,
 #pulseaudio {
@@ -86,20 +86,23 @@ tooltip {
 }
 
 /* === Battery States === */
-#battery.critical,
-#battery.warning {
-  box-shadow: inset 0 0 0 1px #ff3232;
+#battery {
+  border-left: 1px solid #33ccff;
+  color: #33ccff;
+}
+#battery.critical {
   color: #ff3232;
 }
 
+#battery.warning {
+  color: #ffee33;
+}
 #battery.good {
-  box-shadow: inset 0 0 0 1px #ff3232;
-  color: #10b981;
+  color: #33ccff;
 }
 
 #battery.charging {
-  box-shadow: inset 0 0 0 1px #10b981;
-  color: #10b981;
+  color: #00ff99;
 }
 
 /* === Icon Button Styles === */
@@ -110,14 +113,14 @@ tooltip {
   color: #ff3232;
 }
 
-#custom-settings{
-  border-left: 1px solid #33ccff;
-  color: #33ccff;
-  padding: 0 10px 0 6px;
-  font-size: 15px;
+#language {
+  border-right: 1px solid #33ccff;
+  font-family: "CaskaydiaMono Nerd Font", monospace;
+  font-size: 13px;
 }
-#custom-settings.music {
-  color: #00ff99;
+
+#custom-kb-switch {
+  border-right: 1px solid #33ccff;
 }
 #network {
   padding: 0 9px 0 3px;
@@ -126,16 +129,16 @@ tooltip {
 
 #backlight {
   padding: 0 7px 0 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 #pulseaudio {
   padding: 0 7px 0 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 #custom-kdeconnect {
   padding: 0 6px 0 5px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 #tray {
@@ -144,25 +147,30 @@ tooltip {
 }
 
 #custom-logo {
-  font-size: 16px;
+  font-size: 14px;
   color: #33ccff;
   padding: 0 8px 0 6px;
 }
-#custom-logo.music {
-  font-size: 16px;
-  color: #00ff99;
-  padding: 0 8px 0 6px;
+
+#custom-logo.notif {
+  color: #ffee33;
 }
+
+#custom-logo.music {
+  color: #00ff99;
+}
+
 #custom-empty {
   font-size: 4px;
 }
+
 #custom-updates {
   padding: 0 10px 0 6px;
 }
 
 #custom-taskwarrior {
   border-left: 1px solid #33ccff;
-  font-size: 15px;
+  font-size: 14px;
 	padding-right: 4px;
 	padding-left: 7px;
 }
