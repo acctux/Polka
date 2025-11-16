@@ -1,6 +1,6 @@
 /* === Global Styles === */
 * {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   font-family: "JetBrains Mono Nerd Font", monospace;
   transition: all 0.75s ease;
@@ -69,6 +69,7 @@ tooltip {
 #keyboard-state,
 #temperature,
 #custom-kb-switch,
+#custom-timer,
 #language,
 #window,
 #custom-taskwarrior,
@@ -116,29 +117,32 @@ tooltip {
 #language {
   border-right: 1px solid #33ccff;
   font-family: "CaskaydiaMono Nerd Font", monospace;
-  font-size: 13px;
+  font-size: 12px;
 }
 
+#custom-timer {
+  border-right: 1px solid #33ccff;
+}
 #custom-kb-switch {
   border-right: 1px solid #33ccff;
 }
 #network {
   padding: 0 9px 0 3px;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 #backlight {
   padding: 0 7px 0 4px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 #pulseaudio {
   padding: 0 7px 0 4px;
-  font-size: 14px;
+  font-size: 13px;
 }
 #custom-kdeconnect {
   padding: 0 6px 0 5px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 #tray {
@@ -147,12 +151,13 @@ tooltip {
 }
 
 #custom-logo {
-  font-size: 14px;
+  font-size: 13px;
   color: #33ccff;
   padding: 0 8px 0 6px;
 }
 
 #custom-logo.notif {
+	padding-right: 4px;
   color: #ffee33;
 }
 
@@ -172,7 +177,7 @@ tooltip {
 
 #custom-taskwarrior {
   border-left: 1px solid #33ccff;
-  font-size: 14px;
+  font-size: 13px;
 	padding-right: 4px;
 	padding-left: 7px;
 }

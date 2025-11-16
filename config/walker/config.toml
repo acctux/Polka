@@ -52,6 +52,10 @@ prefix = "!"
 provider = "todo"
 
 [[providers.prefixes]]
+prefix = "+"
+provider = "menus"
+
+[[providers.prefixes]]
 prefix = "="
 provider = "calc"
 

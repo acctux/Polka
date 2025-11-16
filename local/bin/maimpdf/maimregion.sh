@@ -1,6 +1,9 @@
 #!/bin/bash
-REGION=$(slop)
-echo "Region saved as: $REGION"
+REGION_FILE="$HOME/Polka/local/bin/maimpdf/region.txt"
 
-# Insert coordinates directly into screenshot script
-sed -i "s|^REGION=.*|REGION=\"$REGION\"|" /home/nick/.local/mystuff/Scripts/maimpdf/maim.sh
+# Let user select a region
+REGION=$(slurp)
+echo "$REGION" >"$REGION_FILE"
+
+echo "Region saved as: $REGION"
+notify-send "Screenshot region saved"
