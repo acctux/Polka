@@ -1,13 +1,19 @@
 #!/bin/bash
 
-image="$(pwd)/screen.png"
+image="$HOME/.cache/ocr_region.png"
 
-# Take screenshot silently without notification
-spectacle --background --region --nonotify --output "$image" >/dev/null 2>&1
+# Remove existing file or directory
+[ -e "$image" ] && rm -rf "$image"
 
-# Ensure file is written (Spectacle is async sometimes)
+# Capture a region screenshot silently with grim
+grim -g "$(slurp)" "$image" >/dev/null 2>&1
+
+# Ensure the image exists
 if [[ -f "$image" ]]; then
-    # OCR with faster config (no auto language detection)
-    tesseract "$image" - -l eng --psm 6 2>/dev/null | wl-copy
-    rm -f "$image"
+  # Fast OCR using Tesseract (English only, no auto lang detection)
+  tesseract "$image" - -l eng --psm 6 2>/dev/null | wl-copy
+  # Clean up
+  rm -f "$image"
+else
+  notify-send "OCR" "Screenshot failed"
 fi

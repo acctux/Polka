@@ -17,7 +17,7 @@ actions = { "record" = "record" }
 [[entries]]
 text = "OCR"
 keywords = ["ocr", "text recognition", "OCR"]
-actions = { "ocr" = "wayfreeze --hide-cursor --after-freeze-cmd 'grim -g \"$(slurp)\" - | tesseract stdin stdout -l deu+eng | wl-copy; killall wayfreeze'" }
+actions = { "default" = "bash /home/nick/Polka/local/bin/ocrcopy/ocrcopy.sh" }
 
 [[entries]]
 text = "Screenshot Region"

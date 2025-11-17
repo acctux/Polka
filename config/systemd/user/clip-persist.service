@@ -1,12 +1,12 @@
 [Unit]
-Description=Walker launcher service
+Description=Clip Persist service
 PartOf=graphical-session.target
-After=elephant.service
+After=graphical-session.target
 ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
-ExecStart=killall walker && /usr/bin/walker --gapplication-service
+ExecStart=wl-clip-persist --clipboard regular
 Slice=session.slice
 Restart=on-failure
 
