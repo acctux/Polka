@@ -65,11 +65,14 @@ tooltip {
 #workspaces button,
 #battery,
 #clock,
+#mpd,
+#mpris,
 #keyboard-state,
 #temperature,
 #custom-kb-switch,
 #custom-logo,
 #custom-timer,
+#custom-music,
 #language,
 #window,
 #custom-taskwarrior,
@@ -122,6 +125,7 @@ tooltip {
 }
 
 /* === Icon Button Styles === */
+#custom-music,
 #temperature {
   border-right: 1px solid #33ccff;
 }
@@ -169,7 +173,7 @@ tooltip {
   color: #ffee33;
 }
 
-#custom-logo.music {
+#custom-logo.playing {
   color: #00ff99;
 }
 

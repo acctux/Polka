@@ -6,7 +6,6 @@
     "custom/logo",
     "tray",
     "custom/kdeconnect",
-    // "custom/tlp",
     "network",
     "backlight",
     "pulseaudio",
@@ -19,6 +18,7 @@
   ],
   "modules-right": [
     "temperature",
+    "custom/music",
     "custom/kb-switch",
     "custom/timer",
     "clock",
@@ -59,19 +59,6 @@
       "󰤨"
     ],
     "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
-  },
-  "custom/playerctl": {
-    "format": "<span>{}</span>",
-    "return-type": "json",
-    "max-length": 25,
-    "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}}  {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
-    "on-click-middle": "playerctl play-pause",
-    "on-click": "playerctl previous",
-    "on-click-right": "playerctl next",
-    "scroll-step": 5.0,
-    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
-    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
-    "smooth-scrolling-threshold": 1,
   },
   "pulseaudio": {
     "on-click": "pavucontrol",
@@ -194,6 +181,11 @@
     "hide-empty-text": true,
     "on-click": "alacritty -e paru",
   },
+  "custom/music": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "waybar-module-music --marquee --format '%title%' -t 10 --effect-speed 300",
+  },
   "custom/kdeconnect": {
     "format": "{}",
     "escape": true,
@@ -211,7 +203,6 @@
     "interval": 4,
     "escape": true,
     "signal": 6,
-    "exec": "~/Polka/local/bin/waybar/settings.sh",
     "on-click": "walker -t mine",
     "on-click-middle": "~/Polka/local/bin/wall/wall.py",
     "on-click-right": "swaync-client -t -sw",

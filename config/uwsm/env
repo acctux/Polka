@@ -38,3 +38,5 @@ export NVD_BACKEND=direct
 # Firefox hardware acceleration (see nvidia-vaapi-driver)
 export MOZ_DISABLE_RDD_SANDBOX=1
 export EGL_PLATFORM=wayland
+
+export MPD_HOST="$XDG_RUNTIME_DIR/mpd/socket"
