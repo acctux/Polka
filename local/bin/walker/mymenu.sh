@@ -3,8 +3,9 @@
 
 CHOICE_1="OCR Screenshot"
 CHOICE_2="Set Screenshot Region"
+CHOICE_3="Screenshot Folder"
 # Define menu options
-MENU="$CHOICE_1\n$CHOICE_2\nCancel"
+MENU="$CHOICE_1\n$CHOICE_2\n$CHOICE_3\nCancel"
 
 # Pipe options into walker in dmenu mode and capture selection
 CHOICE=$(echo -e "$MENU" | walker --dmenu "OCR Action:")
@@ -15,6 +16,9 @@ $CHOICE_1)
   ;;
 $CHOICE_2)
   bash /home/nick/Polka/local/bin/maimpdf/maimregion.sh
+  ;;
+ $CHOICE_3)
+ nemo /home/nick/Polka/local/bin/maimpdf/screens
   ;;
 "Cancel" | "")
   exit 0

@@ -182,9 +182,13 @@
     "on-click": "alacritty -e paru",
   },
   "custom/music": {
-    "format": "{}",
+    "format": "{}",
     "return-type": "json",
-    "exec": "waybar-module-music --marquee --format '%title%' -t 10 --effect-speed 300",
+    "on-click": "playerctl play-pause",
+    "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh",
+    "on-click-right": "alacritty -e rmpc",
+    "exec": "~/Polka/local/bin/mpd/music-clean.sh",
+    // "exec": "waybar-module-music --marquee --format '%title%' -t 10 --effect-speed 300",
   },
   "custom/kdeconnect": {
     "format": "{}",

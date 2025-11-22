@@ -181,6 +181,16 @@ tooltip {
   font-size: 4px;
 }
 
+#custom-music {
+	padding-right: 8px;
+	padding-left: 4px;
+}
+#custom-music.paused,
+#custom-music.playing {
+  color: #33ccff;
+	padding-right: 6px;
+	padding-left: 6px;
+}
 #custom-updates {
   padding: 0 10px 0 6px;
 }
