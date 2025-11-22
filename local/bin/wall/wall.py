@@ -179,7 +179,7 @@ def draw_quote(image_path: Path, quote: str, x_offset: int) -> Path:
         return image_path
 
     width, height = base.size
-    font_size = max(12, width // 155)
+    font_size = max(11, width // 155)
 
     # Load font or use default
     try:

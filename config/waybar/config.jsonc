@@ -210,7 +210,7 @@
     "return-type": "json",
     "on-click": "playerctl play-pause",
     "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh",
-    "on-click-right": "alacritty -e rmpc",
+    "on-click-right": "alacritty -e ~/Polka/local/bin/mpd/rmpclaunch.sh",
     "exec": "~/Polka/local/bin/mpd/music-clean.sh",
   },
   "custom/kdeconnect": {

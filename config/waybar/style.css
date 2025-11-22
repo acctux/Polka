@@ -56,10 +56,10 @@ tooltip {
 	padding-left: 0;
 }
 .modules-right {
-  margin-right: 2px;
+  margin-right: 1px;
 }
 .modules-left {
-  margin-left: 2px;
+  margin-left: 1px;
 }
 /* === Shared Module Styles === */
 #workspaces button,
@@ -188,6 +188,7 @@ tooltip {
 #custom-music.playing {
   color: #33ccff;
 	padding-right: 6px;
+  border-right: 1px solid #33ccff;
 	padding-left: 6px;
 }
 #custom-updates {

@@ -1,14 +1,19 @@
-
 #!/bin/bash
 
-# Arguments from Waybar
 WINDOW_ADDRESS="$1"
 MOUSE_BUTTON="$2"
 
-# Optional: Only focus on left-click
-if [[ "$MOUSE_BUTTON" != "1" ]]; then
-    exit 0
-fi
-
-# Focus the window using hyprctl
-hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+case "$MOUSE_BUTTON" in
+1)
+  hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+  ;;
+2)
+  PID=$(hyprctl clients -j | jq -r ".[] | select(.address == \"$WINDOW_ADDRESS\") | .pid")
+  if [[ -n "$PID" && "$PID" != "null" ]]; then
+    kill -9 "$PID"
+  fi
+  ;;
+*)
+  exit 0
+  ;;
+esac
