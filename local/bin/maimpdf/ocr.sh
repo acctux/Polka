@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC="$(pwd)/screens"
+SRC="$HOME/Documents/Pictures/maimpdf/screens"
 DEST="$SRC/noalpha"
 
 mkdir -p "$DEST"
@@ -13,9 +13,9 @@ img2pdf $(ls -v "$DEST"/*.png) -o output.pdf
 
 # OCR the PDF
 ocrmypdf --language eng \
-         --output-type pdf \
-         --jpeg-quality 100 \
-         output.pdf ocr_output.pdf
+  --output-type pdf \
+  --jpeg-quality 100 \
+  output.pdf ocr_output.pdf
 
 rm -rf "$DEST"
 rm -f output.pdf

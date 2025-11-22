@@ -23,7 +23,7 @@
     directories_sort: SortFormat(group_by_type: true, reverse: false),
     album_art: (
         method: Auto,
-        max_size_px: (width: 1200, height: 1200),
+        max_size_px: (width: 300, height: 300),
         disabled_protocols: ["http://", "https://"],
         vertical_align: Center,
         horizontal_align: Center,
@@ -133,7 +133,7 @@
                 direction: Horizontal,
                 panes: [
                     (
-                        size: "40%",
+                        size: "25%",
                         pane: Split(
                             direction: Vertical,
                             panes: [
@@ -149,7 +149,7 @@
                         ),
                     ), 
                     (
-                        size: "60%",
+                        size: "75%",
                         pane: Pane(Queue)
                     ),
                 ],

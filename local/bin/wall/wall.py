@@ -17,12 +17,12 @@ TEMP_RESIZED_FILE = (
     HOME / ".cache/wallpaper_resized.png"
 )  # Temporary file for resized image
 
-MAX_CHARS = 80  # Maximum characters per line for text wrapping
+MAX_CHARS = 200  # Maximum characters per line for text wrapping
 TEXT_COLOR = (229, 231, 235, 179)  # Text color with 60% opacity
 SHADOW_COLOR = (16, 16, 19, 217)  # Shadow color with 80% opacity
-SHADOW_BLUR_RADIUS = 1  # Blur radius for text shadow
-VERT_MARGIN = 1057  # Vertical margin for text placement
-X_OFFSET = -370
+SHADOW_BLUR_RADIUS = 2  # Blur radius for text shadow
+VERT_MARGIN = 1066  # Vertical margin for text placement
+X_OFFSET = 0
 
 
 def get_screen_size() -> tuple[int, int]:
@@ -254,19 +254,10 @@ def main():
     """
     Main function to select a random wallpaper, resize it, overlay a random quote, and set it as the desktop wallpaper.
     """
-    # Select a random wallpaper
     wallpaper = choose_random_file(WALLPAPER_DIR)
-
-    # Resize wallpaper to screen size
     resized_wallpaper = resize_image_to_screen(wallpaper)
-
-    # Get a random quote
     quote = get_random_quote(QUOTES_FILE)
-
-    # Overlay quote on the resized wallpaper
     final_img = draw_quote(resized_wallpaper, quote, X_OFFSET)
-
-    # Set the final image as wallpaper
     if final_img.exists() and set_wallpaper(final_img):
         print("[INFO] Wallpaper updated successfully.")
     else:

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Task Reminder every 2 hours
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=2h
+Unit=task-reminder.service
+
+[Install]
+WantedBy=timers.target

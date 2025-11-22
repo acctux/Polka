@@ -65,15 +65,12 @@ tooltip {
 #workspaces button,
 #battery,
 #clock,
-#mpd,
-#mpris,
-#keyboard-state,
 #temperature,
 #custom-kb-switch,
 #custom-logo,
 #custom-timer,
+#custom-notification,
 #custom-music,
-#language,
 #window,
 #custom-taskwarrior,
 #custom-settings,
@@ -96,7 +93,6 @@ tooltip {
   font-size: 14.5px;
 }
 #backlight,
-#language ,
 #pulseaudio {
   font-size: 15px;
 }
@@ -125,7 +121,6 @@ tooltip {
 }
 
 /* === Icon Button Styles === */
-#custom-music,
 #temperature {
   border-right: 1px solid #33ccff;
 }
@@ -133,16 +128,16 @@ tooltip {
   color: #ff3232;
 }
 
-#language {
-  border-right: 1px solid #33ccff;
-}
-
-#custom-timer {
-  border-right: 1px solid #33ccff;
-}
 #custom-kb-switch {
   border-right: 1px solid #33ccff;
 }
+#custom-notification {
+  color: #00ff99;
+}
+#custom-timer {
+  border-right: 1px solid #33ccff;
+}
+
 #network {
   padding: 0 9px 0 3px;
 }
@@ -177,6 +172,10 @@ tooltip {
   color: #00ff99;
 }
 
+#custom-emptyborder {
+  font-size: 4px;
+  border-right: 1px solid #33ccff;
+}
 #custom-empty {
   font-size: 4px;
 }
@@ -196,7 +195,7 @@ tooltip {
 }
 
 #custom-taskwarrior {
-  border-left: 1px solid #33ccff;
+  border-right: 1px solid #33ccff;
 	padding-right: 4px;
 	padding-left: 7px;
 }

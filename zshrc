@@ -37,6 +37,7 @@ alias grep='grep --color=auto'
 alias mkdir='mkdir -pv'
 
 alias cx='chmod +x'
+alias cmatrix='cmatrix -a -C blue'
 alias lg='lazygit'
 alias cpnames="/home/nick/Lit/scripts/cpfilenames/copyfilenames.sh"
 alias loggy='sudo systemctl restart logid'

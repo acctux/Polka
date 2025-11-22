@@ -9,18 +9,18 @@
     "network",
     "backlight",
     "pulseaudio",
-    "custom/empty",
-    "custom/taskwarrior",
+    "custom/emptyborder",
     "custom/updates",
-  ],
-  "modules-center": [
-    "hyprland/workspaces"
+    "custom/empty",
+    "hyprland/workspaces",
   ],
   "modules-right": [
-    "temperature",
-    "custom/music",
-    "custom/kb-switch",
     "custom/timer",
+    "custom/music",
+    "custom/notification",
+    "custom/kb-switch",
+    "custom/taskwarrior",
+    "temperature",
     "clock",
     "battery",
   ],
@@ -60,6 +60,26 @@
     ],
     "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
   },
+  "custom/notification": {
+    "tooltip-format": "Left: Notifications\nRight: Do not disturb",
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󰍡",
+      "none": "",
+      "dnd-notification": "󱙍",
+      "dnd-none": "󱙍",
+      "inhibited-notification": "󰍢",
+      "inhibited-none": "󰍢",
+      "dnd-inhibited-notification": "󱙍",
+      "dnd-inhibited-none": "󱙍"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
   "pulseaudio": {
     "on-click": "pavucontrol",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
@@ -82,6 +102,9 @@
     },
   },
   "custom/empty": {
+    "format": " ",
+  },
+  "custom/emptyborder": {
     "format": " ",
   },
   "custom/kb-switch": {
@@ -158,12 +181,13 @@
     "exec": "~/Polka/local/bin/timer/timer_waybar.py",
     "on-scroll-up": "/home/nick/Polka/local/bin/timer/timer_waybar.py +5",
     "on-scroll-down": "/home/nick/Polka/local/bin/timer/timer_waybar.py -5",
+    "on-click": "~/Polka/local/bin/timer/timer_toggle.py",
     "return-type": "json",
     "hide-empty-text": true,
     "interval": 1
   },
   "custom/taskwarrior": {
-    "exec": "~/Polka/local/bin/waybar/tw_count.py",
+    "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
     "return-type": "json",
     "format": " <span size='10pt'>{}</span>",
     "interval": 300,
@@ -188,7 +212,6 @@
     "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh",
     "on-click-right": "alacritty -e rmpc",
     "exec": "~/Polka/local/bin/mpd/music-clean.sh",
-    // "exec": "waybar-module-music --marquee --format '%title%' -t 10 --effect-speed 300",
   },
   "custom/kdeconnect": {
     "format": "{}",

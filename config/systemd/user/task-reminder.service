@@ -1,0 +1,6 @@
+[Unit]
+Description=Taskwarrior notify-send reminder
+
+[Service]
+Type=oneshot
+ExecStart=/home/nick/Polka/local/bin/taskwarrior/task_notify.py
