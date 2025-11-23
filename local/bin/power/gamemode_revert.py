@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 import subprocess
 from pathlib import Path
+from conf import SERVICES
 
 HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
 INPUT_CONF = Path.home() / ".config/hypr/input.conf"
-
-# List of user services/timers to restart
-SERVICES = [
-    "wall.timer",
-    "emailcheck.timer",
-    "hypridle.service",
-    "waybar.service",
-]
 
 # Bindings to restore
 BINDINGS_TO_UNCOMMENT = [
@@ -20,21 +13,21 @@ BINDINGS_TO_UNCOMMENT = [
 ]
 
 
-def start_user_services(services):
+def start_user_services(SERVICES):
     """Restart specific user services/timers."""
-    for svc in services:
+    for svc in SERVICES:
         try:
             subprocess.run(["systemctl", "--user", "start", svc], check=False)
-            print(f"🚀 Started: {svc}")
+            print(f"Started: {svc}")
         except Exception as e:
-            print(f"⚠️ Could not start {svc}: {e}")
-    print("✅ Selected user services/timers started.")
+            print(f"Could not start {svc}: {e}")
+    print("Selected user services/timers started.")
 
 
 def revert_hyprland_source():
-    """Replace 'gamemode.conf' with 'looknfeel.conf' and restore input.conf line."""
+    """Replace 'gamemode.conf' with 'looknfeel.conf' and uncomment input.conf line."""
     if not HYPRLAND_CONF.exists():
-        print(f"❌ Config not found: {HYPRLAND_CONF}")
+        print(f"Config not found: {HYPRLAND_CONF}")
         return False
 
     text = HYPRLAND_CONF.read_text()
@@ -50,17 +43,17 @@ def revert_hyprland_source():
 
     if modified:
         HYPRLAND_CONF.write_text(text)
-        print(f"✅ Reverted Hyprland config: {HYPRLAND_CONF}")
+        print(f"Updated Hyprland config: {HYPRLAND_CONF}")
         return True
     else:
-        print("⚠️ No 'gamemode.conf' or commented input line found; no change made.")
+        print("No relevant 'source =' lines found; no change made.")
         return False
 
 
 def uncomment_hypr_bindings():
     """Uncomment previously commented window move/resize bindings."""
     if not INPUT_CONF.exists():
-        print(f"❌ Input config not found: {INPUT_CONF}")
+        print(f"Input config not found: {INPUT_CONF}")
         return False
 
     changed = False
@@ -70,9 +63,8 @@ def uncomment_hypr_bindings():
     for line in lines:
         stripped = line.strip()
         if any(stripped == f"# {b}" for b in BINDINGS_TO_UNCOMMENT):
-            uncommented = stripped[2:]  # remove '# '
-            new_lines.append(uncommented)
-            print(f"✅ Uncommented: {uncommented}")
+            new_lines.append(stripped[2:])  # remove '# '
+            print(f"Uncommented: {stripped[2:]}")
             changed = True
         else:
             new_lines.append(line)
@@ -95,7 +87,7 @@ def main():
 
     if hypr_reloaded:
         subprocess.run(["hyprctl", "reload"], check=False)
-        print("🔄 Hyprland reloaded.")
+        print("Hyprland reloaded.")
 
 
 if __name__ == "__main__":

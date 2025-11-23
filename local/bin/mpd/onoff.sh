@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if systemctl --user is-active --quiet mpd.service; then
+if systemctl --user is-active --quiet mpd.service && sleep 0.1; then
   mpc toggle
-  notify-send "MPD" "Stopped MPD"
 else
-  systemctl --user start "$SERVICE"
+  systemctl --user start mpd.service
+  mpc play
   notify-send "MPD" "Started MPD"
 fi

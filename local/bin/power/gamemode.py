@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 import subprocess
 from pathlib import Path
+from conf import SERVICES
 
 HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
-
-SERVICES = [
-    "wall.timer",
-    "emailcheck.timer",
-    "hypridle.service",
-    "waybar.service",
-]
 
 
 def stop_user_services(services):

@@ -1,0 +1,12 @@
+[Unit]
+Description=Sway OSD Server
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/swayosd-server
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

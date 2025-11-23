@@ -1,4 +1,0 @@
-system:
-  disable_runtime: true
-  gpu: card0
-  mangohud: true

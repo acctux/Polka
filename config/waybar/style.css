@@ -79,9 +79,8 @@ tooltip {
 
 #workspaces button {
 	padding-right: 6px;
-	padding-left: 6px;
-  border-radius: 0px;
-  border-left: 1px solid #33ccff;
+  border-radius: 5px;
+	padding-left: 2px;
 }
 
 #backlight,
@@ -97,6 +96,7 @@ tooltip {
 #custom-taskwarrior {
   font-size: 14.5px;
 }
+#custom-notification,
 #backlight,
 #pulseaudio {
   font-size: 15px;
@@ -133,10 +133,8 @@ tooltip {
   color: #ff3232;
 }
 
-#custom-kb-switch {
-  border-right: 1px solid #33ccff;
-}
 #custom-notification {
+  border-left: 1px solid #33ccff;
   color: #00ff99;
 }
 #custom-timer {
@@ -145,6 +143,11 @@ tooltip {
 
 #network {
   padding: 0 9px 0 3px;
+}
+
+#custom-kb-switch {
+	padding-right: 3px;
+	padding-left: 8px;
 }
 
 #backlight {
@@ -159,14 +162,15 @@ tooltip {
 }
 
 #tray {
-  padding: 0 3px 0 7px;
-  border-left: 1px solid #33ccff;
+  padding: 0 4px 0 8px;
   border-right: 1px solid #33ccff;
+  border-left: 1px solid #33ccff;
 }
 
 #custom-logo {
 	padding-right: 10px;
 	padding-left: 5px;
+  border-right: 1px solid #33ccff;
   color: #33ccff;
 }
 
@@ -178,23 +182,17 @@ tooltip {
   color: #00ff99;
 }
 
-#custom-emptyborder {
-  font-size: 4px;
-}
 #custom-empty {
   font-size: 5px;
 }
 
 #custom-music {
 	padding-right: 8px;
-	padding-left: 4px;
 }
 #custom-music.paused,
 #custom-music.playing {
+	padding-right: 4px;
   color: #33ccff;
-	padding-right: 6px;
-  border-right: 1px solid #33ccff;
-	padding-left: 6px;
 }
 #custom-updates {
   padding: 0 10px 0 6px;
@@ -202,8 +200,6 @@ tooltip {
 
 #custom-taskwarrior {
   border-right: 1px solid #33ccff;
-	padding-right: 4px;
-	padding-left: 7px;
 }
 #custom-taskwarrior.todo {
   color: #ffee33;
@@ -230,8 +226,6 @@ button:hover,
 #workspaces button:hover {
   background: inherit;
   border-radius: 5px;          /* keeps the overall rounding */
-  border-top-left-radius: 0;   /* removes top-left rounding */
-  border-bottom-left-radius: 0;
   color: #00ff99;
 }
 
