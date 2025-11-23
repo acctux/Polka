@@ -1,13 +1,11 @@
 {
   "$schema": "/etc/xdg/swaync/configSchema.json",
-
-  "positionX": "left",
+  "positionX": "right",
   "positionY": "top",
   "layer": "overlay",
   "layer-shell": true,
   "layer-shell-cover-screen": false,
   "ignore-gtk-theme": true,
-
   "control-center-layer": "top",
   "cssPriority": "user",
   "control-center-width": 350,
@@ -15,7 +13,6 @@
   "control-center-margin-bottom": 20,
   "control-center-margin-right": 0,
   "control-center-margin-left": 0,
-
   "notification-2fa-action": true,
   "notification-inline-replies": true,
   "notification-window-width": 500,
@@ -24,7 +21,6 @@
   "notification-grouping": true,
   "notification-window-preferred-output": "HDMI-A-1",
   "notification-window-height": -1,
-
   "timeout": 20,
   "timeout-low": 10,
   "timeout-critical": 0,
@@ -34,7 +30,6 @@
   "transition-time": 200,
   "hide-on-clear": true,
   "hide-on-action": true,
-
   "script-fail-notify": true,
   "scripts": {
     "sound-script": {
@@ -42,7 +37,6 @@
       "app-name": ".*google-chrome.*"
     }
   },
-
   "widgets": [
     "buttons-grid",
     "mpris",
@@ -51,7 +45,6 @@
     "notifications",
     "inhibitors"
   ],
-
   "widget-config": {
     "title": {
       "text": "Notifications",

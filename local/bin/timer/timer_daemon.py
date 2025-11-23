@@ -84,7 +84,7 @@ while True:
     if remaining_seconds == 0:
         if ELAPSED_FILE.exists():
             ELAPSED_FILE.unlink()
-        subprocess.run(["notify-send", "Timer Finished", "Your countdown has ended!"])
+        subprocess.run(["notify-send", "Timer Finished", "Time's Up!"])
         break
 
     remaining_str = str(timedelta(seconds=remaining_seconds)).split(".")[0]

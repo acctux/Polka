@@ -43,7 +43,6 @@ tooltip {
 }
 
 .modules-left,
-.modules-center,
 .modules-right {
   border-width: 1px;
   border-style: solid;
@@ -62,7 +61,6 @@ tooltip {
   margin-left: 1px;
 }
 /* === Shared Module Styles === */
-#workspaces button,
 #battery,
 #clock,
 #temperature,
@@ -77,6 +75,13 @@ tooltip {
 #custom-updates {
 	padding-right: 6px;
 	padding-left: 6px;
+}
+
+#workspaces button {
+	padding-right: 6px;
+	padding-left: 6px;
+  border-radius: 0px;
+  border-left: 1px solid #33ccff;
 }
 
 #backlight,
@@ -154,12 +159,13 @@ tooltip {
 }
 
 #tray {
-  padding: 0 1px 0 7px;
+  padding: 0 3px 0 7px;
   border-left: 1px solid #33ccff;
+  border-right: 1px solid #33ccff;
 }
 
 #custom-logo {
-	padding-right: 9px;
+	padding-right: 10px;
 	padding-left: 5px;
   color: #33ccff;
 }
@@ -174,10 +180,9 @@ tooltip {
 
 #custom-emptyborder {
   font-size: 4px;
-  border-right: 1px solid #33ccff;
 }
 #custom-empty {
-  font-size: 4px;
+  font-size: 5px;
 }
 
 #custom-music {
@@ -224,7 +229,9 @@ button:hover,
 #workspaces button.active,
 #workspaces button:hover {
   background: inherit;
-  border-radius: 5px;
+  border-radius: 5px;          /* keeps the overall rounding */
+  border-top-left-radius: 0;   /* removes top-left rounding */
+  border-bottom-left-radius: 0;
   color: #00ff99;
 }
 

@@ -5,11 +5,11 @@
   "modules-left": [
     "custom/logo",
     "tray",
+    "custom/empty",
     "custom/kdeconnect",
     "network",
     "backlight",
     "pulseaudio",
-    "custom/emptyborder",
     "custom/updates",
     "custom/empty",
     "hyprland/workspaces",
@@ -36,7 +36,7 @@
       "enable": true,
       "update-active-window": true,
       "format": "{icon}",
-      "icon-size": 18,
+      "icon-size": 17,
       "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}",
     },
   },
@@ -116,8 +116,8 @@
   },
   "temperature": {
     "critical-threshold": 80,
-    "format-critical": "{temperatureC}°C",
-    "format": "{temperatureC}°C",
+    "format-critical": "{temperatureC}°",
+    "format": "{temperatureC}°",
     "on-click": "alacritty -e btop",
   },
   "backlight": {

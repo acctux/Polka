@@ -2,39 +2,27 @@
 set -euo pipefail
 
 SESSION="music"
-CAVA_WIDTH=30 # percentage of window width for cava pane
+CAVA_WIDTH=20
+FILES=("$@")
+UEBERZUGCMD="ueberzugpp"
 
-# find commands
-RMPCCMD="$(command -v rmpc || true)"
-CAVACMD="$(command -v cava || true)"
-
-if [[ -z "$RMPCCMD" ]]; then
-  echo "Error: rmpc not found on PATH. Install or add it to PATH."
-  exit 1
-fi
-if [[ -z "$CAVACMD" ]]; then
-  echo "Error: cava not found on PATH. Install or add it to PATH."
-  exit 1
-fi
-
-# kill old session
+# --- Cleanup ---------------------------------------------
+pkill -9 -x rmpc 2>/dev/null || true
+pkill -9 -x "$UEBERZUGCMD" 2>/dev/null || true
 tmux kill-session -t "$SESSION" 2>/dev/null || true
 
-# start detached session with rmpc
+# --- Clear playlist, add files, play ---------------------
+if [[ ${#FILES[@]} -gt 0 ]]; then
+  mpc clear
+  for f in "${FILES[@]}"; do
+    mpc add "$f"
+  done
+  mpc play
+fi
 
-tmux new-session -d -s "$SESSION" -x "$(tput cols)" -y "$(tput lines)" "bash -lc '$RMPCCMD'" \; \
-  split-window -h -p "$CAVA_WIDTH" "bash -lc '$CAVACMD'" \; \
-  select-pane -t 0 \; \
-  set-option -g status off \; \
-  attach-session -t "$SESSION"
-
-sleep 0.1
-
-# split horizontally and give cava the desired width
-tmux split-window -h -p "$CAVA_WIDTH" -t "${SESSION}:0" "bash -lc '$CAVACMD'"
-
-# focus on rmpc pane
+# --- Start new session ------------------------------------
+tmux new-session -d -s "$SESSION" -x "$(tput cols)" -y "$(tput lines)" "bash -lc rmpc"
+tmux split-window -h -p "$CAVA_WIDTH" -t "${SESSION}:0" "bash -lc cava"
 tmux select-pane -t "${SESSION}:0.0"
-
-# attach session
-tmux attach-session -t "$SESSION"
+tmux set-option -t "$SESSION" status off
+exec tmux attach -t "$SESSION"
