@@ -18,6 +18,7 @@ IMAP_HOST = creds.get("IMAP_HOST", "")
 IMAP_PORT = int(creds.get("IMAP_PORT", 0))
 USERNAME = creds.get("USERNAME", "")
 PASSWORD = creds.get("PASSWORD", "")
+SLEEP_TIME = 30
 
 if not all([IMAP_HOST, IMAP_PORT, USERNAME, PASSWORD]):
     raise ValueError("Missing ProtonMail Bridge credentials in bridge_creds.txt")
@@ -30,9 +31,11 @@ try:
 except FileNotFoundError:
     old_subject = ""
 
-bridge_proc = subprocess.Popen(["protonmail-bridge", "--no-window"])
+bridge_proc = subprocess.run(
+    ["systemctl", "--user", "start", "protonmail-bridge.service"]
+)
 print("Starting ProtonMail Bridge... waiting 30 seconds for it to initialize")
-time.sleep(30)
+time.sleep(SLEEP_TIME)
 
 try:
     imap = imaplib2.IMAP4(IMAP_HOST, IMAP_PORT)
@@ -44,13 +47,15 @@ try:
 
     if email_ids:
         last_email_id = email_ids[-1]
-        status, msg_data = imap.fetch(last_email_id, "(BODY[HEADER.FIELDS (SUBJECT FROM)])")
+        status, msg_data = imap.fetch(
+            last_email_id, "(BODY[HEADER.FIELDS (SUBJECT FROM)])"
+        )
         header_text = msg_data[0][1].decode()
 
         subject = ""
         for line in header_text.splitlines():
             if line.startswith("Subject:"):
-                subject = line[len("Subject:"):].strip()
+                subject = line[len("Subject:") :].strip()
                 break
 
         if subject and subject != old_subject:
@@ -61,10 +66,5 @@ try:
     imap.logout()
 
 finally:
-    if 'bridge_proc' in locals() and bridge_proc:
-        print("Stopping ProtonMail Bridge...")
-        bridge_proc.terminate()
-        try:
-            bridge_proc.wait(timeout=10)
-        except subprocess.TimeoutExpired:
-            bridge_proc.kill()
+    print("Stopping ProtonMail Bridge service...")
+    subprocess.run(["systemctl", "--user", "stop", "protonmail-bridge.service"])

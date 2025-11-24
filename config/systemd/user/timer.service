@@ -1,9 +1,0 @@
-[Unit]
-Description=Persistent Waybar Timer
-
-[Service]
-ExecStart=/home/nick/Polka/local/bin/timer/timer_daemon.py
-Restart=always
-
-[Install]
-WantedBy=default.target

@@ -79,7 +79,7 @@ def main():
     print(
         json.dumps(
             {
-                "text": f"{icon}<span size='10pt'>{folder_name}</span>",
+                "text": f"{icon}<span size='9pt'>{folder_name}</span>",
                 "class": waybar_class,
                 "on-click": "/home/nick/Polka/local/bin/folders/nemo_scroll.py exec",
             }

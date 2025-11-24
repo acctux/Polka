@@ -7,7 +7,7 @@ set recolor-darkcolor "#F4F5F6"    # text color
 
 # Optional: smooth scrolling / keybindings
 set smoothscroll true
-set scroll-step 30
+set scroll-step 20
 
 # Optional: show page number in statusbar
 set statusbar true

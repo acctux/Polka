@@ -55,7 +55,7 @@
 
 @define-color outline_variant #828385;
 
-@define-color primary #10b981; /* Red, could be for active color highlights */
+@define-color primary #1ADB9B; /* Red, could be for active color highlights */
 @define-color primary_container #F4F5F6; /* Darker red */
 @define-color primary_fixed #00e8c6; /* Lighter background */
 @define-color primary_fixed_dim #646464; /* Slightly darkened primary */
@@ -77,7 +77,7 @@
 @define-color surface_container_low #231917; /* Low level container background */
 @define-color surface_container_lowest #140c0a; /* Very dark container background */
 @define-color surface_dim #1a110f; /* Dimmed surface */
-@define-color surface_tint #10b981; /* Tinted surface accent */
+@define-color surface_tint #1ADB9B; /* Tinted surface accent */
 
 @define-color surface_variant #191a1f; /* Surface variant color for contrast */
 

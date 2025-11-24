@@ -1,0 +1,19 @@
+[Default Applications]
+image/jpeg=imv.desktop
+image/png=imv.desktop
+application/pdf=org.pwmt.zathura-pdf-mupdf.desktop
+video/x-matroska=org.kde.haruna.desktop
+audio/mpeg=rmpc.desktop
+x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop
+application/octet-stream=featherpad.desktop
+
+[Added Associations]
+image/jpeg=imv.desktop;
+image/png=imv.desktop;
+application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;
+video/x-matroska=org.kde.haruna.desktop;
+audio/mpeg=rmpc.desktop;
+x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop;
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop;
+application/octet-stream=featherpad.desktop;

@@ -2,88 +2,66 @@
   "$schema": "/etc/xdg/swaync/configSchema.json",
   "positionX": "right",
   "positionY": "top",
-  "layer": "overlay",
-  "layer-shell": true,
-  "layer-shell-cover-screen": false,
-  "ignore-gtk-theme": true,
-  "control-center-layer": "top",
-  "cssPriority": "user",
-  "control-center-width": 350,
-  "control-center-margin-top": 0,
-  "control-center-margin-bottom": 20,
-  "control-center-margin-right": 0,
-  "control-center-margin-left": 0,
-  "notification-2fa-action": true,
-  "notification-inline-replies": true,
-  "notification-window-width": 500,
-  "notification-body-image-height": 200,
+  "control-center-margin-top": 10,
+  "control-center-margin-bottom": 10,
+  "control-center-margin-right": 10,
+  "notification-body-image-height": 100,
   "notification-body-image-width": 200,
-  "notification-grouping": true,
-  "notification-window-preferred-output": "HDMI-A-1",
-  "notification-window-height": -1,
-  "timeout": 20,
-  "timeout-low": 10,
+  "timeout": 10,
+  "timeout-low": 5,
   "timeout-critical": 0,
   "fit-to-screen": false,
+  "control-center-width": 500,
+  "control-center-height": 1033,
+  "notification-window-width": 500,
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
   "transition-time": 200,
-  "hide-on-clear": true,
+  "hide-on-clear": false,
   "hide-on-action": true,
   "script-fail-notify": true,
-  "scripts": {
-    "sound-script": {
-      "exec": "bash ~/.config/swaync/scripts/notify_sound.sh > /tmp/swaync-notify-sound.log",
-      "app-name": ".*google-chrome.*"
-    }
-  },
+  "text-empty": "Nothing here",
   "widgets": [
     "buttons-grid",
-    "mpris",
     "volume",
-    "title",
-    "notifications",
-    "inhibitors"
+    "backlight",
+    "mpris"
   ],
   "widget-config": {
     "title": {
-      "text": "Notifications",
+      "text": "Notification Center",
       "clear-all-button": true,
-      "button-text": "Clear"
+      "button-text": "󰆴 Clear"
     },
-    "notifications": {
-      "vexpand": false
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "label": {
+      "max-lines": 1,
+      "text": "Notification Center"
     },
     "mpris": {
-      "autohide": true,
-      "loop-carousel": true,
-      "show-album-art": "when-available"
+      "blacklist": [
+        "kew",
+        "firefox",
+        "spotify"
+      ]
     },
     "volume": {
-      "label": "",
-      "show-per-app": true
+      "label": "󰕾"
     },
     "backlight": {
-      "label": "󰃞"
-    },
-    "inhibitors": {
-      "text": "Inhibitors",
-      "button-text": "Clear All",
-      "clear-all-button": true
+      "label": "󰃟"
     },
     "buttons-grid": {
       "actions": [
         {
-          "label": "󰂛",
-          "command": "swaync-client -d",
-          "type": "toggle",
-          "tooltip": "DND",
-          "update-command": "echo $(swaync-client --get-dnd)"
+          "label": "󰐥",
+          "command": "systemctl poweroff"
         },
         {
-          "label": "",
-          "command": "hyprlock",
-          "tooltip": "Lock"
+          "label": "󰜉",
+          "command": "systemctl reboot"
         },
         {
           "label": "󱖐",
@@ -91,14 +69,24 @@
           "tooltip": "Suspend"
         },
         {
-          "label": "󰜉",
-          "command": "systemctl reboot",
-          "tooltip": "Reboot"
+          "label": "󰌾",
+          "command": "hyprlock"
         },
         {
-          "label": "⏻",
-          "command": "systemctl poweroff",
-          "tooltip": "Power Off"
+          "label": "󰍃",
+          "command": "swaymsg exit"
+        },
+        {
+          "label": "󰕾",
+          "command": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+          "type": "toggle"
+        },
+        {
+          "label": "󰂛",
+          "command": "swaync-client -d",
+          "type": "toggle",
+          "tooltip": "DND",
+          "update-command": "echo $(swaync-client --get-dnd)"
         }
       ]
     }

@@ -1,9 +1,9 @@
 /* === Global Styles === */
 * {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 400;
-  letter-spacing: 1.25px;
-  font-family: "CaskaydiaMono Nerd Font", monospace;
+  letter-spacing: 1px;
+  font-family: "JetBrainsMono Nerd Font Ultra-Bold", monospace;
   transition: all 0.75s ease;
   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
 }
@@ -176,8 +176,6 @@ tooltip {
   border-right: 1px solid #33ccff;
 }
 #custom-nemo.hidden {
-	padding-right: 8px;
-	padding-left: 6px;
   border: none;
 }
 #custom-logo {
@@ -206,7 +204,6 @@ tooltip {
 #custom-music.playing {
 	padding-right: 4px;
   border-right: 1px solid #33ccff;
-  border-left: 1px solid #33ccff;
   color: #33ccff;
 }
 #custom-updates {

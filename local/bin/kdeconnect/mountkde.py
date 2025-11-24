@@ -4,16 +4,19 @@ import sys
 import time
 from pathlib import Path
 import os
+import shutil
 import re
 
-# Paths and config
 PHONE_PATH = Path.home() / "Phone"
 ANDROID_MOUNT = PHONE_PATH / "Internal"
 SD_MOUNT = PHONE_PATH / "SD"
+
 SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
 ANDROID_USER = "kdeconnect"
 ANDROID_DIR = "/storage/emulated/0"
 SD_DIR = "/storage/0000-0000"
+
+PHONE_ICON = "/home/nick/.local/share/icons/WhiteSur-grey-dark/places/scalable/folder-android.svg"
 
 
 def run(cmd, capture=True, check=False):
@@ -69,6 +72,27 @@ def get_ssh_port(host):
     sys.exit("Failed to detect SSH port.")
 
 
+def set_phone_icon(icon_path):
+    icon_path = Path(icon_path).resolve()
+    PHONE_PATH.mkdir(parents=True, exist_ok=True)
+    if not icon_path.exists():
+        print(f"Icon not found: {icon_path}")
+        return
+    try:
+        run(
+            [
+                "gio",
+                "set",
+                str(PHONE_PATH),
+                "metadata::custom-icon",
+                f"file://{icon_path}",
+            ]
+        )
+        print(f"Custom icon set for {PHONE_PATH}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to set icon for {PHONE_PATH}: {e.stderr}")
+
+
 def mount_storage(host, port):
     ANDROID_MOUNT.mkdir(parents=True, exist_ok=True)
     SD_MOUNT.mkdir(parents=True, exist_ok=True)
@@ -92,6 +116,12 @@ def unmount_storage():
                 print(f"Unmounted {mp}")
             except subprocess.CalledProcessError:
                 print(f"Failed to unmount {mp}", file=sys.stderr)
+    if PHONE_PATH.exists() and PHONE_PATH.is_dir():
+        try:
+            shutil.rmtree(PHONE_PATH)
+            print(f"Removed {PHONE_PATH}")
+        except Exception as e:
+            print(f"Failed to remove {PHONE_PATH}: {e}", file=sys.stderr)
 
 
 def main():
@@ -102,6 +132,7 @@ def main():
     activate_sftp(device_id)
     host = detect_host(device_id)
     port = get_ssh_port(host)
+    set_phone_icon(PHONE_ICON)  # <-- set icon only for PHONE_PATH
     mount_storage(host, port)
     print(f"Mounted {device_id} at {ANDROID_MOUNT} and {SD_MOUNT}")
 

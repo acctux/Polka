@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Duration to keep the services running (in seconds)
-RUNTIME=8
+RUNTIME=15
 
 # List of user services to start/stop
 SERVICES=(
