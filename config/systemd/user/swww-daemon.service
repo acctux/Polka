@@ -1,12 +1,13 @@
 [Unit]
 Description=swww wallpaper daemon
-After=graphical-session.target
-Wants=graphical-session.target
+After=wayland-wm@hyprland.desktop.service
+Requires=wayland-wm@hyprland.desktop.service
 
 [Service]
 ExecStart=/usr/bin/swww-daemon
 Restart=on-failure
 Type=simple
+RestartSec=5
 
 [Install]
 WantedBy=default.target

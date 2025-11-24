@@ -2,6 +2,7 @@
 * {
   font-size: 13.5px;
   font-weight: 400;
+  letter-spacing: 1.25px;
   font-family: "CaskaydiaMono Nerd Font", monospace;
   transition: all 0.75s ease;
   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
@@ -67,6 +68,7 @@ tooltip {
 #custom-kb-switch,
 #custom-logo,
 #custom-timer,
+#custom-nemo,
 #custom-notification,
 #custom-music,
 #window,
@@ -83,6 +85,7 @@ tooltip {
 	padding-left: 2px;
 }
 
+#custom-timer,
 #backlight,
 #network,
 #custom-kdeconnect,
@@ -96,11 +99,10 @@ tooltip {
 #custom-taskwarrior {
   font-size: 14.5px;
 }
+#custom-nemo,
 #custom-notification,
 #backlight,
-#pulseaudio {
-  font-size: 15px;
-}
+#pulseaudio,
 #custom-kdeconnect,
 #custom-logo {
   font-size: 15px;
@@ -129,6 +131,9 @@ tooltip {
 #temperature {
   border-right: 1px solid #33ccff;
 }
+#clock {
+  border-left: 1px solid #33ccff;
+}
 #temperature.critical {
   color: #ff3232;
 }
@@ -142,7 +147,7 @@ tooltip {
 }
 
 #network {
-  padding: 0 9px 0 3px;
+  padding: 0 8px 0 4px;
 }
 
 #custom-kb-switch {
@@ -164,9 +169,17 @@ tooltip {
 #tray {
   padding: 0 4px 0 8px;
   border-right: 1px solid #33ccff;
-  border-left: 1px solid #33ccff;
 }
 
+#custom-nemo {
+  font-size: 15px;
+  border-right: 1px solid #33ccff;
+}
+#custom-nemo.hidden {
+	padding-right: 8px;
+	padding-left: 6px;
+  border: none;
+}
 #custom-logo {
 	padding-right: 10px;
 	padding-left: 5px;
@@ -192,6 +205,8 @@ tooltip {
 #custom-music.paused,
 #custom-music.playing {
 	padding-right: 4px;
+  border-right: 1px solid #33ccff;
+  border-left: 1px solid #33ccff;
   color: #33ccff;
 }
 #custom-updates {
@@ -212,6 +227,7 @@ tooltip {
 button:hover,
 #custom-power:hover,
 #custom-kdeconnect.connected:hover,
+#custom-timer:hover,
 #backlight:hover,
 #custom-tlp:hover,
 #network:hover,
@@ -231,12 +247,16 @@ button:hover,
 
 #custom-logo:hover,
 #custom-updates:hover,
+#custom-nemo:hover,
 #custom-kb-switch:hover,
 #clock:hover,
 #custom-taskwarrior:hover,
 #temperature:hover {
   background-color: rgba(16, 16, 19, 0.3);
   color: #33ccff;
+}
+#custom-notification:hover {
+  color: #ff3232;
 }
 #custom-logo:hover {
   color: #00ff99;

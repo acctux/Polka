@@ -16,4 +16,7 @@ SERVICES = [
     "walker.service",
     # "xdg-user-dirs.service",
     # "polkit-gnome.service",
+    # "swww-daemon.service",
+    # "swayosd.service",
+    # "kdeconnectd.service",
 ]

@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import time
+from pathlib import Path
+import os
+import re
+
+# Paths and config
+PHONE_PATH = Path.home() / "Phone"
+ANDROID_MOUNT = PHONE_PATH / "Internal"
+SD_MOUNT = PHONE_PATH / "SD"
+SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
+ANDROID_USER = "kdeconnect"
+ANDROID_DIR = "/storage/emulated/0"
+SD_DIR = "/storage/0000-0000"
+
+
+def run(cmd, capture=True, check=False):
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        text=True,
+        stdout=subprocess.PIPE if capture else None,
+        stderr=subprocess.PIPE if capture else None,
+    )
+    if check and result.returncode != 0:
+        raise subprocess.CalledProcessError(result.returncode, cmd)
+    return result.stdout.strip() if capture else None
+
+
+def select_device():
+    output = run("kdeconnect-cli -l")
+    if output:
+        devices = re.findall(r"- .*?: ([a-f0-9]{8,})", output, re.I)
+        if not devices:
+            sys.exit("No KDE Connect devices found.")
+        if len(devices) == 1:
+            return devices[0]
+        for i, d in enumerate(devices, 1):
+            print(f"{i}: {d}")
+        try:
+            return devices[int(input("Select device: ")) - 1]
+        except (ValueError, IndexError):
+            sys.exit("Invalid selection.")
+
+
+def activate_sftp(device_id):
+    run(
+        f"qdbus org.kde.kdeconnect /modules/kdeconnect/devices/{device_id}/sftp org.kde.kdeconnect.device.sftp.mountAndWait",
+        check=True,
+    )
+
+
+def detect_host(device_id):
+    time.sleep(3)
+    for line in run("mount").splitlines():
+        if device_id in line and "kdeconnect" in line:
+            match = re.search(r"kdeconnect@([0-9.]+)", line)
+            if match:
+                return match.group(1)
+    sys.exit("Failed to detect KDE Connect mount.")
+
+
+def get_ssh_port(host):
+    for line in run("ss -tnp").splitlines():
+        if host in line and "ssh" in line:
+            return line.split()[4].split(":")[-1]
+    sys.exit("Failed to detect SSH port.")
+
+
+def mount_storage(host, port):
+    ANDROID_MOUNT.mkdir(parents=True, exist_ok=True)
+    SD_MOUNT.mkdir(parents=True, exist_ok=True)
+    opts = f"rw,nosuid,nodev,IdentityFile={SSH_KEY},port={port},uid={os.getuid()},gid={os.getgid()},allow_other"
+    for remote, mount_point in [(ANDROID_DIR, ANDROID_MOUNT), (SD_DIR, SD_MOUNT)]:
+        try:
+            run(
+                f"sshfs -o {opts} {ANDROID_USER}@{host}:{remote} {mount_point}",
+                capture=False,
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            print(f"Failed to mount {mount_point}", file=sys.stderr)
+
+
+def unmount_storage():
+    for mp in [ANDROID_MOUNT, SD_MOUNT]:
+        if mp.is_mount():
+            try:
+                run(f"fusermount3 -u {mp}", capture=False, check=True)
+                print(f"Unmounted {mp}")
+            except subprocess.CalledProcessError:
+                print(f"Failed to unmount {mp}", file=sys.stderr)
+
+
+def main():
+    if ANDROID_MOUNT.is_mount():
+        unmount_storage()
+        return
+    device_id = select_device()
+    activate_sftp(device_id)
+    host = detect_host(device_id)
+    port = get_ssh_port(host)
+    mount_storage(host, port)
+    print(f"Mounted {device_id} at {ANDROID_MOUNT} and {SD_MOUNT}")
+
+
+if __name__ == "__main__":
+    main()

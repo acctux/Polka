@@ -1,61 +1,135 @@
 #!/usr/bin/env python3
+"""
+Waybar timer module — perfectly matched to the clean JSON timer
+Uses: "paused_at" as the only truth for pause state
+"""
+
 import json
 import sys
+import time
 from pathlib import Path
+from datetime import datetime, timezone
+from typing import Any
 
-ELAPSED_FILE = Path.home() / ".cache/timer_elapsed.txt"
-DURATION_FILE = Path.home() / ".cache/timer_duration.txt"
+# ----------------------------------------------------------------------
+# Config
+# ----------------------------------------------------------------------
+STATE_FILE = Path.home() / ".cache" / "timer_state.json"
 
 
-def read_duration():
+# ----------------------------------------------------------------------
+# Helpers
+# ----------------------------------------------------------------------
+def format_seconds(secs: int) -> str:
+    secs = max(0, int(secs))
+    h, r = divmod(secs, 3600)
+    m, s = divmod(r, 60)
+    return f"{h:d}:{m:02d}:{s:02d}" if h else f"{m:02d}:{s:02d}"
+
+
+def load_state() -> dict:
+    if not STATE_FILE.exists():
+        return {}
     try:
-        with DURATION_FILE.open("r") as f:
-            return int(f.read().strip())
-    except (FileNotFoundError, ValueError):
-        return None
+        data = json.loads(STATE_FILE.read_text())
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
 
 
-def write_duration(seconds):
-    with DURATION_FILE.open("w") as f:
-        f.write(str(seconds))
+# ----------------------------------------------------------------------
+# State cases — based on REAL current logic
+# ----------------------------------------------------------------------
+def case_no_timer() -> dict[str, Any]:
+    return {"text": ""}
 
 
-def adjust_duration(delta):
-    current = read_duration()
-    if current is None:
-        return
-    new_duration = max(0, current + delta)
-    write_duration(new_duration)
+def case_running(state: dict) -> dict[str, Any]:
+    start_time = datetime.fromisoformat(state["start_time"])
+    elapsed = (datetime.now(timezone.utc) - start_time).total_seconds()
+    remaining = max(0, int(state["duration"] - elapsed))
+    text = format_seconds(remaining)
+    unit = load_state().get("unit")
+    # Optional: flash when < 1 minute
+    if unit == "minutes":
+        icon = "󰔛"
+    elif unit == "hours":
+        icon = "󱦟"
+    else:
+        icon = "󰨀"
+
+    return {
+        "text": f"{icon} {text}",
+        "tooltip": f"Running — {text} remaining{unit}",
+        "class": f"{icon}",
+        "alt": "timer",
+    }
 
 
-# Handle CLI adjustments (+N / -N)
-if len(sys.argv) == 2:
-    arg = sys.argv[1]
-    if arg.startswith("+") or arg.startswith("-"):
-        try:
-            delta = int(arg)
-            adjust_duration(delta)
-        except ValueError:
-            pass  # ignore invalid input
+def case_paused(state: dict) -> dict[str, Any]:
+    remaining = int(state["duration"])
+    text = format_seconds(remaining)
+    return {
+        "text": f"⏸ {text}",
+        "tooltip": f"Paused — {text} left",
+        "class": "paused",
+        "alt": "timer",
+    }
 
-# Read remaining time
-try:
-    with ELAPSED_FILE.open("r") as f:
-        elapsed_str = f.read().strip()
-except FileNotFoundError:
-    elapsed_str = ""  # fallback
 
-# Read total timer duration for tooltip
-total_seconds = read_duration()
-if total_seconds is not None:
-    total_td = f"{total_seconds // 3600:02d}:{(total_seconds % 3600) // 60:02d}:{total_seconds % 60:02d}"
-else:
-    total_td = "Unknown"
+def case_finished() -> dict[str, Any]:
+    return {
+        "text": "󰀨 DONE!",
+        "tooltip": "Timer finished!",
+        "class": "finished urgent",
+        "alt": "timer",
+    }
 
-waybar_output = {
-    "text": f"{elapsed_str}",
-    "tooltip": f"Total time: {total_td}",
-    "class": "timer",
-}
 
-print(json.dumps(waybar_output))
+# ----------------------------------------------------------------------
+# Main loop
+# ----------------------------------------------------------------------
+last_output = None
+
+while True:
+    state = load_state()
+
+    has_duration = bool(state.get("duration"))
+    is_paused = state.get("paused_at") is not None
+    is_running_state = "start_time" in state and state.get("paused_at") is None
+
+    just_finished = False
+    if is_running_state:
+        elapsed = (
+            datetime.now(timezone.utc) - datetime.fromisoformat(state["start_time"])
+        ).total_seconds()
+        if elapsed >= state["duration"]:
+            just_finished = True
+
+    # Dispatch
+    if not has_duration:
+        output = case_no_timer()
+    elif just_finished:
+        output = case_finished()
+    elif is_paused:
+        output = case_paused(state)
+    elif is_running_state:
+        output = case_running(state)
+    else:
+        output = {"text": "Timer ?", "class": "error"}  # corrupted
+
+    # Print only on change
+    output_json = json.dumps(output)
+    if output_json != last_output:
+        print(output_json)
+        sys.stdout.flush()
+        last_output = output_json
+
+    remaining = 0
+    if is_running_state:
+        elapsed = (
+            datetime.now(timezone.utc) - datetime.fromisoformat(state["start_time"])
+        ).total_seconds()
+        remaining = max(0, int(state["duration"] - elapsed))
+    sleep_time = 1
+    time.sleep(sleep_time)

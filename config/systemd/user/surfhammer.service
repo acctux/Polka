@@ -1,0 +1,13 @@
+[Unit]
+Description=Surfshark VPN client
+After=network.target wayland-wm@hyprland.desktop.service
+Requires=wayland-wm@hyprland.desktop.service
+
+[Service]
+Type=simple
+RestartSec=5
+ExecStart=/opt/Surfshark/surfshark --hidden
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

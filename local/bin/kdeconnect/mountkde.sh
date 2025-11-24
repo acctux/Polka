@@ -52,10 +52,7 @@ mount_storage() {
 }
 
 main() {
-  check_requirements
-  check_kdeconnect
   activate_sftp
-  create_mount_points
   detect_mount
   get_ssh_port
   mount_storage

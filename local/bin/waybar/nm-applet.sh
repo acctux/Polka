@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# Toggle nm-applet: kill if running, start if not
 
-if pgrep -x nm-applet >/dev/null; then
-  echo "nm-applet running — killing it..."
-  pkill -x nm-applet
+SERVICE="nm-applet.service"
+if systemctl --user is-active --quiet "$SERVICE"; then
+  systemctl --user stop "$SERVICE"
 else
-  echo "nm-applet not running — starting it..."
-  nohup nm-applet --indicator >/dev/null 2>&1 &
+  systemctl --user start "$SERVICE"
 fi

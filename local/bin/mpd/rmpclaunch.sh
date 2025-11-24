@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SESSION="music"
-CAVA_WIDTH=20
+CAVA_WIDTH=25
 FILES=("$@")
 UEBERZUGCMD="ueberzugpp"
 
