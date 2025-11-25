@@ -1,7 +1,7 @@
 [Unit]
 Description=NetworkManager Applet
 After=network.target wayland-wm@hyprland.desktop.service
-Wants=network.target
+Wants=network.target wayland-wm@hyprland.desktop.service
 
 [Service]
 Type=simple
@@ -9,5 +9,4 @@ ExecStart=/usr/bin/nm-applet --indicator
 Restart=no
 
 [Install]
-WantedBy=default.target
-
+WantedBy=wayland-wm@hyprland.desktop.service

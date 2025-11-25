@@ -2,7 +2,7 @@
 Description=Run ProtonMail email check every 30 minutes
 
 [Timer]
-OnBootSec=40sec
+OnBootSec=5min
 OnUnitActiveSec=30min
 Persistent=true
 

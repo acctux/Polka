@@ -1,7 +1,8 @@
 
 [Unit]
 Description=Elephant
-After=graphical-session.target
+WantedBy=wayland-wm@hyprland.desktop.service
+Requires=wayland-wm@hyprland.desktop.service
 
 [Service]
 Type=simple
@@ -9,5 +10,6 @@ ExecStart=elephant
 Restart=on-failure
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=wayland-wm@hyprland.desktop.service
+
 							

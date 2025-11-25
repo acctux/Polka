@@ -1,14 +1,13 @@
 [Unit]
 Description=Walker launcher service
-PartOf=graphical-session.target
-After=graphical-session.target elephant.service
+Wants=wayland-session@hyprland.desktop.target
+After=wayland-session@hyprland.desktop.target elephant.service
 ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
 ExecStart=walker --gapplication-service
-Slice=session.slice
 Restart=on-failure
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=wayland-session@hyprland.desktop.target

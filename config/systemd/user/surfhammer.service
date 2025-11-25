@@ -1,13 +1,15 @@
 [Unit]
-Description=Surfshark VPN client
+Description=Surfshark VPN client (user mode)
 After=network.target wayland-wm@hyprland.desktop.service
 Requires=wayland-wm@hyprland.desktop.service
 
 [Service]
-Type=simple
-RestartSec=5
-ExecStart=/opt/Surfshark/surfshark --hidden
-Restart=on-failure
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/usr/bin/sudo /opt/Surfshark/resources/dist/resources/surfsharkd2.js
+ExecStart=/bin/sleep 2
+ExecStartPost=/opt/Surfshark/surfshark --hidden
 
 [Install]
-WantedBy=default.target
+WantedBy=wayland-wm@hyprland.desktop.service
+

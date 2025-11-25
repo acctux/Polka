@@ -1,11 +1,13 @@
 [Unit]
-Description=AyuGram Desktop
+Description=nm-applet autostart
 After=wayland-session@hyprland.desktop.target
 Wants=wayland-session@hyprland.desktop.target
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/AyuGram -autostart
+ExecStartPre=/usr/sbin/systemctl --user start nm-applet.service
+ExecStart=/usr/sbin/sleep 20
+ExecStartPost=/usr/sbin/systemctl --user stop nm-applet.service
 Slice=session.slice
 Restart=on-failure
 RestartSec=5

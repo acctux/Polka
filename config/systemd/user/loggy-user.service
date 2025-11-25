@@ -1,0 +1,13 @@
+[Unit]
+Description=Run Solaar when Logitech mouse connects
+Wants=loggy-user.path
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/systemctl --user start solaar.service
+ExecStart=/bin/sleep 10
+ExecStartPost=/usr/bin/systemctl --user stop solaar.service
+RemainAfterExit=true
+[Install]
+WantedBy=default.target
+

@@ -3,7 +3,7 @@
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 1px;
-  font-family: "JetBrainsMono Nerd Font Ultra-Bold", monospace;
+  font-family: "CaskaydiaMono Nerd Font Medium", monospace;
   transition: all 0.75s ease;
   font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
 }
@@ -69,7 +69,6 @@ tooltip {
 #custom-logo,
 #custom-timer,
 #custom-nemo,
-#custom-notification,
 #custom-music,
 #window,
 #custom-taskwarrior,
@@ -140,6 +139,8 @@ tooltip {
 
 #custom-notification {
   border-left: 1px solid #33ccff;
+	padding-right: 7px;
+	padding-left: 5px;
   color: #00ff99;
 }
 #custom-timer {

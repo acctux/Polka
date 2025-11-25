@@ -1,23 +1,36 @@
 #!/usr/bin/env bash
-
-# Duration to keep the services running (in seconds)
+#############################################
+#############################################
 RUNTIME=15
-
-# List of user services to start/stop
-SERVICES=(
-  "solaar.service"
+START_SERVICES=(
+  # "solaar.service"
+  "nm-applet.service"
+)
+STOP_SERVICES=(
+  # "solaar.service"
   "nm-applet.service"
 )
 
-# Start services
-for svc in "${SERVICES[@]}"; do
-  systemctl --user start "$svc"
-done
+############################################
+start_svcs() {
+  for svc in "${START_SERVICES[@]}"; do
+    if ! systemctl --user is-active --quiet "$svc"; then
+      systemctl --user start "$svc"
+    fi
+  done
+}
+stop_svcs() {
+  for svc in "${START_SERVICES[@]}"; do
+    if systemctl --user is-active --quiet "$svc"; then
+      systemctl --user stop "$svc"
+    fi
+  done
+}
 
-# Sleep for the desired runtime
-sleep "$RUNTIME"
-
-# Stop services
-for svc in "${SERVICES[@]}"; do
-  systemctl --user stop "$svc"
-done
+############################################
+main() {
+  start_svcs
+  sleep $RUNTIME
+  stop_svcs
+  systemctl --user restart swww-daemon.service
+}

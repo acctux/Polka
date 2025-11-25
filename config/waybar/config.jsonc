@@ -5,6 +5,7 @@
   "modules-left": [
     "custom/logo",
     "temperature",
+    "custom/music",
     "tray",
     "custom/empty",
     "custom/empty",
@@ -12,7 +13,6 @@
     "custom/updates",
   ],
   "modules-right": [
-    "custom/music",
     "custom/nemo",
     "custom/timer",
     "custom/kb-switch",

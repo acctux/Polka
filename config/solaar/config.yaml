@@ -6,7 +6,7 @@
     m-key-leds, mr-key-led, multiplatform, gesture2-gestures, gesture2-divert, gesture2-params, sidetone, equalizer, adc_power_management]
   _battery: 4100
   _modelId: B03400000000
-  _sensitive: {dpi: true}
+  _sensitive: {dpi: true, hires-smooth-resolution: true, scroll-ratchet: true, smart-shift: true}
   _unitId: ABE58ED7
   change-host: null
   divert-keys: {82: 0, 83: 1, 86: 1, 195: 1, 196: 1}
@@ -16,6 +16,6 @@
   hires-smooth-resolution: true
   reprogrammable-keys: {80: 80, 81: 81, 82: 82, 83: 83, 86: 86, 195: 195, 196: 196}
   scroll-ratchet: 2
-  smart-shift: 30
+  smart-shift: 44
   thumb-scroll-invert: false
   thumb-scroll-mode: false
