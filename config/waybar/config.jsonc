@@ -110,13 +110,6 @@
   "custom/emptyborder": {
     "format": " ",
   },
-  "custom/kb-switch": {
-    "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
-    "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
-    "signal": 6,
-    "format": "{}",
-    "tooltip": false
-  },
   "temperature": {
     "critical-threshold": 80,
     "format-critical": "{temperatureC}°",
@@ -179,6 +172,15 @@
     "on-click-right": "gsimplecal",
     "on-click-middle": "~/Polka/local/bin/timer/set_timer.py",
     "interval": 60,
+  },
+  "custom/kb-switch": {
+    "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
+    "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
+    "on-click-right": "rofimoji",
+    "on-click-middle": "/home/nick/Polka/local/bin/folders/mountencrypted.sh",
+    "signal": 6,
+    "format": "{}",
+    "tooltip": false
   },
   "custom/nemo": {
     "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",

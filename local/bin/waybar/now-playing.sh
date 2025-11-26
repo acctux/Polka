@@ -36,8 +36,13 @@ get_player_info() {
     rm -f "$SCROLL_FILE" "$MEDIA_FILE"
     exit 0
   fi
-  artist=$(playerctl metadata xesam:artist 2>/dev/null)
-  title=$(playerctl metadata xesam:title 2>/dev/null)
+  if [ "$player_status" == "Stopped" ]; then
+    artist=$(playerctl --player=vivaldi metadata xesam:artist 2>/dev/null)
+    title=$(playerctl --player=vivaldi metadata xesam:title 2>/dev/null)
+  else
+    artist=$(playerctl metadata xesam:artist 2>/dev/null)
+    title=$(playerctl metadata xesam:title 2>/dev/null)
+  fi
 }
 
 create_track_string() {
