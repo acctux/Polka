@@ -12,66 +12,96 @@
 #___________________________________________________________________________________________________
 # By Affan Mustafa 2025
 #___________________________________________________________________________________________________
-
 #!/bin/bash
 
 VISIBLE_MIN=10
 SCROLL_FILE="$HOME/.cache/nowplaying_scroll_pos"
 MEDIA_FILE="$HOME/.cache/nowplaying_last_track"
 
-# Fetch info
-player_status=$(playerctl -a status 2>/dev/null | grep -i Playing | head -n1)
-echo "Status: '$player_status'"
-if [[ $? -ne 0 || -z "$player_status" ]]; then
-  # No media player or not playing anything
-  rm -f "$SCROLL_FILE" "$MEDIA_FILE"
-  exit 0
-fi
+get_vivaldi_status() {
+  player_status=$(playerctl status --player=vivaldi 2>/dev/null)
+  if [ "$player_status" == "Paused" ]; then
+    return 1
+  fi
+}
 
-if [[ "$player_status" == "Paused" ]]; then
-  # Do not advance scroll position
-  echo ""
-  exit 0
-fi
+get_vivaldi_info() {
+  artist=$(playerctl --player=vivaldi metadata xesam:artist 2>/dev/null)
+  title=$(playerctl --player=vivaldi metadata xesam:title 2>/dev/null)
+}
 
-artist=$(playerctl -a metadata xesam:artist 2>/dev/null | head -n1)
-title=$(playerctl -a metadata xesam:title 2>/dev/null | head -n1)
-[[ -z "$artist" && -z "$title" ]] && exit 0
+get_player_info() {
+  player_status=$(playerctl status 2>/dev/null)
+  if [[ $? -ne 0 || -z "$player_status" ]]; then
+    rm -f "$SCROLL_FILE" "$MEDIA_FILE"
+    exit 0
+  fi
+  artist=$(playerctl metadata xesam:artist 2>/dev/null)
+  title=$(playerctl metadata xesam:title 2>/dev/null)
+}
 
-track="•$title•$artist"
+create_track_string() {
+  if [[ -z "$artist" && -z "$title" ]]; then
+    return 1
+  fi
+  track="$title • $artist • "
+  return 0
+}
 
-# Reset scroll if new track
-last_track=$(cat "$MEDIA_FILE" 2>/dev/null)
-if [[ "$track" != "$last_track" ]]; then
-  echo "$track" >"$MEDIA_FILE"
-  echo "0" >"$SCROLL_FILE"
-  scroll_pos=0
-else
-  scroll_pos=$(cat "$SCROLL_FILE" 2>/dev/null)
-  [[ -z "$scroll_pos" ]] && scroll_pos=0
-fi
+handle_scroll_position() {
+  last_track=$(cat "$MEDIA_FILE" 2>/dev/null)
+  if [[ "$track" != "$last_track" ]]; then
+    echo "$track" >"$MEDIA_FILE"
+    echo "0" >"$SCROLL_FILE"
+    scroll_pos=0
+  else
+    scroll_pos=$(cat "$SCROLL_FILE" 2>/dev/null)
+    [[ -z "$scroll_pos" ]] && scroll_pos=0
+  fi
+}
 
-scroll_pos=$((scroll_pos + 4))
-# Loop handling with 2s pause
-if ((scroll_pos > ${#track})); then
-  sleep 1
-  scroll_pos=0
-fi
-echo "$scroll_pos" >"$SCROLL_FILE"
+calculate_visible_length() {
+  visible_chars=$((${#track} * 1 / 8))
+  [[ $visible_chars -lt $VISIBLE_MIN ]] && visible_chars=$VISIBLE_MIN
+}
 
-# Dynamic visible length
-visible_chars=$((${#track} * 1 / 8))
-[[ $visible_chars -lt $VISIBLE_MIN ]] && visible_chars=$VISIBLE_MIN
+update_scroll_position() {
+  if [[ "$player_status" == "Paused" ]]; then
+    return
+  else
+    scroll_pos=$((scroll_pos + 1))
+    if ((scroll_pos > ${#track})); then
+      sleep 2
+      scroll_pos=0
+    fi
+    echo "$scroll_pos" >"$SCROLL_FILE"
+  fi
+}
 
-# Create scrolling text
-if ((scroll_pos + visible_chars <= ${#track})); then
-  display_text="${track:scroll_pos:visible_chars}"
-else
-  wrap_len=$((scroll_pos + visible_chars - ${#track}))
-  display_text="${track:scroll_pos}${track:0:wrap_len}"
-fi
+create_scrolling_text() {
+  if ((scroll_pos + visible_chars <= ${#track})); then
+    display_text="${track:scroll_pos:visible_chars}"
+  else
+    wrap_len=$((scroll_pos + visible_chars - ${#track}))
+    display_text="${track:scroll_pos}${track:0:wrap_len}"
+  fi
+}
 
-# Output JSON for Waybar
+output_json() {
+  echo "{\"text\": \"$display_text\", \"class\": \"${player_status,,}\"}"
+}
 
-safe_text=$(printf '%s' "$display_text" | jq -R .)
-echo "{\"text\": $safe_text}"
+main() {
+  if get_vivaldi_status; then
+    get_vivaldi_info
+  else
+    get_player_info
+  fi
+  create_track_string
+  handle_scroll_position
+  calculate_visible_length
+  update_scroll_position
+  create_scrolling_text
+  output_json
+}
+main

@@ -200,11 +200,11 @@ tooltip {
 
 #custom-music {
 	padding-right: 8px;
+  border-right: 1px solid #33ccff;
 }
 #custom-music.paused,
 #custom-music.playing {
 	padding-right: 4px;
-  border-right: 1px solid #33ccff;
   color: #33ccff;
 }
 #custom-updates {
