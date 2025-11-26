@@ -1,0 +1,12 @@
+[Unit]
+Description=NetworkManager Applet
+After=network.target wayland-wm@hyprland.desktop.service
+Wants=network.target wayland-wm@hyprland.desktop.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/protonvpn-app
+Restart=yes
+
+[Install]
+WantedBy=wayland-wm@hyprland.desktop.service

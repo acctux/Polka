@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Yazi
+Comment=Run Yazi Music Player inside Alacritty
+Exec=kitty --title "Yazi" yazi %F
+Terminal=false
+Type=Application
+Categories=Utility;FileTools;
+Icon=yazi
+StartupNotify=true

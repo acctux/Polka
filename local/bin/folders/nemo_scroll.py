@@ -6,12 +6,12 @@ from pathlib import Path
 
 # Hardcoded folders and optional icons
 FOLDERS = [
-    ("/home/nick/Documents", "󱧺"),
+    ("/home/nick/Documents", "󱧶"),
     ("/home/nick/Documents/Decrypted", "󰉑"),
-    ("/home/nick/Polka", ""),
-    ("/home/nick/Lit/noah", "󱃪"),
-    ("/etc", "󱁿"),
-    ("/home/nick/Overload", "󱧶"),
+    ("/home/nick/Polka", "󱂵"),
+    ("/home/nick/Lit/noah", "󰉒"),
+    ("/etc", "󱂀"),
+    ("/home/nick/Overload", "󱁿"),
 ]
 
 INDEX_FILE = Path.home() / ".cache/nemo_scroll_index"
@@ -79,7 +79,7 @@ def main():
     print(
         json.dumps(
             {
-                "text": f"{icon}<span size='9pt'>{folder_name}</span>",
+                "text": f"{icon}<span size='10pt'>{folder_name}</span>",
                 "class": waybar_class,
                 "on-click": "/home/nick/Polka/local/bin/folders/nemo_scroll.py exec",
             }

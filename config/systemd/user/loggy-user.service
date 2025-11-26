@@ -5,7 +5,7 @@ Wants=loggy-user.path
 [Service]
 Type=oneshot
 ExecStartPre=/usr/bin/systemctl --user start solaar.service
-ExecStart=/bin/sleep 10
+ExecStart=/bin/sleep 30
 ExecStartPost=/usr/bin/systemctl --user stop solaar.service
 RemainAfterExit=true
 [Install]

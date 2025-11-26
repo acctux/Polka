@@ -1,0 +1,13 @@
+[Unit]
+Description=MPV Play Script
+After=network.target wayland-wm@hyprland.desktop.service
+Requires=network.target wayland-wm@hyprland.desktop.service
+
+[Service]
+Type=simple
+ExecStart=/home/nick/Polka/local/bin/mpvplay/mpvplay.sh
+Restart=on-failure
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=wayland-wm@hyprland.desktop.service

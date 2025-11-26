@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Rmpc
 Comment=Run rmpc with cava inside tmux
-Exec=alacritty --title "rmpc Music" -e bash -lc "/home/nick/Polka/local/bin/mpd/rmpclaunch.sh %F"
+Exec=kitty --title "Rmpc" /home/nick/Polka/local/bin/mpd/rmpclaunch.sh %F
 Terminal=false
 Type=Application
 MimeType=audio/mpeg;audio/mp3;audio/x-mp3;
