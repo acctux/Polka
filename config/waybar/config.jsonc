@@ -150,7 +150,7 @@
     "on-click": "kitty impala",
     "format": "{}",
     "exec": "~/Polka/local/bin/waybar/network.py",
-    "interval": 5,
+    "interval": 2,
     "return-type": "json"
   },
   "custom/volume": {
