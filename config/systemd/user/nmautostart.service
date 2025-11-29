@@ -1,7 +1,7 @@
 [Unit]
 Description=nm-applet autostart
-After=wayland-session@hyprland.desktop.target
-Wants=wayland-session@hyprland.desktop.target
+After=graphical-session.target
+Wants=graphical-session.target
 
 [Service]
 Type=simple
@@ -13,4 +13,4 @@ Restart=on-failure
 RestartSec=5
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target

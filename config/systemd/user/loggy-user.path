@@ -5,4 +5,4 @@ Description=Watch for mouse flag file
 PathExists=/tmp/mouse_connected.flag
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target

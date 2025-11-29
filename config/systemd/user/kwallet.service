@@ -1,0 +1,12 @@
+[Unit]
+Description=NetworkManager Applet
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/pam_kwallet_init
+Restart=no
+
+[Install]
+WantedBy=graphical-session.target

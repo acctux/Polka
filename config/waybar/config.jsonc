@@ -5,31 +5,30 @@
   "modules-left": [
     "custom/logo",
     "temperature",
-    "custom/music",
-    "tray",
-    "custom/empty",
-    "custom/empty",
-    "hyprland/workspaces",
+    "custom/taskwarrior",
     "custom/updates",
+    "hyprland/workspaces"
   ],
   "modules-right": [
     "custom/timer",
-    "custom/kb-switch",
-    "custom/taskwarrior",
     "custom/empty",
-    "network",
     "backlight",
-    "pulseaudio",
     "custom/kdeconnect",
+    "bluetooth",
+    "custom/wifi",
     "custom/nemo",
+    "custom/volume",
     "custom/empty",
-    "clock",
+    "custom/kb-switch",
     "battery",
-    "custom/notification",
+    "clock",
+    "custom/notification"
   ],
   "hyprland/workspaces": {
-    "format": "{icon}<span size='4pt'> </span>{windows}",
-    "format-window-separator": "",
+    "format": "{icon}",
+    "format-icons": {
+      "active": ""
+    },
     "on-scroll-up": "hyprctl dispatch workspace r+1",
     "on-scroll-down": "hyprctl dispatch workspace r-1",
     "on-click": "activate",
@@ -40,34 +39,25 @@
       "update-active-window": true,
       "format": "{icon}",
       "icon-size": 17,
-      "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}",
-    },
+      "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}"
+    }
   },
-  "network": {
-    "format": "{icon}",
-    "format-wifi": "{icon}",
-    "format-ethernet": "{icon}",
-    "format-disconnected": "{icon}",
-    "tooltip-format": "{ipaddr}  {bandwidthUpBits}  {bandwidthDownBits}",
-    "format-linked": "󰤪",
-    "tooltip-format-wifi": "{essid} {icon} {signalStrength}%  {bandwidthUpBits}  {bandwidthDownBits}",
-    "tooltip-format-linked": "{ifname}  {bandwidthUpBits}  {bandwidthDownBits}",
-    "tooltip-format-ethernet": "{ifname} 󰌘",
-    "tooltip-format-disconnected": "󰌙 Disconnected",
-    "format-icons": [
-      "󰤯",
-      "󰤟",
-      "󰤢",
-      "󰤥",
-      "󰤨"
-    ],
-    "on-click-right": "$HOME/.local/bin/waybar/nm-applet.sh",
+  "bluetooth": {
+    "format": "",
+    "on-click": "blueman-manager",
+    "on-click-right": "solaar",
+    "format-disabled": "",
+    "format-connected": "󰂱",
+    "tooltip-format-connected": "\n{num_connections} connected\n\n{device_battery_percentage}%\n\n{device_enumerate}",
+    "format-off": "󰂲",
+    "interval": 30,
+    "format-no-controller": ""
   },
   "custom/notification": {
     "tooltip-format": "Left: Notifications\nRight: Do not disturb",
-    "format": "<span size='6pt'>{icon}</span>",
+    "format": "<span size='8pt'>{icon}</span>",
     "format-icons": {
-      "notification": "󰍡 ",
+      "notification": "",
       "none": "",
       "dnd-notification": "󱙍 ",
       "dnd-none": "󱙍 ",
@@ -83,33 +73,12 @@
     "on-click-right": "swaync-client -d -sw",
     "escape": true
   },
-  "pulseaudio": {
-    "on-click": "pavucontrol",
-    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
-    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
-    "format": "{icon}",
-    "tooltip-format": "{volume}%",
-    "format-bluetooth": "{icon}",
-    "format-bluetooth-muted": "{icon} {format_source}",
-    "format-muted": "{icon}",
-    "format-source": "{volume}% ",
-    "format-source-muted": "",
-    "format-icons": {
-      "bluetooth": " ",
-      "muted": "󰖁",
-      "default": [
-        "󰕿",
-        "󰖀",
-        "󰕾"
-      ],
-    },
-  },
   "temperature": {
     "critical-threshold": 80,
     "format-critical": "{temperatureC}°",
     "format": "{temperatureC}°",
     "on-click": "alacritty -e btop",
-    "on-click-right": "qjournalctl",
+    "on-click-right": "qjournalctl"
   },
   "backlight": {
     "format": "{icon}",
@@ -129,21 +98,17 @@
       "",
       "",
       "",
-      "",
+      ""
     ],
     "scroll-step": 10,
-    "on-click": "/home/nick/Polka/local/bin/hyprsunset/toggle-hyprsunset.sh",
-  },
-  "tray": {
-    "icon-size": 14,
-    "spacing": 6,
+    "on-click": "/home/nick/Polka/local/bin/hyprsunset/toggle-hyprsunset.sh"
   },
   "battery": {
     "interval": 60,
     "states": {
       "good": 95,
       "warning": 30,
-      "critical": 15,
+      "critical": 15
     },
     "format": "{icon} {capacity}%",
     "format-charging": "󱐋 {capacity}%",
@@ -156,7 +121,7 @@
       " ",
       " ",
       " "
-    ],
+    ]
   },
   "clock": {
     "timezone": "America/New_York",
@@ -165,13 +130,10 @@
     "format": "{:%H:%M}",
     "on-click-right": "gsimplecal",
     "on-click-middle": "~/Polka/local/bin/timer/set_timer.py",
-    "interval": 60,
+    "interval": 60
   },
   "custom/empty": {
-    "format": " ",
-  },
-  "custom/emptyborder": {
-    "format": " ",
+    "format": " "
   },
   "custom/kb-switch": {
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
@@ -181,6 +143,26 @@
     "signal": 6,
     "format": "{}",
     "tooltip": false
+  },
+  "custom/wifi": {
+    "on-click-right": "protonvpn-app",
+    "on-click-middle": "firewall-config",
+    "on-click": "kitty impala",
+    "format": "{}",
+    "exec": "~/Polka/local/bin/waybar/network.py",
+    "interval": 5,
+    "return-type": "json"
+  },
+  "custom/volume": {
+    "on-click-right": "~/Polka/local/bin/mpd/onoff.sh",
+    "on-click-middle": "alacritty -e ~/Polka/local/bin/mpd/rmpclaunch.sh",
+    "exec": "/home/nick/Polka/local/bin/mpd/mypulseaudio.py",
+    "return-type": "json",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "pavucontrol"
   },
   "custom/nemo": {
     "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",
@@ -200,38 +182,26 @@
     "on-click-right": "/home/nick/Polka/local/bin/timer/set_timer.py --unit",
     "on-click-middle": "/home/nick/Polka/local/bin/timer/set_timer.py --stop",
     "on-scroll-up": "/home/nick/Polka/local/bin/timer/set_timer.py --up 5",
-    "on-scroll-down": "/home/nick/Polka/local/bin/timer/set_timer.py --down 5",
+    "on-scroll-down": "/home/nick/Polka/local/bin/timer/set_timer.py --down 5"
   },
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
     "return-type": "json",
-    "format": " <span size='10pt'>{}</span>",
+    "format": "<span size='9pt'> {}</span>",
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,
-    "on-click": "alacritty -e taskwarrior-tui",
+    "on-click": "alacritty -e taskwarrior-tui"
   },
   "custom/updates": {
-    "format": " {}",
+    "format": "{}<span size='4pt'> </span><span size='9.5pt'></span>",
     "escape": true,
     "return-type": "json",
     "exec": "~/Polka/local/bin/waybar/updates.py",
     "interval": 1800,
     "signal": 1,
     "hide-empty-text": true,
-    "on-click": "alacritty -e paru",
-  },
-  "custom/music": {
-    "exec": "~/Polka/local/bin/waybar/nowplaying.py",
-    "on-click": "~/Polka/local/bin/mpd/onoff.sh",
-    "on-click-right": "alacritty -e ~/Polka/local/bin/mpd/rmpclaunch.sh",
-    "format": " {text}",
-    "return-type": "json",
-    "interval": 1,
-    "escape": true,
-    "hide-empty-text": false,
-    "on-click-middle": "playerctl next",
-    "tooltip-format": "Left: Play/Pause\nRight: Next\nMiddle: Previous"
+    "on-click": "alacritty -e paru"
   },
   "custom/kdeconnect": {
     "format": "{}",
@@ -242,7 +212,7 @@
     "hide-empty-text": true,
     "on-click": "~/Polka/local/bin/kdeconnect/mountkde.py",
     "on-click-middle": "kdeconnect-app",
-    "on-click-right": "kdeconnect-sms",
+    "on-click-right": "kdeconnect-sms"
   },
   "custom/logo": {
     "format": "<span size='9pt'>{text}</span>",
@@ -252,6 +222,6 @@
     "signal": 6,
     "on-click": "fuzzel",
     "on-click-middle": "~/Polka/local/bin/wall/wall.py",
-    "on-click-right": "swaync-client -t -sw",
-  },
+    "on-click-right": "swaync-client -t -sw"
+  }
 }

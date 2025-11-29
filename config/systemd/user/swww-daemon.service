@@ -9,4 +9,4 @@ Restart=on-failure
 Type=simple
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=wayland-session@hyprland.desktop.target

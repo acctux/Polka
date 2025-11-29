@@ -1,215 +1,206 @@
 /* === Global Styles === */
 * {
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 1px;
   font-family: "FiraMono Nerd Font Medium", monospace;
   transition: all 0.75s ease;
-  font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
+  font-feature-settings: '"zero","ss01","ss02","ss03","ss04","ss05","cv31"';
 }
 
 /* === Waybar Window === */
-window#waybar,
-window#waybar.empty,
-window#waybar.empty #window {
-    background-color: transparent;
-    padding: 0px;
-    border: 0px;
+window#waybar {
+  background-color: transparent;
+  padding: 0;
+  border: 0;
 }
 
 button {
-  padding: 0;
-	padding-right: 4px;
-	padding-left: 4px;
+  padding: 0 4px;
   margin: 0;
   border: none;
   min-height: 0;
   box-shadow: none;
 }
 
-tooltip label {
-  padding: 0 2px;
-  font-size: 15px;
-  background-color: transparent;
-  font-weight: 400;
-}
-
+/* === Tooltip === */
 tooltip {
   background: #101013;
   opacity: 0.95;
   border-radius: 5px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(30, 58, 138, 0.6);
+  border: 1px solid rgba(30, 58, 138, 0.6);
+}
+tooltip label {
+  padding: 0 2px;
+  font-size: 15px;
+  background: transparent;
+  font-weight: 400;
 }
 
+/* === Module Containers === */
 .modules-left,
 .modules-right {
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(30, 58, 138, 0.7);
-  background-color: rgba(16, 16, 19, 0.75);
+  border: 1px solid rgba(30,58,138,0.65);
+  background-color: rgba(16,16,19,0.65);
   border-radius: 4px;
 }
-.modules-center{
-	padding-right: 0;
-	padding-left: 0;
-}
-.modules-right {
-  margin-right: 1px;
-}
-.modules-left {
-  margin-left: 1px;
-}
-/* === Shared Module Styles === */
+.modules-right { margin-right: 1px; }
+.modules-left  { margin-left: 1px; }
+
+/* === Shared Spacing === */
 #battery,
-#clock,
+#bluetooth,
 #temperature,
-#custom-kb-switch,
+#clock,
 #custom-logo,
 #custom-timer,
-#custom-nemo,
-#custom-music,
-#window,
 #custom-taskwarrior,
-#custom-settings,
 #custom-updates {
-	padding-right: 6px;
-	padding-left: 6px;
+  padding: 0 6px;
 }
 
 #workspaces button {
-	padding-right: 6px;
+  padding: 0 3px;
   border-radius: 5px;
-	padding-left: 2px;
+}
+/* === Shared Borders === */
+#custom-taskwarrior,
+#custom-timer,
+#temperature,
+#custom-updates {
+  border-right: 1px solid #33ccff;
 }
 
-#custom-timer,
-#custom-nemo,
-#backlight,
-#network,
-#custom-kdeconnect,
-#pulseaudio {
-  border-radius: 5px;
-}
-#custom-nemo,
-#network {
-  font-size: 13px;
-}
 #custom-kb-switch,
-#custom-taskwarrior {
-  font-size: 14.5px;
+#clock,
+#battery {
+  border-left: 1px solid #33ccff;
 }
+/* === Shared Font Sizes === */
+#custom-volume,
 #custom-notification,
 #backlight,
-#pulseaudio,
+#bluetooth,
 #custom-kdeconnect,
 #custom-logo {
   font-size: 15px;
 }
-/* === Battery States === */
+#custom-wifi,
+#custom-taskwarrior {
+  font-size: 14.5px;
+}
+
+/* === Border Radius === */
+#custom-wifi,
+#custom-nemo,
+#custom-volume,
+#backlight,
+#bluetooth,
+#custom-kdeconnect {
+  border-radius: 5px;
+}
+
+/* === Battery === */
 #battery {
-  border-left: 1px solid #33ccff;
   color: #33ccff;
+}
+#battery.charging {
+  color: #00ff99;
+}
+#battery.warning {
+  color: #ffee33;
 }
 #battery.critical {
   color: #ff3232;
 }
 
-#battery.warning {
-  color: #ffee33;
-}
-#battery.good {
-  color: #33ccff;
-}
-
-#battery.charging {
-  color: #00ff99;
-}
-
-/* === Icon Button Styles === */
-#temperature {
-  border-right: 1px solid #33ccff;
-}
-#clock {
-  border-left: 1px solid #33ccff;
-}
+/* === Temperature === */
 #temperature.critical {
   color: #ff3232;
 }
 
+/* === Updates === */
+#custom-updates {
+  padding-right: 9px;
+  padding-left: 5px;
+}
+
+/* === Notification === */
 #custom-notification {
-  border-left: 1px solid #33ccff;
-	padding-right: 7px;
-	padding-left: 5px;
+  padding-right: 7px;
+  padding-left: 5px;
+  color: #ff3232;
+}
+#custom-notification.notification {
   color: #00ff99;
 }
-#custom-timer {
-  border-right: 1px solid #33ccff;
+
+/* === Wifi === */
+#custom-wifi {
+  padding-right: 9px;
+  padding-left: 3px;
+}
+#custom-wifi.vpn { color: #33ccff; }
+
+/* === Clock === */
+#clock {
+  padding: 0 4px;
 }
 
-#network {
-  padding: 0 8px 0 4px;
-}
-
+/* === KB Switch === */
 #custom-kb-switch {
-	padding-right: 3px;
-	padding-left: 8px;
+  padding: 0 5px;
 }
 
-#custom-nemo {
-	padding-right: 8px;
-	padding-left: 4px;
+/* === Volume === */
+#custom-volume {
+  padding-right: 7px;
+  padding-left: 5px;
+  font-weight: 600;
 }
+#custom-volume.playing { font-weight: 600; }
+
+/* === Bluetooth === */
+#bluetooth {
+  padding-right: 7px;
+  padding-left: 5px;
+}
+#bluetooth.connected {
+  color: #00ff99;
+}
+
+/* === Nemo === */
+#custom-nemo {
+  padding-right: 7px;
+  padding-left: 5px;
+}
+
+/* === Backlight === */
 #backlight {
   padding: 0 7px 0 4px;
 }
 
-#pulseaudio {
-  padding: 0 7px 0 4px;
-}
+/* === KDEConnect === */
 #custom-kdeconnect {
   padding: 0 6px 0 5px;
 }
 
-#tray {
-  padding: 0 4px 0 8px;
-  border-right: 1px solid #33ccff;
-}
-
+/* === Logo === */
 #custom-logo {
-	padding-right: 10px;
-	padding-left: 5px;
+  padding-right: 7px;
+  padding-left: 5px;
   color: #33ccff;
 }
 
-#custom-logo.notif {
-  color: #ffee33;
-}
-
-#custom-logo.playing {
-  color: #00ff99;
-}
-
+/* === Empty Spacer === */
 #custom-empty {
   font-size: 5px;
 }
 
-#custom-music {
-	padding-right: 8px;
-  border-right: 1px solid #33ccff;
-}
-#custom-music.paused,
-#custom-music.playing {
-	padding-right: 4px;
-  color: #33ccff;
-}
-#custom-updates {
-  padding: 0 10px 0 6px;
-}
-
+/* === TaskWarrior === */
 #custom-taskwarrior {
-  border-right: 1px solid #33ccff;
+  padding-right: 4px;
+  padding-left: 6px;
 }
 #custom-taskwarrior.todo {
   color: #ffee33;
@@ -220,23 +211,28 @@ tooltip {
 
 /* === Hover Effects === */
 button:hover,
-#custom-power:hover,
 #custom-kdeconnect.connected:hover,
 #custom-timer:hover,
 #backlight:hover,
 #custom-nemo:hover,
-#network:hover,
-#pulseaudio:hover,
+#bluetooth:hover,
+#custom-wifi:hover,
+#custom-volume:hover,
 #battery:hover {
   box-shadow: inset 0 0 0 1px #00ff99;
-  background-color: rgba(16, 16, 19, 0.3);
+  background-color: rgba(16,16,19,0.3);
   color: #33ccff;
+}
+
+#workspaces button.active {
+  padding-right: 4px;
+  padding-left: 2px;
 }
 
 #workspaces button.active,
 #workspaces button:hover {
   background: inherit;
-  border-radius: 5px;          /* keeps the overall rounding */
+  border-radius: 5px;
   color: #00ff99;
 }
 
@@ -247,9 +243,10 @@ button:hover,
 #clock:hover,
 #custom-taskwarrior:hover,
 #temperature:hover {
-  background-color: rgba(16, 16, 19, 0.3);
+  background-color: rgba(16,16,19,0.3);
   color: #33ccff;
 }
+
 #custom-notification:hover {
   color: #ff3232;
 }

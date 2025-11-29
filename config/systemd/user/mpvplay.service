@@ -1,7 +1,7 @@
 [Unit]
 Description=MPV Play Script
-After=network.target wayland-wm@hyprland.desktop.service
-Requires=network.target wayland-wm@hyprland.desktop.service
+After=wayland-wm@hyprland.desktop.service
+Requires=wayland-wm@hyprland.desktop.service
 
 [Service]
 Type=simple

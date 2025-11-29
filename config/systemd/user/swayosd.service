@@ -1,7 +1,8 @@
 [Unit]
 Description=Sway OSD Server
-After=wayland-wm@hyprland.desktop.service
-Requires=wayland-wm@hyprland.desktop.service
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
@@ -10,4 +11,4 @@ Restart=on-failure
 RestartSec=3
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target

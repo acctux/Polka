@@ -3,8 +3,8 @@
 CHOICE_1="OCR Screenshot"
 CHOICE_2="Set Screenshot Region"
 CHOICE_3="Screenshot Folder"
-CHOICE_4="Start Youtube Daemon" # new option
-CHOICE_5="Stop Youtube Daemon"  # new option
+CHOICE_4="Start Youtube Daemon"
+CHOICE_5="Stop Youtube Daemon"
 
 MENU="$CHOICE_1\n$CHOICE_2\n$CHOICE_3\n$CHOICE_4\n$CHOICE_5\nCancel"
 

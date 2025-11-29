@@ -1,7 +1,8 @@
 [Unit]
-Description=nm-applet autostart
-After=wayland-session@hyprland.desktop.target
-Wants=wayland-session@hyprland.desktop.target
+Description=swww autostart
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
@@ -11,4 +12,4 @@ ExecStartPost=/usr/sbin/systemctl --user restart swww-daemon.service
 Restart=on-failure
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target

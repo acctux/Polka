@@ -6,6 +6,7 @@ audio/mpeg=rmpc.desktop
 x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop
 x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop
 application/octet-stream=featherpad.desktop
+inode/directory=nemo.desktop
 
 [Added Associations]
 image/jpeg=imv.desktop;
@@ -15,3 +16,5 @@ audio/mpeg=rmpc.desktop;
 x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop;
 x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop;
 application/octet-stream=featherpad.desktop;
+inode/directory=nemo.desktop;
+video/x-matroska;video/mp4;video/x-mpegurl;application/x-matroska;

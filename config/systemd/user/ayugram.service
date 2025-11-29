@@ -1,14 +1,13 @@
 [Unit]
 Description=AyuGram Desktop
-After=wayland-session@hyprland.desktop.target
-Wants=wayland-session@hyprland.desktop.target
+After=graphical-session.target
+PartOf=graphical-session.target
 
 [Service]
 Type=simple
 ExecStart=/usr/sbin/AyuGram -autostart
-Slice=session.slice
 Restart=on-failure
 RestartSec=5
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target

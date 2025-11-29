@@ -9,4 +9,4 @@ ExecStart=/usr/bin/solaar -w hide
 Restart=no
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=wayland-wm@hyprland.desktop.service

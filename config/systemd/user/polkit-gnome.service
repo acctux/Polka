@@ -1,7 +1,8 @@
 [Unit]
 Description=Polkit GNOME Authentication Agent
-After=wayland-wm@hyprland.desktop.service
-Requires=wayland-wm@hyprland.desktop.service
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
