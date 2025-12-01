@@ -139,6 +139,7 @@ tooltip label {
 #custom-wifi {
   padding-right: 9px;
   padding-left: 3px;
+  color: #ff3232;
 }
 #custom-wifi.vpn { color: #33ccff; }
 

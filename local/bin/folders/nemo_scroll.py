@@ -11,7 +11,7 @@ FOLDERS = [
     ("/home/nick/Polka", "󱂵"),
     ("/home/nick/Lit/noah", "󰉒"),
     ("/etc", "󱂀"),
-    ("/home/nick/Overload", "󱁿"),
+    ("/usr/local/bin", "󱁿"),
 ]
 
 INDEX_FILE = Path.home() / ".cache/nemo_scroll_index"

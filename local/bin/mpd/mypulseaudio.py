@@ -73,9 +73,6 @@ def save_state(track, pos):
 # Scrolling logic
 # ────────────────────────────────────────────
 def scroll_text(track: str, pos: float, dt: float):
-    """
-    Returns a dynamically sized scrolling window of text.
-    """
     pos += dt * SPEED
     visible = max(len(track) // VISIBLE_DIVISOR, MIN_VISIBLE)
     # No need to scroll
@@ -90,17 +87,8 @@ def scroll_text(track: str, pos: float, dt: float):
 # ────────────────────────────────────────────
 # Now playing logic
 # ────────────────────────────────────────────
-def get_nowplaying():
-    """
-    Returns:
-        display     -> visible scrolling chunk
-        status      -> "playing" or "stopped"
-        css_class   -> same as status (style hook)
-        full_track  -> full text "artist – title"
-    """
-    players = list_players()
+def get_nowplaying(players):
     track_player = None
-
     for p in players:
         if run(["--player", p, "status"]) == "Playing" and p not in IGNORE_TEXT_PLAYERS:
             track_player = p
@@ -157,7 +145,8 @@ def get_volume() -> int:
 # ────────────────────────────────────────────
 def main():
     while True:
-        text, status, css_class, full_track = get_nowplaying()
+        players = list_players()
+        text, status, css_class, full_track = get_nowplaying(players)
         vol = get_volume()
 
         tooltip = f"{vol}%\n{full_track}" if full_track else f"{vol}%"

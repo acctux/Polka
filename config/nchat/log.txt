@@ -1,7 +1,0 @@
-2025-11-28 02:42:11.847 | INFO  | nchat 5.12.8  (main.cpp:252)
-2025-11-28 02:42:11.847 | INFO  | arch linux x86_64  (main.cpp:254)
-2025-11-28 02:42:11.847 | INFO  | gcc 15.2.1 20251112 glibc 2.42  (main.cpp:256)
-2025-11-28 02:42:11.847 | INFO  | go 1.25.4  (main.cpp:258)
-2025-11-28 02:42:11.847 | INFO  | telegram on, whatsapp on  (main.cpp:260)
-2025-11-28 02:42:11.852 | INFO  | load telegram profile  (tgchat.cpp:354)
-2025-11-28 02:42:11.858 | INFO  | exit  (main.cpp:461)
