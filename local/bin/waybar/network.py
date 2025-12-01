@@ -21,8 +21,8 @@ def safe_search(pattern: str, text: str) -> str | None:
 
 def format_speed(bps: float) -> str:
     if bps < 1_000_000:
-        return f"{bps/1024:.0f}K"
-    return f"{bps/1_048_576:.1f}M"
+        return f"{bps / 1024:.0f}K"
+    return f"{bps / 1_048_576:.1f}M"
 
 
 def get_iface() -> str | None:
@@ -33,10 +33,15 @@ def get_iface() -> str | None:
 
 
 def get_speeds(rx: int, tx: int) -> Tuple[int, int]:
+    if not CACHE.exists():
+        with CACHE.open("w") as f:
+            json.dump({"rx": rx, "tx": tx, "t": time.time()}, f)
     prev = json.loads(CACHE.read_text())
     dt = time.time() - prev.get("t", 0)
     up_bps = (tx - prev.get("tx", 0)) / dt
     down_bps = (rx - prev.get("rx", 0)) / dt
+    with CACHE.open("w") as f:
+        json.dump({"rx": rx, "tx": tx, "t": time.time()}, f)
     return up_bps, down_bps
 
 
@@ -71,7 +76,7 @@ def main() -> None:
     icon = ICONS[min(strength // 20, len(ICONS) - 1)]
     up_bps, down_bps = get_speeds(rx, tx)
     save_counters(rx, tx)
-    tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f"↑{format_speed(up_bps)}"}\n{f"↓{format_speed(down_bps)}"}"
+    tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
     print(
         json.dumps(
             {"text": icon, "tooltip": tooltip, "class": "connected"},

@@ -1,86 +1,131 @@
 #!/usr/bin/env python3
-import asyncio
 import sys
-from concurrent.futures import Future
+import subprocess
+from pathlib import Path
+from typing import List
 
-from proton.vpn.app.gtk.controller import Controller
-from proton.vpn.app.gtk.utils.executor import AsyncExecutor
-from proton.vpn.app.gtk.utils.exception_handler import ExceptionHandler
-
-
-class DummyExceptionHandler(ExceptionHandler):
-    def handle_exception(self, exc_type, exc_value, exc_traceback):
-        print("Error:", exc_value, file=sys.stderr)
+WG_DIR = Path("/etc/wireguard")
 
 
-async def run_blocking_future(fut: Future):
-    """Helper to properly await a concurrent.futures.Future in asyncio"""
-    while not fut.done():
-        await asyncio.sleep(0.1)
-    return fut.result()
+# ─────────────────────────────────────────────────────────────
+# Core helper functions
+# ─────────────────────────────────────────────────────────────
+def run_cmd(cmd: List[str], check: bool = False) -> subprocess.CompletedProcess:
+    """Run a command and print it (verbose mode)"""
+    print(f"   → Running: {' '.join(cmd)}")
+    return subprocess.run(cmd, capture_output=True, text=True, check=check)
 
 
-async def main():
-    executor = AsyncExecutor()
-    exception_handler = DummyExceptionHandler()
+def set_sysctl(key: str, value: int | str) -> bool:
+    val_str = str(value)
+    print(f"   sysctl → {key} = {val_str}")
+    result = run_cmd(["sysctl", "-w", f"{key}={val_str}"])
+    if result.returncode != 0:
+        print(f"   Failed: {result.stderr.strip()}")
+        return False
+    return True
 
-    print("Initializing Proton VPN controller (10–20s first time)...")
-    controller = Controller(executor=executor, exception_handler=exception_handler)
 
-    # This is the CORRECT way: submit + wait via our helper
-    init_future: Future = executor.submit(controller.initialize_vpn_connector)
-    await run_blocking_future(init_future)
+def get_sysctl(key: str) -> str | None:
+    """Read current sysctl value"""
+    result = run_cmd(["sysctl", "-n", key])
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip()
 
-    print("Controller initialized!")
 
-    # Reuse existing login if possible
-    if controller.user_logged_in:
-        print("Already logged in")
+def get_active_interfaces() -> List[str]:
+    result = run_cmd(["ip", "-brief", "link", "show", "up"])
+    if result.returncode != 0:
+        print("   Failed to get interface list")
+        return []
+    interfaces = []
+    for line in result.stdout.splitlines():
+        parts = line.strip().split(maxsplit=3)
+        if not parts:
+            continue
+        name = parts[0].split("@")[0]  # remove @parent
+        interfaces.append(name)
+    return interfaces
+
+
+def is_proton_interface(name: str) -> bool:
+    exists = (WG_DIR / f"{name}.conf").exists()
+    status = "Found" if exists else "Not found"
+    print(f"   Checking ProtonVPN config: {name}.conf → {status}")
+    return exists
+
+
+def active_proton_interfaces(
+    active=[name for name in get_active_interfaces() if is_proton_interface(name)],
+) -> List[str]:
+    """Return only active ProtonVPN WireGuard interfaces"""
+    if active:
+        print(f"   Active ProtonVPN interface(s): {', '.join(active)}")
     else:
-        username = input("Username: ").strip()
-        password = input("Password: ").strip()
+        print("   No active ProtonVPN tunnels")
+    return active
 
-        login_future = controller.login(username, password)
-        await run_blocking_future(login_future)
 
-        if not controller.user_logged_in:
-            exc = login_future.exception()
-            if exc and "two factor" in str(exc).lower():
-                code = input("2FA code: ").strip()
-                await run_blocking_future(controller.submit_2fa_code(code))
-            else:
-                print("Login failed:", exc)
-                return
+# ─────────────────────────────────────────────────────────────
+# IPv6 control
+# ─────────────────────────────────────────────────────────────
+def disable_ipv6_on_physical_interfaces(disable: bool = True) -> None:
+    action = "Disabling" if disable else "Enabling"
+    value = 1 if disable else 0
+    print(f"\n{action} IPv6 on physical interfaces (leak protection)...")
+    for name in get_active_interfaces():
+        if name == "lo" or name.startswith(
+            (
+                "wg",
+                "tun",
+                "proton",
+                "docker",
+            )
+        ):
+            continue
+        if is_proton_interface(name):
+            continue
+        set_sysctl(f"net.ipv6.conf.{name}.disable_ipv6", value)
 
-        print("Logged in!")
 
-    # Status updates
-    def on_status(state):
-        desc = getattr(state, "description", "") or ""
-        print(f"→ {state.__class__.__name__}: {desc}".strip())
+def restart_mod(wifi_iface: str) -> None:
+    run_cmd(["ip", "link", "set", wifi_iface, "down"])
+    run_cmd(["ip", "link", "set", wifi_iface, "up"])
 
-    controller.register_connection_status_subscriber(on_status)
 
-    print("Connecting to fastest server...")
-    connect_future = controller.connect_to_fastest_server()
-    try:
-        await run_blocking_future(connect_future)
-        print("Connected to Proton VPN!")
-    except Exception as e:
-        print("Connection failed:", e)
+# ─────────────────────────────────────────────────────────────
+# Main logic
+# ─────────────────────────────────────────────────────────────
+def main() -> None:
+    print("ProtonVPN Toggle Script")
+    print("=" * 60)
+    current = active_proton_interfaces()
+    if current:
+        print(f"\nActive connection detected: {' '.join(current)}")
+        for iface in current:
+            print(f"Disconnecting {iface}...")
+            run_cmd(["wg-quick", "down", iface])
+            restart_mod("wlan0")
+        print("Restoring IPv6 on physical interfaces...")
+        disable_ipv6_on_physical_interfaces(disable=False)
+        print("\nDisconnected successfully — all systems restored")
         return
-
-    print("\nConnected! Press Ctrl+C to disconnect.")
-    try:
-        await asyncio.Event().wait()
-    except KeyboardInterrupt:
-        print("\nDisconnecting...")
-        await run_blocking_future(controller.disconnect())
-        print("Disconnected. Bye!")
+    if len(sys.argv) != 2:
+        print("\nNo active ProtonVPN connection.")
+        return
+    config = sys.argv[1]
+    print(f"\nConnecting to ProtonVPN server: {config}")
+    disable_ipv6_on_physical_interfaces(disable=True)
+    result = run_cmd(["wg-quick", "up", config])
+    if result.returncode != 0:
+        print("Error output:")
+        print(result.stdout or result.stderr)
+        print("\nCleaning up — restoring IPv6...")
+        disable_ipv6_on_physical_interfaces(disable=False)
+        sys.exit(1)
+    print(f"\nConnected to {config}")
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("\nAborted.")
+    main()
