@@ -1,105 +1,84 @@
 #!/usr/bin/env python3
 import json
-import psutil
+import re
 import subprocess
+import time
 from pathlib import Path
+from typing import Tuple
 
-INTERVAL = 5
-CACHE_FILE = Path("/tmp/waybar-wifi-counters.json")
-WIFI_ICONS = ["󰤫", "󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]  # 0%, 1–19, 20–39, 40–59, 60–79, 80–100%
-
-
-# ─── Helpers ───
-def run(cmd):
-    try:
-        return subprocess.check_output(
-            cmd, text=True, stderr=subprocess.DEVNULL, timeout=4
-        ).strip()
-    except:
-        return None
+CACHE = Path("/tmp/waybar-wifi.json")
+ICONS = ["󰤫", "󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
 
 
-def load_prev():
-    return json.loads(CACHE_FILE.read_text()) if CACHE_FILE.exists() else {}
+def run(cmd: list[str]) -> str:
+    return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL).strip()
 
 
-def save_prev(data):
-    CACHE_FILE.write_text(json.dumps(data))
+def safe_search(pattern: str, text: str) -> str | None:
+    m = re.search(pattern, text)
+    return m.group(1) if m else None
 
 
-def human_bytes(b):
-    for unit in ["B", "K", "M", "G"]:
-        if b < 1024:
-            return f"{b:.0f}{unit}"
-        b /= 1024
-    return f"{b:.1f}T"
+def format_speed(bps: float) -> str:
+    if bps < 1_000_000:
+        return f"{bps/1024:.0f}K"
+    return f"{bps/1_048_576:.1f}M"
 
 
-def get_iface():
-    out = run(["ip", "-o", "route", "get", "8.8.8.8"])
-    return out.split("dev", 1)[1].split()[0] if out and "dev" in out else None
+def get_iface() -> str | None:
+    return next(
+        (p.name for p in Path("/sys/class/net").iterdir() if (p / "wireless").exists()),
+        None,
+    )
 
 
-def get_wifi_strength():
-    out = run(["nmcli", "-t", "-f", "ACTIVE,SIGNAL", "dev", "wifi"])
-    if not out:
+def get_speeds(rx: int, tx: int) -> Tuple[int, int]:
+    prev = json.loads(CACHE.read_text())
+    dt = time.time() - prev.get("t", 0)
+    up_bps = (tx - prev.get("tx", 0)) / dt
+    down_bps = (rx - prev.get("rx", 0)) / dt
+    return up_bps, down_bps
+
+
+def save_counters(rx: int, tx: int) -> None:
+    CACHE.write_text(json.dumps({"rx": rx, "tx": tx, "t": time.time()}))
+
+
+def rssi_to_strength(rssi: int) -> int:
+    if rssi >= -35:
+        return 100
+    if rssi <= -90:
         return 0
-    for line in out.splitlines():
-        if line.startswith("yes:"):
-            return int(line.split(":", 1)[1])
-    return 0
+    strength = (rssi + 90) / 55  # -90→0%, -35→100%
+    return int(strength * 100)
 
 
-def get_speed(iface, prev):
+def main() -> None:
+    iface = get_iface()
     if not iface:
-        return 0, 0
-    io = psutil.net_io_counters(pernic=True).get(iface)
-    if not io:
-        return 0, 0
-    sent, recv = io.bytes_sent, io.bytes_recv
-    old = prev.get(iface, {"sent": sent, "recv": recv})
-    up = max(0, (sent - old["sent"]) // INTERVAL)
-    down = max(0, (recv - old["recv"]) // INTERVAL)
-    prev[iface] = {"sent": sent, "recv": recv}
-    return up, down
+        print('{"text":"No Wi-Fi","tooltip":"No Wi-Fi","class":"disconnected"}')
+        return
+    out = run(["iw", "dev", iface, "station", "dump"])
+    rssi_str = safe_search(r"signal:\s+(-?\d+)", out)
+    rx_str = safe_search(r"rx bytes:\s+(\d+)", out)
+    tx_str = safe_search(r"tx bytes:\s+(\d+)", out)
+    if not (rssi_str and rx_str and tx_str):
+        print('{"text":"No data","tooltip":"No data","class":"disconnected"}')
+        return
+    rx = int(rx_str)
+    tx = int(tx_str)
+    strength = rssi_to_strength(int(rssi_str))
+    icon = ICONS[min(strength // 20, len(ICONS) - 1)]
+    up_bps, down_bps = get_speeds(rx, tx)
+    save_counters(rx, tx)
+    tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f"↑{format_speed(up_bps)}"}\n{f"↓{format_speed(down_bps)}"}"
+    print(
+        json.dumps(
+            {"text": icon, "tooltip": tooltip, "class": "connected"},
+            ensure_ascii=False,
+        )
+    )
 
 
-def get_firewalld_zone():
-    """
-    Returns just the zone name without ' (default)'
-    Examples:
-        "block (default)\n..." → "block"
-        "home\n..."           → "home"
-        no firewalld / error  → "off"
-    """
-    output = run(["firewall-cmd", "--get-active-zones"])
-    if not output:
-        return "off"
-
-    first_line = output.splitlines()[0]  # e.g. "block (default)" or "home"
-    zone_name = first_line.split(None, 1)[0]  # take everything before first space
-    return zone_name
-
-
-# ─── Main ───
-prev = load_prev()
-iface = get_iface() or "—"
-strength = get_wifi_strength()
-up, down = get_speed(iface, prev)
-zone = f"{get_firewalld_zone()}󱨑"
-cls = "vpn" if iface.startswith(("proton", "tun", "wg", "tail")) else "wifi"
-
-# Icon selection
-icon = WIFI_ICONS[0] if strength == 0 else WIFI_ICONS[(strength - 1) // 20 + 1]
-
-# Output
-if strength == 0:
-    text = f"{icon} {iface}"
-    tooltip = "No Wi-Fi connection"
-    cls = "disconnected"
-else:
-    text = icon
-    tooltip = f"{icon} {iface}\n{strength}%\n↑{human_bytes(up)}\n↓{human_bytes(down)}\n{zone}\n"
-
-save_prev(prev)
-print(json.dumps({"text": text, "tooltip": tooltip, "class": cls}, ensure_ascii=False))
+if __name__ == "__main__":
+    main()
