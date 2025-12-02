@@ -25,11 +25,16 @@ def format_speed(bps: float) -> str:
     return f"{bps / 1_048_576:.1f}M"
 
 
-def get_iface() -> str | None:
+def get_real_iface() -> str | None:
     return next(
         (p.name for p in Path("/sys/class/net").iterdir() if (p / "wireless").exists()),
         None,
     )
+
+
+def get_iface() -> str | None:
+    iface = run(["wg", "show", "interfaces"])
+    return iface
 
 
 def get_speeds(rx: int, tx: int) -> Tuple[int, int]:
@@ -59,7 +64,7 @@ def rssi_to_strength(rssi: int) -> int:
 
 
 def main() -> None:
-    iface = get_iface()
+    iface = get_real_iface()
     if not iface:
         print('{"text":"No Wi-Fi","tooltip":"No Wi-Fi","class":"disconnected"}')
         return
@@ -76,10 +81,16 @@ def main() -> None:
     icon = ICONS[min(strength // 20, len(ICONS) - 1)]
     up_bps, down_bps = get_speeds(rx, tx)
     save_counters(rx, tx)
-    tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
+    wg_iface = get_iface()
+    if wg_iface:
+        tooltip = f"{wg_iface}\n{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
+        tooltip_class = "connected"
+    else:
+        tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
+        tooltip_class = "disconnected"
     print(
         json.dumps(
-            {"text": icon, "tooltip": tooltip, "class": "connected"},
+            {"text": icon, "tooltip": tooltip, "class": tooltip_class},
             ensure_ascii=False,
         )
     )

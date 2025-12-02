@@ -1,0 +1,7 @@
+session_name: nchat
+windows:
+  - window_name: main
+    panes:
+      - shell_command:
+          - "nchat -d"
+    focus: 0

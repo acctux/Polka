@@ -8,17 +8,17 @@ WG_DIR = Path("/etc/wireguard")
 
 
 # ─────────────────────────────────────────────────────────────
-# Core helper functions
+# Core functions
 # ─────────────────────────────────────────────────────────────
 def run_cmd(cmd: List[str], check: bool = False) -> subprocess.CompletedProcess:
     """Run a command and print it (verbose mode)"""
-    print(f"   → Running: {' '.join(cmd)}")
+    print(f"Running: {' '.join(cmd)}")
     return subprocess.run(cmd, capture_output=True, text=True, check=check)
 
 
 def set_sysctl(key: str, value: int | str) -> bool:
     val_str = str(value)
-    print(f"   sysctl → {key} = {val_str}")
+    print(f"sysctl → {key} = {val_str}")
     result = run_cmd(["sysctl", "-w", f"{key}={val_str}"])
     if result.returncode != 0:
         print(f"   Failed: {result.stderr.strip()}")
@@ -52,7 +52,7 @@ def get_active_interfaces() -> List[str]:
 def is_proton_interface(name: str) -> bool:
     exists = (WG_DIR / f"{name}.conf").exists()
     status = "Found" if exists else "Not found"
-    print(f"   Checking ProtonVPN config: {name}.conf → {status}")
+    print(f"Checking ProtonVPN config: {name}.conf → {status}")
     return exists
 
 
@@ -67,9 +67,6 @@ def active_proton_interfaces(
     return active
 
 
-# ─────────────────────────────────────────────────────────────
-# IPv6 control
-# ─────────────────────────────────────────────────────────────
 def disable_ipv6_on_physical_interfaces(disable: bool = True) -> None:
     action = "Disabling" if disable else "Enabling"
     value = 1 if disable else 0
@@ -109,8 +106,7 @@ def main() -> None:
             restart_mod("wlan0")
         print("Restoring IPv6 on physical interfaces...")
         disable_ipv6_on_physical_interfaces(disable=False)
-        print("\nDisconnected successfully — all systems restored")
-        return
+        print("\nDisconnected successfully")
     if len(sys.argv) != 2:
         print("\nNo active ProtonVPN connection.")
         return

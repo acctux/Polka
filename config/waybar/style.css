@@ -141,7 +141,7 @@ tooltip label {
   padding-left: 3px;
   color: #ff3232;
 }
-#custom-wifi.vpn { color: #33ccff; }
+#custom-wifi.connected { color: #33ccff; }
 
 /* === Clock === */
 #clock {
