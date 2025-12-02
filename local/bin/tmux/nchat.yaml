@@ -1,6 +1,6 @@
 session_name: nchat
 windows:
-  - window_name: main
+  - window_name: nchat
     panes:
       - shell_command:
           - "nchat -d"
