@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "icon-theme": "WhiteSur-grey-dark",
+  "icon-theme": "Nordzy--dark_panel",
   "modules-left": [
     "custom/logo",
     "temperature",
@@ -45,7 +45,7 @@
   },
   "bluetooth": {
     "format": "",
-    "on-click": "kitty bluetui",
+    "on-click": "alacritty -e bluetui &",
     "on-click-right": "solaar",
     "format-disabled": "",
     "format-connected": "󰂱",
@@ -78,8 +78,9 @@
     "critical-threshold": 80,
     "format-critical": "{temperatureC}°",
     "format": "{temperatureC}°",
-    "on-click": "kitty btop",
-    "on-click-right": "qjournalctl"
+    "on-click": "alacritty -e btop &",
+    "on-click-right": "qjournalctl &",
+    "on-click-middle": "alacritty -e nvtop"
   },
   "backlight": {
     "format": "{icon}",
@@ -148,7 +149,7 @@
   "custom/wifi": {
     "on-click-right": "protonvpn-app",
     "on-click-middle": "firewall-config",
-    "on-click": "kitty impala",
+    "on-click": "alacritty -e impala &",
     "format": "{}",
     "exec": "~/Polka/local/bin/waybar/network.py",
     "interval": 2,
@@ -156,7 +157,7 @@
   },
   "custom/volume": {
     "on-click-right": "~/Polka/local/bin/mpd/onoff.sh",
-    "on-click-middle": "kitty ~/Polka/local/bin/mpd/rmpclaunch.sh",
+    "on-click-middle": "tmuxp load /home/nick/Polka/local/bin/tmux/rmpc.yaml -d && alacritty -e tmux attach -t music &",
     "exec": "/home/nick/Polka/local/bin/mpd/mypulseaudio.py",
     "return-type": "json",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
@@ -192,7 +193,7 @@
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,
-    "on-click": "kitty taskwarrior-tui"
+    "on-click": "alacritty -e taskwarrior-tui"
   },
   "custom/updates": {
     "format": "{}<span size='4pt'> </span><span size='9.5pt'></span>",
@@ -202,7 +203,7 @@
     "interval": 1800,
     "signal": 1,
     "hide-empty-text": true,
-    "on-click": "kitty paru"
+    "on-click": "alacriitty -e paru &"
   },
   "custom/kdeconnect": {
     "format": "{}",
@@ -222,7 +223,7 @@
     "escape": true,
     "signal": 6,
     "on-click": "fuzzel",
-    "on-click-middle": "~/Polka/local/bin/wall/wall.py",
+    "on-click-middle": "~/Polka/local/bin/wall/wall.py &",
     "on-click-right": "swaync-client -t -sw"
   }
 }

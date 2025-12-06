@@ -1,7 +1,10 @@
 session_name: nchat
+global_options:
+  remain-on-exit: true
+  status: off
 windows:
   - window_name: nchat
     panes:
       - shell_command:
-          - "nchat -d"
+          - "nchat"
     focus: 0

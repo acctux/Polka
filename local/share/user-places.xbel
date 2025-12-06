@@ -158,7 +158,7 @@
  <separator>
   <info>
    <metadata owner="http://www.kde.org">
-    <UDI>/org/freedesktop/UDisks2/block_devices/nvme1n1p1</UDI>
+    <UDI>/org/freedesktop/UDisks2/block_devices/nvme0n1p1</UDI>
     <isSystemItem>true</isSystemItem>
     <uuid>58ff16ee-7de5-4e2f-a7a4-3cdaac20ade3</uuid>
    </metadata>
@@ -211,7 +211,7 @@
  <separator>
   <info>
    <metadata owner="http://www.kde.org">
-    <UDI>/org/freedesktop/UDisks2/block_devices/nvme0n1p2</UDI>
+    <UDI>/org/freedesktop/UDisks2/block_devices/nvme1n1p2</UDI>
     <isSystemItem>true</isSystemItem>
     <uuid>825fc93d-b7b8-4677-abae-4b3e8566a387</uuid>
    </metadata>
@@ -242,7 +242,7 @@
     <bookmark:icon name="kdeconnect"/>
    </metadata>
    <metadata owner="http://www.kde.org">
-    <ID>1764630756/0</ID>
+    <ID>1764974697/1</ID>
    </metadata>
   </info>
  </bookmark>

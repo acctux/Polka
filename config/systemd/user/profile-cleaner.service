@@ -1,0 +1,6 @@
+[Unit]
+Description=Run profile-cleaner
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/profile-cleaner v

@@ -4,6 +4,10 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(mcfly init zsh)"
 # eval "$(direnv hook zsh)"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# better sudo expansion
+alias sudo='sudo '
+
 # Ignore commands that start with spaces and duplicates.
 
 HISTFILE=~/.zsh_history
@@ -35,7 +39,6 @@ alias lt='eza -a --tree --level=1 --icons=always'
 alias shutdown='systemctl poweroff'
 alias grep='grep --color=auto'
 alias mkdir='mkdir -pv'
-
 alias cx='chmod +x'
 alias cmatrix='cmatrix -a -C blue'
 alias lg='lazygit'

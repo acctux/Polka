@@ -1,15 +1,18 @@
 session_name: music
+global_options:
+  remain-on-exit: true
+  status: off
 window_management: vertical
 shell_command_before:
   - "systemctl --user is-active --quiet mpd.service || systemctl --user start mpd.service"
   - "systemctl --user is-active --quiet mpd-mpris.service || systemctl --user start mpd-mpris.service"
 windows:
   - window_name: Rmpc
-    layout: main-vertical # This ensures the layout is vertical (split vertically)
+    layout: main-vertical
     panes:
       - shell_command:
           - rmpc
       - shell_command:
           - cava
-        width: 25% # The second pane takes up 25% of the window's width
+        width: 25%
     focus: 0

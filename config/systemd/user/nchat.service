@@ -1,13 +1,12 @@
 [Unit]
-Description=nchat tmux session for user %I
+Description=nchat tmux session
 After=graphical-session.target
 
 [Service]
 Type=forking
-User=%I
 # WARNING: use %I instead of %u here; %u=root in system services.
-ExecStart=/usr/bin/tmux new-session -s %I -d -s "t-nchat" "nchat"
-ExecStop=/usr/bin/tmux kill-session -t %I
+ExecStart=/usr/sbin/tmuxp load /home/nick/Polka/local/bin/tmux/nchat.yaml -d
+ExecStop=/usr/sbin/tmux kill-session -t "nchat"
 
 [Install]
 WantedBy=graphical-session.target

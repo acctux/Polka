@@ -1,7 +1,7 @@
 [Unit]
 Description=ProtonMail Bridge
-After=wayland-wm@hyprland.desktop.service
-Requires=wayland-wm@hyprland.desktop.service
+After=graphical-session.target
+Requires=graphical-session.target
 
 [Service]
 Type=simple
@@ -10,4 +10,4 @@ Restart=on-failure
 RestartSec=5
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target
