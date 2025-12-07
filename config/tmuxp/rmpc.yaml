@@ -1,7 +1,9 @@
-session_name: music
+session_name: rmpc
 global_options:
   remain-on-exit: true
   status: off
+options:
+  main-pane-width: 70%
 window_management: vertical
 shell_command_before:
   - "systemctl --user is-active --quiet mpd.service || systemctl --user start mpd.service"
@@ -14,5 +16,3 @@ windows:
           - rmpc
       - shell_command:
           - cava
-        width: 25%
-    focus: 0

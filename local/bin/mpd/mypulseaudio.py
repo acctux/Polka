@@ -5,21 +5,16 @@ import re
 import time
 from pathlib import Path
 
-# ────────────────────────────────────────────
-# Config
-# ────────────────────────────────────────────
 CACHE_FILE = Path.home() / ".cache" / "nowplaying_scroll.json"
 SLEEP = 0.3
 SPEED = 2
-SEP = "  "
+SEP = ""
 MIN_VISIBLE = 8
 VISIBLE_DIVISOR = 6
 IGNORE_TEXT_PLAYERS = ["JBL_Go_4"]
 
 
-# ────────────────────────────────────────────
 # Player helper functions
-# ────────────────────────────────────────────
 def run(args):
     return subprocess.run(
         ["playerctl"] + args, capture_output=True, text=True
@@ -46,9 +41,6 @@ def get_track_metadata(player):
     return f"{artist} – {title}" if artist else title
 
 
-# ────────────────────────────────────────────
-# Scroll state
-# ────────────────────────────────────────────
 def load_state():
     if not CACHE_FILE.exists():
         return None, 0.0, time.time()
@@ -69,9 +61,6 @@ def save_state(track, pos):
     CACHE_FILE.write_text(json.dumps({"track": track, "pos": pos, "ts": time.time()}))
 
 
-# ────────────────────────────────────────────
-# Scrolling logic
-# ────────────────────────────────────────────
 def scroll_text(track: str, pos: float, dt: float):
     pos += dt * SPEED
     visible = max(len(track) // VISIBLE_DIVISOR, MIN_VISIBLE)
@@ -84,9 +73,6 @@ def scroll_text(track: str, pos: float, dt: float):
     return pos, display
 
 
-# ────────────────────────────────────────────
-# Now playing logic
-# ────────────────────────────────────────────
 def get_nowplaying(players):
     track_player = None
     for p in players:
@@ -110,9 +96,6 @@ def get_nowplaying(players):
     return display or "", "playing", "playing", full_track or ""
 
 
-# ────────────────────────────────────────────
-# Volume
-# ────────────────────────────────────────────
 def volume_icon(vol: int) -> str:
     if vol == 0:
         return "󰖁"
@@ -129,14 +112,11 @@ def get_volume() -> int:
         out = subprocess.check_output(
             ["pactl", "get-sink-volume", "@DEFAULT_SINK@"], stderr=subprocess.DEVNULL
         ).decode()
-
         matches = re.findall(r"(\d+)%", out)
         if matches:
             return sum(int(m) for m in matches) // len(matches)
-
     except subprocess.CalledProcessError:
         pass
-
     return 0
 
 
@@ -148,15 +128,12 @@ def main():
         players = list_players()
         text, status, css_class, full_track = get_nowplaying(players)
         vol = get_volume()
-
         tooltip = f"{vol}%\n{full_track}" if full_track else f"{vol}%"
-
         display_text = (
             f"{volume_icon(vol)}<span size='8.5pt'> {text}</span>"
             if text
             else volume_icon(vol)
         )
-
         print(
             json.dumps(
                 {
@@ -169,7 +146,6 @@ def main():
             ),
             flush=True,
         )
-
         time.sleep(SLEEP)
 
 

@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=nvtop
+Name=Nvtop
 GenericName=GPU Process Monitor
 Type=Application
 Terminal=true
 Exec=nvtop
-Icon=preferences-desktop
+Icon=nvidia-settings
 Categories=System;Monitor;
 X-AppImage-Integrate=false
 

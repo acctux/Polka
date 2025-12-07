@@ -23,3 +23,7 @@ export GIT_ASKPASS=/usr/lib/seahorse/ssh-askpass
 export CUDA_DISABLE_PERF_BOOST=1
 export LIBVA_DRIVER_NAME=nvdec
 export SUDO_PROMPT="$(tput setaf 1 bold)Password:$(tput sgr0) "
+export TASKRC="$XDG_CONFIG_HOME/task/taskrc"
+export TASKDATA="$XDG_CONFIG_HOME/task"
+export ZDOTDIR="$HOME/.config/zsh"
+export HISTFILE="$HOME/.config/zsh/.zsh_history"

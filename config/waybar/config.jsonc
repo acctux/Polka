@@ -32,16 +32,7 @@
     },
     "on-scroll-up": "hyprctl dispatch workspace r+1",
     "on-scroll-down": "hyprctl dispatch workspace r-1",
-    "on-click": "activate",
-    "active-only": false,
-    "all-outputs": true,
-    "workspace-taskbar": {
-      "enable": true,
-      "update-active-window": true,
-      "format": "{icon}",
-      "icon-size": 17,
-      "on-click-window": "$HOME/.local/bin/waybar/focus-window.sh {address} {button}"
-    }
+    "on-click": "activate"
   },
   "bluetooth": {
     "format": "",
@@ -130,8 +121,8 @@
     "tooltip-format": "{:%A, %B %d}",
     "format-alt": "{:%a, %d %b %Y}",
     "format": "{:%H:%M}",
-    "on-click-right": "gsimplecal",
-    "on-click-middle": "~/Polka/local/bin/timer/set_timer.py",
+    "on-click-right": "gsimplecal &",
+    "on-click-middle": "~/Polka/local/bin/timer/set_timer.py &",
     "interval": 60
   },
   "custom/empty": {
@@ -140,7 +131,7 @@
   "custom/kb-switch": {
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
     "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
-    "on-click-right": "rofimoji",
+    "on-click-right": "rofimoji &",
     "on-click-middle": "/home/nick/Polka/local/bin/folders/mountencrypted.sh",
     "signal": 6,
     "format": "{}",
@@ -156,15 +147,15 @@
     "return-type": "json"
   },
   "custom/volume": {
-    "on-click-right": "~/Polka/local/bin/mpd/onoff.sh",
-    "on-click-middle": "tmuxp load /home/nick/Polka/local/bin/tmux/rmpc.yaml -d && alacritty -e tmux attach -t music &",
     "exec": "/home/nick/Polka/local/bin/mpd/mypulseaudio.py",
     "return-type": "json",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
     "format": "{text}",
     "tooltip": true,
-    "on-click": "pavucontrol"
+    "on-click": "pavucontrol &",
+    "on-click-right": "kitty tmux attach -t rmpc &",
+    "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh"
   },
   "custom/nemo": {
     "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",
@@ -222,8 +213,7 @@
     "interval": 4,
     "escape": true,
     "signal": 6,
-    "on-click": "fuzzel",
-    "on-click-middle": "~/Polka/local/bin/wall/wall.py &",
-    "on-click-right": "swaync-client -t -sw"
+    "on-click": "fuzzel --config=/home/nick/.config/fuzzel/left-menu.ini",
+    "on-click-middle": "~/Polka/local/bin/wall/wall.py &"
   }
 }

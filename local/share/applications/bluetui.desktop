@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Bluetui
+Comment=Launch Blue TUI terminal interface
+Exec=alacritty -e bluetui
+Terminal=false
+Categories=System;Utility;
+Icon=cs-bluetooth

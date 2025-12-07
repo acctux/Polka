@@ -8,7 +8,7 @@ CHOICE_5="Stop Youtube Daemon"
 
 MENU="$CHOICE_1\n$CHOICE_2\n$CHOICE_3\n$CHOICE_4\n$CHOICE_5\nCancel"
 
-CHOICE=$(echo -e "$MENU" | fuzzel --dmenu "OCR Action:")
+CHOICE=$(echo -e "$MENU" | fuzzel --dmenu --hide-prompt "OCR Action:")
 case "$CHOICE" in
 $CHOICE_1)
   bash /home/nick/Polka/local/bin/ocrcopy/ocrcopy.sh

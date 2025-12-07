@@ -10,15 +10,16 @@ from typing import Optional
 HOME = Path.home()
 WALLPAPER_DIR = HOME / ".local/bin/wall/wallpapers"
 QUOTES_FILE = HOME / ".local/bin/wall/quotes.txt"
-FONT_PATH = Path("/usr/share/fonts/OTF/FiraMonoNerdFontMono-Medium.otf")
+FONT_PATH = Path("/usr/share/fonts/OTF/FiraMonoNerdFont-Medium.otf")
 CACHE_FILE = HOME / ".cache/wallpaper_with_quote.png"
 TEMP_RESIZED_FILE = HOME / ".cache/wallpaper_resized.png"
-MAX_CHARS = 200  # Maximum characters per line for text wrapping
-TEXT_COLOR = (229, 231, 235, 179)  # Text color with 60% opacity
-SHADOW_COLOR = (16, 16, 19, 217)  # Shadow color with 80% opacity
-SHADOW_BLUR_RADIUS = 2  # Blur radius for text shadow
-VERT_MARGIN = 1066  # Vertical margin for text placement
+MAX_CHARS = 200
+TEXT_COLOR = (229, 231, 235, 179)
+SHADOW_COLOR = (16, 16, 19, 217)
+SHADOW_BLUR_RADIUS = 2
+VERT_MARGIN = 1066
 X_OFFSET = 0
+FONT_SIZE = 10
 
 
 def get_screen_size() -> tuple[int, int]:
@@ -101,14 +102,13 @@ def resize_image_to_screen(image_path: Path) -> Path:
     return TEMP_RESIZED_FILE
 
 
-def draw_quote(image_path: Path, quote: str, x_offset: int) -> Path:
+def draw_quote(image_path: Path, quote: str, x_offset: int, font_size: int) -> Path:
     try:
         base = Image.open(image_path)
     except Exception as e:
         print(f"[ERROR] Failed to open image: {e}")
         return image_path
     width, height = base.size
-    font_size = max(11, width // 155)
     try:
         font = ImageFont.truetype(str(FONT_PATH), font_size)
     except Exception:
@@ -158,7 +158,7 @@ def main():
     if wallpaper:
         resized_wallpaper = resize_image_to_screen(wallpaper)
         quote = get_random_quote(QUOTES_FILE)
-        final_img = draw_quote(resized_wallpaper, quote, X_OFFSET)
+        final_img = draw_quote(resized_wallpaper, quote, X_OFFSET, FONT_SIZE)
         if final_img.exists() and set_wallpaper(final_img):
             print("[INFO] Wallpaper updated successfully.")
         else:

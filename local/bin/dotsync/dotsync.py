@@ -1,9 +1,4 @@
 #!/usr/bin/env python3
-"""
-dotsync — Deploy Polka → ~/
-Symlinks files + whole dirs with leading dot.
-"""
-
 import os
 import shutil
 import subprocess
@@ -29,8 +24,11 @@ symlink_dirs = [
 
 pass_dots = "~/Lit/docs/base"
 symlink_items = [
-    {"src": f"{pass_dots}/task/", "dest": "~/.task"},
-    {"src": f"{pass_dots}/zsh_history", "dest": "~/.zsh_history"},
+    {
+        "src": f"{pass_dots}/task/taskchampion.sqlite3",
+        "dest": "~/.config/task/taskchampion.sqlite3",
+    },
+    {"src": f"{pass_dots}/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
     {
         "src": f"{pass_dots}/fonts/calibri.ttf",
         "dest": "~/.local/share/fonts/calibri.ttf",
@@ -88,14 +86,11 @@ def safe_rm(path: Path) -> None:
 
 
 def safe_rm_file(path: Path) -> None:
-    """Remove a file (or broken symlink) safely. Skips directories."""
     if not path.exists():
-        return  # already gone
-
+        return
     if path.is_dir():
         log(f"Refused to remove directory: {path}")
         return
-
     log(f"Remove file: {path}")
     path.unlink(missing_ok=True)
 
@@ -103,13 +98,11 @@ def safe_rm_file(path: Path) -> None:
 def make_link(src: Path, dst: Path) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     rel = os.path.relpath(src, dst.parent)
-
     try:
         if dst.is_symlink() and dst.readlink() == rel:
             return
     except OSError:
         pass
-
     safe_rm(dst)
     log(f"Link: {dst} → {rel}")
     dst.symlink_to(rel)
@@ -145,10 +138,8 @@ def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
     dst_dir = dest / dot_path
 
     dst_dir.parent.mkdir(parents=True, exist_ok=True)
-
     if dst_dir.is_symlink() and dst_dir.resolve(strict=False) == src_dir.resolve():
         return False
-
     safe_rm(dst_dir)
     rel_link = os.path.relpath(src_dir, dst_dir.parent)
     dst_dir.symlink_to(rel_link)
@@ -157,10 +148,6 @@ def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
 
 
 def deploy_item(src: Path, dest: Path) -> bool:
-    """
-    Deploy a file or directory as a symlink from src to dest.
-    Uses relative paths for safer dotfile deployment.
-    """
     if not src.exists():
         log(f"Skipping missing source: {src}")
         return False
@@ -180,22 +167,13 @@ def deploy_item(src: Path, dest: Path) -> bool:
     return True
 
 
-def reload_hypr() -> None:
-    if shutil.which("hyprctl"):
-        subprocess.run(["hyprctl", "reload"], check=False)
-        log("Hyprland reloaded")
-
-
 def polka(dots_name: str, dest: Path, skip_patterns: list[str], symlink_items) -> None:
     dots = Path.home() / dots_name
     if not dots.is_dir():
         log(f"Error: {dots} does not exist!")
         return
-
     skipped = 0
     linked = 0
-
-    # 1. Symlink whole directories
     for d in symlink_dirs:
         src = dots / d
         if src.is_dir():
@@ -203,19 +181,15 @@ def polka(dots_name: str, dest: Path, skip_patterns: list[str], symlink_items) -
                 linked += 1
         else:
             skipped += 1
-
     for src in dots.rglob("*"):
         if not src.is_file():
             continue
-
         rel = src.relative_to(dots)
         if valid_src(rel, skip_patterns):
             skipped += 1
             continue
-
         if deploy_base(src, dots, dest, skip_patterns):
             linked += 1
-
     for item in symlink_items:
         src = Path(item["src"]).expanduser()
         dest = Path(item["dest"]).expanduser()
@@ -223,12 +197,9 @@ def polka(dots_name: str, dest: Path, skip_patterns: list[str], symlink_items) -
             linked += 1
         else:
             skipped += 1
-
-    # 3. Reload + Summary
     if shutil.which("hyprctl"):
         subprocess.run(["hyprctl", "reload"], check=False)
         log("Hyprland reloaded")
-
     log("Deployment complete!")
     log(f"Linked: {linked} | Skipped: {skipped}")
 

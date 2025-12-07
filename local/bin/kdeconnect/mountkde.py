@@ -7,15 +7,13 @@ import os
 import shutil
 import re
 
-PHONE_PATH = Path.home() / "Phone"
+PHONE_PATH = Path.home() / "Documents" / "Phone"
 ANDROID_MOUNT = PHONE_PATH / "Internal"
 SD_MOUNT = PHONE_PATH / "SD"
-
 SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
 ANDROID_USER = "kdeconnect"
 ANDROID_DIR = "/storage/emulated/0"
 SD_DIR = "/storage/0000-0000"
-
 PHONE_ICON = "/home/nick/.local/share/icons/WhiteSur-grey-dark/places/scalable/folder-android.svg"
 
 
@@ -57,19 +55,23 @@ def activate_sftp(device_id):
 
 def detect_host(device_id):
     time.sleep(3)
-    for line in run("mount").splitlines():
-        if device_id in line and "kdeconnect" in line:
-            match = re.search(r"kdeconnect@([0-9.]+)", line)
-            if match:
-                return match.group(1)
-    sys.exit("Failed to detect KDE Connect mount.")
+    lines = run("mount")
+    if lines:
+        for line in lines.splitlines():
+            if device_id in line and "kdeconnect" in line:
+                match = re.search(r"kdeconnect@([0-9.]+)", line)
+                if match:
+                    return match.group(1)
+        sys.exit("Failed to detect KDE Connect mount.")
 
 
 def get_ssh_port(host):
-    for line in run("ss -tnp").splitlines():
-        if host in line and "ssh" in line:
-            return line.split()[4].split(":")[-1]
-    sys.exit("Failed to detect SSH port.")
+    lines = run("ss -tnp")
+    if lines:
+        for line in lines.splitlines():
+            if host in line and "ssh" in line:
+                return line.split()[4].split(":")[-1]
+        sys.exit("Failed to detect SSH port.")
 
 
 def set_phone_icon(icon_path):

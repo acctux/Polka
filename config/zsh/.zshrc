@@ -10,7 +10,6 @@ alias sudo='sudo '
 
 # Ignore commands that start with spaces and duplicates.
 
-HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt HIST_IGNORE_SPACE        # Ignore commands that start with a space

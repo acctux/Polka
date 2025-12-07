@@ -1,0 +1,12 @@
+[Unit]
+Description=rmpc tmux session
+After=graphical-session.target
+
+[Service]
+Type=forking
+# WARNING: use %I instead of %u here; %u=root in system services.
+ExecStart=/usr/sbin/tmuxp load rmpc -d
+ExecStop=/usr/sbin/tmux kill-session -t rmpc
+
+[Install]
+WantedBy=graphical-session.target
