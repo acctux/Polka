@@ -154,7 +154,7 @@
     "format": "{text}",
     "tooltip": true,
     "on-click": "pavucontrol &",
-    "on-click-right": "kitty tmux attach -t rmpc &",
+    "on-click-right": "kitty /home/nick/Polka/local/bin/mpd/rmpclaunch.sh",
     "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh"
   },
   "custom/nemo": {

@@ -14,7 +14,6 @@ window#waybar {
   padding: 0;
   border: 0;
 }
-
 button {
   padding: 0 4px;
   margin: 0;
@@ -58,11 +57,11 @@ tooltip label {
 #custom-updates {
   padding: 0 6px;
 }
-
 #workspaces button {
   padding: 0 3px;
   border-radius: 5px;
 }
+
 /* === Shared Borders === */
 #custom-taskwarrior,
 #custom-timer,
@@ -70,12 +69,11 @@ tooltip label {
 #custom-updates {
   border-right: 1px solid #33ccff;
 }
-
 #custom-kb-switch,
-#clock,
 #battery {
   border-left: 1px solid #33ccff;
 }
+
 /* === Shared Font Sizes === */
 #custom-volume,
 #custom-notification,
@@ -86,6 +84,7 @@ tooltip label {
   font-size: 15px;
 }
 #custom-wifi,
+#custom-kb-switch,
 #custom-taskwarrior {
   font-size: 14.5px;
 }
@@ -100,60 +99,47 @@ tooltip label {
   border-radius: 5px;
 }
 
-/* === Battery === */
+/* === Individual === */
+#custom-logo,
+#custom-wifi.connected,
 #battery {
   color: #33ccff;
 }
+#bluetooth.connected,
+#custom-notification.notification,
 #battery.charging {
   color: #00ff99;
 }
+#custom-taskwarrior.todo,
+#custom-volume.playing,
 #battery.warning {
   color: #ffee33;
 }
+#custom-taskwarrior.critical,
+#custom-notification,
+#temperature.critical,
+#custom-wifi,
 #battery.critical {
   color: #ff3232;
 }
-
-/* === Temperature === */
-#temperature.critical {
-  color: #ff3232;
-}
-
-/* === Updates === */
 #custom-updates {
   padding-right: 9px;
   padding-left: 5px;
 }
-
-/* === Notification === */
 #custom-notification {
   padding-right: 7px;
   padding-left: 5px;
-  color: #ff3232;
 }
-#custom-notification.notification {
-  color: #00ff99;
-}
-
-/* === Wifi === */
 #custom-wifi {
   padding-right: 9px;
   padding-left: 3px;
-  color: #ff3232;
 }
-#custom-wifi.connected { color: #33ccff; }
-
-/* === Clock === */
 #clock {
   padding: 0 4px;
 }
-
-/* === KB Switch === */
-#custom-kb-switch {
+ #custom-kb-switch {
   padding: 0 5px;
 }
-
-/* === Volume === */
 #custom-volume {
   padding-right: 7px;
   padding-left: 5px;
@@ -161,56 +147,31 @@ tooltip label {
 }
 #custom-volume.playing {
  font-weight: 600;
-  color: #ffee33;
 }
-
-/* === Bluetooth === */
 #bluetooth {
   padding-right: 7px;
   padding-left: 5px;
 }
-#bluetooth.connected {
-  color: #00ff99;
-}
-
-/* === Nemo === */
 #custom-nemo {
   padding-right: 7px;
   padding-left: 5px;
 }
-
-/* === Backlight === */
 #backlight {
   padding: 0 7px 0 4px;
 }
-
-/* === KDEConnect === */
 #custom-kdeconnect {
   padding: 0 6px 0 5px;
 }
-
-/* === Logo === */
 #custom-logo {
   padding-right: 7px;
   padding-left: 5px;
-  color: #33ccff;
 }
-
-/* === Empty Spacer === */
 #custom-empty {
   font-size: 5px;
 }
-
-/* === TaskWarrior === */
 #custom-taskwarrior {
   padding-right: 4px;
   padding-left: 6px;
-}
-#custom-taskwarrior.todo {
-  color: #ffee33;
-}
-#custom-taskwarrior.critical {
-  color: #ff3232;
 }
 
 /* === Hover Effects === */
@@ -227,19 +188,16 @@ button:hover,
   background-color: rgba(16,16,19,0.3);
   color: #33ccff;
 }
-
 #workspaces button.active {
   padding-right: 4px;
   padding-left: 2px;
 }
-
 #workspaces button.active,
 #workspaces button:hover {
   background: inherit;
   border-radius: 5px;
   color: #00ff99;
 }
-
 #custom-logo:hover,
 #custom-updates:hover,
 #custom-nemo:hover,
@@ -250,7 +208,6 @@ button:hover,
   background-color: rgba(16,16,19,0.3);
   color: #33ccff;
 }
-
 #custom-notification:hover {
   color: #ff3232;
 }
