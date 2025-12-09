@@ -4,7 +4,7 @@ SERVICES = [
     "hypridle.service",
     "kdeconnectd.service",
     "waybar.service",
-    "mpd-mpris.service",
+    # "mpd-mpris.service", # Necessary?
     "psd.service",
     "swaync.service",
     "emailcheck.timer",
