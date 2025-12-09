@@ -3,7 +3,7 @@ import asyncio
 import json
 import logging
 from dbus_fast.aio import MessageBus
-from dbus_fast import BusType, MessageType
+from dbus_fast import BusType, Message, MessageType
 
 # ── Config ─────────────────────────────────────
 DEVICE_ID = "4d76022a5910415f9073cc44af2025c3"  # your phone's ID
@@ -49,7 +49,7 @@ async def query_device_reachability(bus: MessageBus):
         render()
 
 
-async def handle_signal(msg):
+async def handle_signal(msg: Message):
     if msg.message_type != MessageType.SIGNAL:
         return
     #  and msg.member in (

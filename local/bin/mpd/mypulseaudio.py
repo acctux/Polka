@@ -6,9 +6,9 @@ import time
 from pathlib import Path
 
 CACHE_FILE = Path.home() / ".cache" / "nowplaying_scroll.json"
-SLEEP = 0.3
-SPEED = 2
-SEP = ""
+SLEEP = 2
+SPEED = 0.5
+SEP = "  "
 MIN_VISIBLE = 8
 VISIBLE_DIVISOR = 6
 IGNORE_TEXT_PLAYERS = ["JBL_Go_4"]
@@ -44,7 +44,6 @@ def get_track_metadata(player):
 def load_state():
     if not CACHE_FILE.exists():
         return None, 0.0, time.time()
-
     try:
         data = json.loads(CACHE_FILE.read_text())
         return (
@@ -130,7 +129,7 @@ def main():
         vol = get_volume()
         tooltip = f"{vol}%\n{full_track}" if full_track else f"{vol}%"
         display_text = (
-            f"{volume_icon(vol)}<span size='8.5pt'> {text}</span>"
+            f"{volume_icon(vol)}<span size='9pt'> {text}</span>"
             if text
             else volume_icon(vol)
         )

@@ -1,6 +1,6 @@
 /* === Global Styles === */
 * {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 1px;
   font-family: "FiraMono Nerd Font Medium", monospace;
@@ -31,7 +31,7 @@ tooltip {
 }
 tooltip label {
   padding: 0 2px;
-  font-size: 15px;
+  font-size: 14px;
   background: transparent;
   font-weight: 400;
 }
@@ -43,8 +43,12 @@ tooltip label {
   background-color: rgba(16,16,19,0.65);
   border-radius: 4px;
 }
-.modules-right { margin-right: 1px; }
-.modules-left  { margin-left: 1px; }
+.modules-right {
+  margin-right: 1px; 
+}
+.modules-left  { 
+  margin-left: 1px; 
+}
 
 /* === Shared Spacing === */
 #battery,
@@ -77,16 +81,17 @@ tooltip label {
 /* === Shared Font Sizes === */
 #custom-volume,
 #custom-notification,
+#custom-nemo,
 #backlight,
 #bluetooth,
 #custom-kdeconnect,
 #custom-logo {
-  font-size: 15px;
+  font-size: 16px;
 }
 #custom-wifi,
 #custom-kb-switch,
 #custom-taskwarrior {
-  font-size: 14.5px;
+  font-size: 15px;
 }
 
 /* === Border Radius === */
