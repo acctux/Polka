@@ -1,58 +1,53 @@
 #!/usr/bin/env python3
 import subprocess
 import json
-import re
 import time
 from pathlib import Path
 
 CACHE_FILE = Path.home() / ".cache" / "nowplaying_scroll.json"
 SLEEP = 2
-SPEED = 0.5
+SCROLL_SPEED = 0.5
 SEP = "  "
-MIN_VISIBLE = 8
-VISIBLE_DIVISOR = 6
-IGNORE_TEXT_PLAYERS = ["JBL_Go_4"]
+EXCLUDED = {"JBL_Go_4"}
+MIN_LEN = 10
 
 
-# Player helper functions
-def run(args):
+def run(cmd):
     return subprocess.run(
-        ["playerctl"] + args, capture_output=True, text=True
+        ["playerctl"] + cmd, capture_output=True, text=True
     ).stdout.strip()
 
 
-def list_players():
-    out = subprocess.run(["playerctl", "-l"], capture_output=True, text=True).stdout
-    return out.strip().splitlines()
+def get_players():
+    return [p for p in run(["-l"]).splitlines() if p != "No players found"]
 
 
-def get_playing_player(players):
+def get_active_player():
+    players = get_players()
     for p in players:
-        if run(["--player", p, "status"]) == "Playing":
+        if p in EXCLUDED:
+            continue
+        status = run(["--player", p, "status"])
+        if status == "Playing":
             return p
     return None
 
 
-def get_track_metadata(player):
-    artist = run(["--player", player, "metadata", "xesam:artist"]).strip()
-    title = run(["--player", player, "metadata", "xesam:title"]).strip()
-    if not artist and not title:
-        return ""
+def get_metadata(player):
+    artist = run(["--player", player, "metadata", "xesam:artist"])
+    title = run(["--player", player, "metadata", "xesam:title"])
     return f"{artist} – {title}" if artist else title
 
 
 def load_state():
-    if not CACHE_FILE.exists():
-        return None, 0.0, time.time()
-    try:
+    if CACHE_FILE.exists():
         data = json.loads(CACHE_FILE.read_text())
         return (
             data.get("track"),
-            float(data.get("pos", 0.0)),
-            float(data.get("ts", time.time())),
+            float(data.get("pos", 0)),
+            data.get("ts", time.time()),
         )
-    except Exception:
-        return None, 0.0, time.time()
+    return None, 0.0, time.time()
 
 
 def save_state(track, pos):
@@ -60,87 +55,55 @@ def save_state(track, pos):
     CACHE_FILE.write_text(json.dumps({"track": track, "pos": pos, "ts": time.time()}))
 
 
-def scroll_text(track: str, pos: float, dt: float):
-    pos += dt * SPEED
-    visible = max(len(track) // VISIBLE_DIVISOR, MIN_VISIBLE)
-    # No need to scroll
-    if len(track) <= visible:
-        return pos, track
-    loop = track + SEP + track
-    start = int(pos) % len(track)
-    display = loop[start : start + visible]
-    return pos, display
+def scroll_text(text, pos, delta):
+    if len(text) <= MIN_LEN:
+        return 0.0, text
+    pos = (pos + delta * SCROLL_SPEED) % len(text)
+    looped = text + SEP + text
+    start = int(pos)
+    return pos, looped[start : start + MIN_LEN]
 
 
-def get_nowplaying(players):
-    track_player = None
-    for p in players:
-        if run(["--player", p, "status"]) == "Playing" and p not in IGNORE_TEXT_PLAYERS:
-            track_player = p
-            break
-    if not track_player:
-        track_player = get_playing_player(players)
-    if not track_player:
-        return "", "stopped", "stopped", ""
-    full_track = (
-        "" if track_player in IGNORE_TEXT_PLAYERS else get_track_metadata(track_player)
+def get_volume():
+    out = subprocess.check_output(
+        ["pactl", "get-sink-volume", "@DEFAULT_SINK@"], text=True
     )
-    last_track, pos, last_ts = load_state()
-    now = time.time()
-    if full_track != last_track:
-        save_state(full_track, 0.0)
-        return full_track or "", "playing", "playing", full_track or ""
-    pos, display = scroll_text(full_track, pos, now - last_ts)
-    save_state(full_track, pos)
-    return display or "", "playing", "playing", full_track or ""
+    vols = [int(x) for x in __import__("re").findall(r"(\d+)%", out)]
+    return sum(vols[:2]) // len(vols[:2]) if vols else 0
 
 
-def volume_icon(vol: int) -> str:
-    if vol == 0:
-        return "󰖁"
-    elif vol <= 33:
-        return "󰕿"
-    elif vol <= 66:
-        return "󰖀"
-    else:
-        return "󰕾"
+def volume_icon(vol):
+    return "󰖁" if vol == 0 else "󰕿" if vol <= 33 else "󰖀" if vol <= 66 else "󰕾"
 
 
-def get_volume() -> int:
-    try:
-        out = subprocess.check_output(
-            ["pactl", "get-sink-volume", "@DEFAULT_SINK@"], stderr=subprocess.DEVNULL
-        ).decode()
-        matches = re.findall(r"(\d+)%", out)
-        if matches:
-            return sum(int(m) for m in matches) // len(matches)
-    except subprocess.CalledProcessError:
-        pass
-    return 0
-
-
-# ────────────────────────────────────────────
-# Main loop
-# ────────────────────────────────────────────
 def main():
+    pos = 0.0
     while True:
-        players = list_players()
-        text, status, css_class, full_track = get_nowplaying(players)
-        vol = get_volume()
-        tooltip = f"{vol}%\n{full_track}" if full_track else f"{vol}%"
-        display_text = (
-            f"{volume_icon(vol)}<span size='9pt'> {text}</span>"
-            if text
-            else volume_icon(vol)
-        )
+        player = get_active_player()
+        volume = get_volume()
+        if not player:
+            output = {
+                "text": volume_icon(volume),
+                "tooltip": f"{volume}%",
+                "class": "stopped",
+            }
+            print(json.dumps(output, ensure_ascii=False), flush=True)
+            time.sleep(SLEEP)
+            continue
+        track = get_metadata(player)
+        now = time.time()
+        saved_track, saved_pos, saved_ts = load_state()
+        if track != saved_track:
+            pos = 0.0
+            display = track[:MIN_LEN]
+        else:
+            pos, display = scroll_text(track, saved_pos, now - saved_ts)
+        save_state(track, pos)
+        text = f"{volume_icon(volume)}<span size='9pt'> {display}</span>"
+        tooltip = f"{volume}%\n{track}"
         print(
             json.dumps(
-                {
-                    "text": display_text,
-                    "status": status,
-                    "class": css_class,
-                    "tooltip": tooltip,
-                },
+                {"text": text, "tooltip": tooltip, "class": "playing"},
                 ensure_ascii=False,
             ),
             flush=True,
@@ -150,3 +113,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
