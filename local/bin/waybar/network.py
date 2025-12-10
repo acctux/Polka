@@ -4,96 +4,113 @@ import re
 import subprocess
 import time
 from pathlib import Path
-from typing import Tuple
 
 CACHE = Path("/tmp/waybar-wifi.json")
-ICONS = ["󰤫", "󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
 
 
-def run(cmd: list[str]) -> str:
-    return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL).strip()
+def run(cmd):
+    try:
+        return subprocess.check_output(
+            cmd, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except subprocess.CalledProcessError:
+        return ""
 
 
-def safe_search(pattern: str, text: str) -> str | None:
-    m = re.search(pattern, text)
-    return m.group(1) if m else None
+def find_wifi_interface():
+    for dev in Path("/sys/class/net").iterdir():
+        if (dev / "wireless").exists():
+            return dev.name
+    return None
 
 
-def format_speed(bps: float) -> str:
-    if bps < 1_000_000:
-        return f"{bps / 1024:.0f}K"
-    return f"{bps / 1_048_576:.1f}M"
+def get_station_info(iface):
+    return run(["iw", "dev", iface, "station", "dump"])
 
 
-def get_real_iface() -> str | None:
-    return next(
-        (p.name for p in Path("/sys/class/net").iterdir() if (p / "wireless").exists()),
-        None,
-    )
+def parse_wifi_info(station_info):
+    rssi = rx = tx = None
+    rssi_match = re.search(r"signal avg:\s+(-?\d+)", station_info)
+    rx_match = re.search(r"rx bytes:\s+(\d+)", station_info)
+    tx_match = re.search(r"tx bytes:\s+(\d+)", station_info)
+    if rssi_match:
+        rssi = int(rssi_match.group(1))
+    if rx_match:
+        rx = int(rx_match.group(1))
+    if tx_match:
+        tx = int(tx_match.group(1))
+    return rssi, rx, tx
 
 
-def get_iface() -> str | None:
-    iface = run(["wg", "show", "interfaces"])
-    return iface
+def compute_signal_strength(rssi):
+    strength = max(0, min(100, int((rssi + 90) / 0.55)))
+    ICONS = ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
+    icon = ICONS[min(strength // 25, 4)]
+    return strength, icon
 
 
-def get_speeds(rx: int, tx: int) -> Tuple[int, int]:
+def load_previous_stats():
     if not CACHE.exists():
-        with CACHE.open("w") as f:
-            json.dump({"rx": rx, "tx": tx, "t": time.time()}, f)
-    prev = json.loads(CACHE.read_text())
-    dt = time.time() - prev.get("t", 0)
-    up_bps = (tx - prev.get("tx", 0)) / dt
-    down_bps = (rx - prev.get("rx", 0)) / dt
-    with CACHE.open("w") as f:
-        json.dump({"rx": rx, "tx": tx, "t": time.time()}, f)
-    return up_bps, down_bps
+        return None
+    try:
+        return json.loads(CACHE.read_text())
+    except Exception:
+        return None
 
 
-def save_counters(rx: int, tx: int) -> None:
+def save_stats(rx, tx):
     CACHE.write_text(json.dumps({"rx": rx, "tx": tx, "t": time.time()}))
 
 
-def rssi_to_strength(rssi: int) -> int:
-    if rssi >= -35:
-        return 100
-    if rssi <= -90:
-        return 0
-    strength = (rssi + 90) / 55  # -90→0%, -35→100%
-    return int(strength * 100)
+def compute_speeds(prev, rx, tx):
+    if not prev:
+        return 0, 0
+
+    dt = time.time() - prev.get("t", 0)
+    if dt <= 0.5:
+        return 0, 0
+    upload_rate = (tx - prev.get("tx", 0)) / dt
+    download_rate = (rx - prev.get("rx", 0)) / dt
+    return upload_rate, download_rate
 
 
-def main() -> None:
-    iface = get_real_iface()
-    if not iface:
-        print('{"text":"No Wi-Fi","tooltip":"No Wi-Fi","class":"disconnected"}')
-        return
-    out = run(["iw", "dev", iface, "station", "dump"])
-    rssi_str = safe_search(r"signal:\s+(-?\d+)", out)
-    rx_str = safe_search(r"rx bytes:\s+(\d+)", out)
-    tx_str = safe_search(r"tx bytes:\s+(\d+)", out)
-    if not (rssi_str and rx_str and tx_str):
-        print('{"text":"No data","tooltip":"No data","class":"disconnected"}')
-        return
-    rx = int(rx_str)
-    tx = int(tx_str)
-    strength = rssi_to_strength(int(rssi_str))
-    icon = ICONS[min(strength // 20, len(ICONS) - 1)]
-    up_bps, down_bps = get_speeds(rx, tx)
-    save_counters(rx, tx)
-    wg_iface = get_iface()
-    if wg_iface:
-        tooltip = f"{wg_iface}\n{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
-        tooltip_class = "connected"
-    else:
-        tooltip = f"{iface}\n{strength}%\n{rssi_str}dBm\n{f'↑{format_speed(up_bps)}'}\n{f'↓{format_speed(down_bps)}'}"
-        tooltip_class = "disconnected"
+def build_tooltip(iface, strength, rssi, upload, download, vpn):
+    lines = [f"{iface} · {strength}% · {rssi} dBm"]
+    if upload or download:
+        lines.append(f"↑ {upload / 1_048_576:.1f}M  ↓ {download / 1_048_576:.1f}M")
+    if vpn:
+        lines.insert(0, f"VPN: {vpn}")
+
+    return "\n".join(lines)
+
+
+def output_json(icon, tooltip, vpn_active):
     print(
         json.dumps(
-            {"text": icon, "tooltip": tooltip, "class": tooltip_class},
+            {
+                "text": icon,
+                "tooltip": tooltip,
+                "class": "vpn" if vpn_active else "wifi",
+            },
             ensure_ascii=False,
         )
     )
+
+
+def main():
+    vpn_interfaces = run(["wg", "show", "interfaces"])
+    iface = find_wifi_interface() or "wlan0"
+    station_info = get_station_info(iface)
+    rssi, rx_bytes, tx_bytes = parse_wifi_info(station_info)
+    if rssi is None or rx_bytes is None or tx_bytes is None:
+        output_json("󰤫", "No WiFi link", False)
+        return
+    strength, icon = compute_signal_strength(rssi)
+    prev = load_previous_stats()
+    upload, download = compute_speeds(prev, rx_bytes, tx_bytes)
+    save_stats(rx_bytes, tx_bytes)
+    tooltip = build_tooltip(iface, strength, rssi, upload, download, vpn_interfaces)
+    output_json(icon, tooltip, bool(vpn_interfaces))
 
 
 if __name__ == "__main__":
