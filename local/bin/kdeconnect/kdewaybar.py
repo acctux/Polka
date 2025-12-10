@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-import asyncio
+from pathlib import Path
+import subprocess
 import json
-import logging
-from dbus_fast.aio import MessageBus
-from dbus_fast import BusType, Message, MessageType
 
 # ── Config ─────────────────────────────────────
-DEVICE_ID = "4d76022a5910415f9073cc44af2025c3"  # your phone's ID
-ICON = "phone"
+DEVICE_ID = "4d76022a5910415f9073cc44af2025c3"
+ICON = ""
+ANDROID_MOUNT = Path.home() / "Documents" / "Phone" / "Internal"
 
 CONNECTED = {
     "text": ICON,
@@ -16,80 +15,77 @@ CONNECTED = {
     "alt": "connected",
 }
 DISCONNECTED = {
-    "text": ICON,
+    "text": "",
     "tooltip": "Phone disconnected",
     "class": "disconnected",
     "alt": "disconnected",
 }
-
+MOUNTED = {
+    "text": ICON,
+    "tooltip": "Phone mounted",
+    "class": "mounted",
+    "alt": "mounted",
+}
 STATE = DISCONNECTED.copy()
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger("kdeconnect")
 
 
 def render():
     print(json.dumps(STATE), flush=True)
 
 
-async def query_device_reachability(bus: MessageBus):
+def is_phone_mounted():
     try:
-        obj = bus.get_proxy_object(
-            "org.kde.kdeconnect",
-            f"/modules/kdeconnect/devices/{DEVICE_ID}",
+        result = subprocess.run(
+            ["findmnt", "--target", str(ANDROID_MOUNT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
         )
-        dev = obj.get_interface("org.kde.kdeconnect.device")
-        reachable = await dev.get_isReachable()
-        new_state = CONNECTED if reachable else DISCONNECTED
+        if result.returncode == 0:
+            return True
+        else:
+            return False
     except Exception as e:
-        log.debug(f"Device not available yet: {e}")
-        new_state = DISCONNECTED
+        print(f"Error checking mount status: {e}")
+        return False
+
+
+def query_device_reachability():
     global STATE
-    if STATE != new_state:
-        STATE = new_state
+    new_state = DISCONNECTED
+    try:
+        if is_phone_mounted():
+            new_state = MOUNTED
+        else:
+            result = subprocess.run(
+                ["kdeconnect-cli", "-l"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            if result.returncode != 0:
+                return
+            for line in result.stdout.splitlines():
+                if DEVICE_ID in line:
+                    if "reachable" in line:
+                        new_state = CONNECTED
+                    else:
+                        new_state = DISCONNECTED
+                    break
+        if new_state != STATE:
+            STATE = new_state
+            render()
+    except Exception:
+        STATE = DISCONNECTED
         render()
 
 
-async def handle_signal(msg: Message):
-    if msg.message_type != MessageType.SIGNAL:
-        return
-    #  and msg.member in (
-    #     "deviceAdded",
-    #     "deviceRemoved",
-    # )
-    if msg.interface == "org.kde.kdeconnect.daemon":
-        path = msg.body[0] if msg.body else ""
-        if DEVICE_ID in path:
-            log.info(f"deviceAdded/deviceRemoved → {path}")
-            await query_device_reachability(bus)
-    elif (
-        msg.interface == "org.kde.kdeconnect.device"
-        and msg.member == "reachableChanged"
-    ):
-        reachable = msg.body[0] if msg.body else False
-        log.info(f"reachableChanged → {'reachable' if reachable else 'not reachable'}")
-        global STATE
-        STATE = CONNECTED if reachable else DISCONNECTED
-        render()
-
-
-async def main():
-    global bus
-    bus = await MessageBus(bus_type=BusType.SESSION).connect()
-    bus.add_message_handler(handle_signal)
-    bus._add_match_rule(
-        "type='signal',interface='org.kde.kdeconnect.daemon',member='deviceAdded'"
-    )
-    bus._add_match_rule(
-        "type='signal',interface='org.kde.kdeconnect.daemon',member='deviceRemoved'"
-    )
-    bus._add_match_rule(
-        "type='signal',interface='org.kde.kdeconnect.device',member='reachableChanged'"
-    )
-    bus.add_message_handler(handle_signal)
-    log.info("KDE Connect Waybar module ready – monitoring your phone")
-    await query_device_reachability(bus)
-    await asyncio.Future()
+def main():
+    try:
+        query_device_reachability()
+    except Exception:
+        raise
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

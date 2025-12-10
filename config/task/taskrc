@@ -4,7 +4,7 @@
 data.location=~/Lit/docs/base/task
 verbose=affected,blank,context,edit,header,footnote,label,new-id,project,special,sync,recur
 uda.priority.values=H,M,,L
-color.alternate=blue
+color.alternate=yellow
 
 # taskwarrior-tui reads color attributes from the following to display the same colors of tasks as the CLI
 color.tagged=black on rgb444

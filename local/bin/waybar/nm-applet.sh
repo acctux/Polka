@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-SERVICE="nm-applet.service"
-if systemctl --user is-active --quiet "$SERVICE"; then
-  systemctl --user stop "$SERVICE"
-else
-  systemctl --user start "$SERVICE"
-fi

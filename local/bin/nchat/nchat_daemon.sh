@@ -1,8 +1,7 @@
 #!/bin/bash
-SESSION="nchat-session"
+SESSION="nchat"
 if ! tmux has-session -t "$SESSION" 2>/dev/null; then
-  tmux new-session -d -s "$SESSION" "nchat"
-else
-  echo "already exists"
+  tmuxp load -d "$SESSION"
 fi
+nchat --export /home/nick/Lit/docs/nchat
 exec tmux attach -t "$SESSION"

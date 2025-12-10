@@ -126,18 +126,18 @@ def unmount_storage():
             print(f"Failed to remove {PHONE_PATH}: {e}", file=sys.stderr)
 
 
-def main():
+def mount_kde():
     if ANDROID_MOUNT.is_mount():
-        unmount_storage()
+        # unmount_storage()
         return
     device_id = select_device()
     activate_sftp(device_id)
     host = detect_host(device_id)
     port = get_ssh_port(host)
-    set_phone_icon(PHONE_ICON)  # <-- set icon only for PHONE_PATH
+    set_phone_icon(PHONE_ICON)
     mount_storage(host, port)
     print(f"Mounted {device_id} at {ANDROID_MOUNT} and {SD_MOUNT}")
 
 
 if __name__ == "__main__":
-    main()
+    mount_kde()

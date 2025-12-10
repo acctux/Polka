@@ -1,7 +1,6 @@
 /* === Global Styles === */
 * {
   font-size: 14px;
-  font-weight: 600;
   letter-spacing: 1px;
   font-family: "FiraMono Nerd Font Medium", monospace;
   transition: all 0.75s ease;
@@ -57,23 +56,26 @@ tooltip label {
 #clock,
 #custom-logo,
 #custom-timer,
+#custom-telegram,
 #custom-taskwarrior,
 #custom-updates {
   padding: 0 6px;
 }
 #workspaces button {
-  padding: 0 3px;
+  padding: 0 2px;
   border-radius: 5px;
 }
 
 /* === Shared Borders === */
+#custom-kb-switch,
+#custom-logo,
 #custom-taskwarrior,
 #custom-timer,
 #temperature,
 #custom-updates {
   border-right: 1px solid #33ccff;
 }
-#custom-kb-switch,
+#custom-notification,
 #clock,
 #battery {
   border-left: 1px solid #33ccff;
@@ -82,23 +84,23 @@ tooltip label {
 /* === Shared Font Sizes === */
 #custom-volume,
 #custom-notification,
-#custom-nemo,
 #backlight,
-#bluetooth,
 #custom-kdeconnect,
+#bluetooth,
+#custom-wifi,
+#custom-nemo,
+#custom-telegram,
+#custom-kb-switch,
+#custom-taskwarrior,
 #custom-logo {
   font-size: 16px;
-}
-#custom-wifi,
-#custom-kb-switch,
-#custom-taskwarrior {
-  font-size: 15px;
 }
 
 /* === Border Radius === */
 #custom-wifi,
 #custom-nemo,
 #custom-volume,
+#custom-telegram,
 #backlight,
 #bluetooth,
 #custom-kdeconnect {
@@ -108,16 +110,18 @@ tooltip label {
 /* === Colors === */
 #custom-logo,
 #custom-wifi.vpn,
+#custom-telegram,
 #battery {
   color: #33ccff;
 }
 #bluetooth.connected,
-#custom-notification.notification,
+#custom-kdeconnect.mounted,
+#custom-volume.playing,
 #battery.charging {
   color: #00ff99;
 }
+#custom-notification.notification,
 #custom-taskwarrior.todo,
-#custom-volume.playing,
 #battery.warning {
   color: #ffee33;
 }
@@ -136,7 +140,7 @@ tooltip label {
 }
 #custom-notification {
   padding-right: 7px;
-  padding-left: 5px;
+  padding-left: 6px;
 }
 #custom-wifi {
   padding-right: 9px;
@@ -144,6 +148,10 @@ tooltip label {
 }
 #clock {
   padding: 0 4px;
+}
+#custom-telegram {
+  padding-right: 9px;
+  padding-left: 3px;
 }
  #custom-kb-switch {
   padding: 0 5px;
@@ -161,18 +169,18 @@ tooltip label {
   padding-left: 5px;
 }
 #custom-nemo {
-  padding-right: 7px;
-  padding-left: 5px;
+  padding-right: 8px;
+  padding-left: 4px;
 }
 #backlight {
-  padding: 0 7px 0 4px;
+  padding: 0 7px 0 5px;
 }
 #custom-kdeconnect {
-  padding: 0 6px 0 5px;
+  padding: 0 9px 0 3px;
 }
 #custom-logo {
-  padding-right: 7px;
-  padding-left: 5px;
+  padding-right: 9px;
+  padding-left: 4px;
 }
 #custom-empty {
   font-size: 5px;
@@ -184,10 +192,11 @@ tooltip label {
 
 /* === Hover Effects === */
 button:hover,
-#custom-kdeconnect.connected:hover,
+#custom-kdeconnect:hover,
 #custom-timer:hover,
 #backlight:hover,
 #custom-nemo:hover,
+#custom-telegram:hover,
 #bluetooth:hover,
 #custom-wifi:hover,
 #custom-volume:hover,

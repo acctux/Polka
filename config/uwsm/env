@@ -1,6 +1,7 @@
 export TERMINAL=alacritty
 export EDITOR=nvim
 export BROWSER=vivaldi
+export TERM=xterm-256color
 export GPG_TTY=$(tty)
 export XCURSOR_THEME=capitaine-cursors-light
 export XCURSOR_SIZE=24
