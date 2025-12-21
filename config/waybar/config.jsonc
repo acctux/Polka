@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "icon-theme": "Nordzy--dark_panel",
+  "icon-theme": "WhiteSur-grey-dark",
   "modules-left": [
     "custom/logo",
     "temperature",
@@ -162,7 +162,7 @@
     "format": "{text}",
     "tooltip": true,
     "on-click": "pavucontrol &",
-    "on-click-right": "kitty /home/nick/Polka/local/bin/mpd/rmpclaunch.sh & disown",
+    "on-click-right": "alacritty /home/nick/Polka/local/bin/mpd/rmpclaunch.sh & disown",
     "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh"
   },
   "custom/nemo": {
