@@ -59,6 +59,7 @@ x-scheme-handler/mailto=firebird.desktop
 x-scheme-handler/ftp=vivaldi.desktop
 x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop
 x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop
+x-scheme-handler/magnet=deluge.desktop
 
 [Added Associations]
 # Image MIME Types

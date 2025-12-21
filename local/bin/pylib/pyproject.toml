@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pylib"
+version = "0.1.0"
+description = "My personal Python library with colored logging"
+authors = [{ name = "Nick" }]
+dependencies = ["colorlog>=6.7.0"]
+readme = "README.md"

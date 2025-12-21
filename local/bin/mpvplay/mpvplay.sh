@@ -10,5 +10,5 @@ while true; do
       mpv "$CLIP" &
     fi
   fi
-  sleep 1
+  sleep 3
 done

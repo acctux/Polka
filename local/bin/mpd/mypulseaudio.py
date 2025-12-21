@@ -5,11 +5,11 @@ import time
 from pathlib import Path
 
 CACHE_FILE = Path.home() / ".cache" / "nowplaying_scroll.json"
-SLEEP = 2
-SCROLL_SPEED = 0.5
+SLEEP = 1
+SCROLL_SPEED = 1
 SEP = "  "
 EXCLUDED = {"JBL_Go_4"}
-MIN_LEN = 10
+MIN_LEN = 14
 
 
 def run(cmd):
@@ -113,4 +113,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

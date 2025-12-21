@@ -124,7 +124,7 @@
     ]
   },
   "clock": {
-    "timezone": "America/New_York",
+    "timezone": "Europe/Madrid",
     "tooltip-format": "{:%A, %B %d}",
     "format-alt": "{:%a, %d %b %Y}",
     "format": "{:%H:%M}",
@@ -133,6 +133,7 @@
     "interval": 60
   },
   "custom/empty": {
+    "tooltip": false,
     "format": " "
   },
   "custom/kb-switch": {
@@ -215,8 +216,13 @@
     "on-click-right": "kdeconnect-sms"
   },
   "custom/telegram": {
-    "format": "",
-    "on-click": "Telegram & disown"
+    "exec": "/home/nick/Polka/local/bin/nchat/telegram.py",
+    "interval": 30,
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "Telegram & disown",
+    "class": "telegram"
   },
   "custom/logo": {
     "format": "",
