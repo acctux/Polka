@@ -1,14 +1,8 @@
 #!/bin/sh
-
-TZONE=$(find /usr/share/zoneinfo \
-  -type f \
-  ! -path '*/posix/*' \
-  ! -path '*/right/*' \
-  ! -name 'localtime' \
-  ! -name 'posixrules' \
-  | sed 's|/usr/share/zoneinfo/||' \
-  | sort \
-  | fuzzel --dmenu --prompt="Timezone: ")
-
-[ -n "$TZONE" ] && sudo timedatectl set-timezone "$TZONE"
-
+set -e
+ZONEINFO=/usr/share/zoneinfo
+ZONETAB="$ZONEINFO/zone1970.tab"
+CURRENT_TZ=$(timedatectl show --property=Timezone --value)
+TZONE=$(awk 'NF && $1 !~ /^#/ {print $3}' "$ZONETAB" | sort | fuzzel --dmenu --prompt="Timezone ($CURRENT_TZ): ")
+[ -z "$TZONE" ] && exit 0
+alacritty -e sudo timedatectl set-timezone "$TZONE"

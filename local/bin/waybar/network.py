@@ -74,8 +74,17 @@ def compute_speeds(prev, rx, tx):
     return upload_rate, download_rate
 
 
-def build_tooltip(iface, strength, rssi, upload, download, vpn):
-    lines = [f"{iface} · {strength}% · {rssi} dBm"]
+def get_firewalld_zone():
+    output = run(["firewall-cmd", "--get-active-zones"])
+    if not output:
+        return "off"
+    first_line = output.splitlines()[0]
+    zone_name = first_line.split(None, 1)[0]
+    return zone_name
+
+
+def build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name):
+    lines = [f"{iface}\n · {strength}%\n · {rssi} dBm\n{zone_name}󱨑"]
     if upload or download:
         lines.append(f"↑ {upload / 1_048_576:.1f}M  ↓ {download / 1_048_576:.1f}M")
     if vpn:
@@ -103,13 +112,16 @@ def main():
     station_info = get_station_info(iface)
     rssi, rx_bytes, tx_bytes = parse_wifi_info(station_info)
     if rssi is None or rx_bytes is None or tx_bytes is None:
-        output_json("󰤫", "No WiFi link", False)
+        output_json("󰤫", f"No WiFi link\n{get_firewalld_zone()} 󱨑", False)
         return
     strength, icon = compute_signal_strength(rssi)
     prev = load_previous_stats()
     upload, download = compute_speeds(prev, rx_bytes, tx_bytes)
+    zone_name = get_firewalld_zone()
     save_stats(rx_bytes, tx_bytes)
-    tooltip = build_tooltip(iface, strength, rssi, upload, download, vpn_interfaces)
+    tooltip = build_tooltip(
+        iface, strength, rssi, upload, download, vpn_interfaces, zone_name
+    )
     output_json(icon, tooltip, bool(vpn_interfaces))
 
 

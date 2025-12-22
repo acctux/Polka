@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-Ultra-clean timer – unit mode stored in JSON
-timer --down 5 → always 5 of current unit (m/h/s)
-"""
 
 import json
 import subprocess
@@ -65,6 +61,10 @@ def parse_duration(text: str) -> int:
         elif len(parts) == 3:
             total = parts[0] * 3600 + parts[1] * 60 + parts[2]
     return max(0, total)
+
+
+def default_step_for_unit() -> int:
+    return 5 if get_current_unit() == "seconds" else 1
 
 
 # ----------------------------------------------------------------------
@@ -219,7 +219,6 @@ def main():
             sys.exit(0)
         start_timer(parse_duration(res.stdout.strip()))
         return
-
     arg = sys.argv[1]
     match arg:
         case "--stop":
@@ -237,9 +236,11 @@ def main():
                 cycle_unit()
         case "--up" | "--down":
             direction = 1 if arg == "--up" else -1
-            raw = sys.argv[2] if len(sys.argv) > 2 else "1"
-            delta = direction * get_adjust_delta(raw)
-            adjust_timer(delta)
+            if len(sys.argv) > 2:
+                delta = get_adjust_delta(sys.argv[2])
+            else:
+                delta = default_step_for_unit() * UNIT_MULTIPLIER[get_current_unit()]
+            adjust_timer(direction * delta)
         case "--status":
             get_current_unit()
             if is_running():

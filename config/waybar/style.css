@@ -208,6 +208,9 @@ button:hover,
   padding-right: 4px;
   padding-left: 2px;
 }
+#custom-timer:hover {
+  border-radius: 5px;
+}
 #workspaces button.active,
 #workspaces button:hover {
   background: inherit;

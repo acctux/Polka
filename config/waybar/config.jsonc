@@ -162,8 +162,8 @@
     "format": "{text}",
     "tooltip": true,
     "on-click": "pavucontrol &",
-    "on-click-right": "alacritty -e /home/nick/Polka/local/bin/mpd/rmpclaunch.sh & disown",
-    "on-click-middle": "~/Polka/local/bin/mpd/onoff.sh"
+    "on-click-middle": "playerctl play-pause",
+    "on-click-right": "alacritty -e /home/nick/Polka/local/bin/mpd/rmpclaunch.sh & disown"
   },
   "custom/nemo": {
     "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",
@@ -182,8 +182,8 @@
     "on-click": "/home/nick/Polka/local/bin/timer/set_timer.py --toggle",
     "on-click-right": "/home/nick/Polka/local/bin/timer/set_timer.py --unit",
     "on-click-middle": "/home/nick/Polka/local/bin/timer/set_timer.py --stop",
-    "on-scroll-up": "/home/nick/Polka/local/bin/timer/set_timer.py --up 5",
-    "on-scroll-down": "/home/nick/Polka/local/bin/timer/set_timer.py --down 5"
+    "on-scroll-up": "/home/nick/Polka/local/bin/timer/set_timer.py --up",
+    "on-scroll-down": "/home/nick/Polka/local/bin/timer/set_timer.py --down"
   },
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",

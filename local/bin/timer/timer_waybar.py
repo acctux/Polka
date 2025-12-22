@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-Waybar timer module — perfectly matched to the clean JSON timer
-Uses: "paused_at" as the only truth for pause state
-"""
 
 import json
 import sys
