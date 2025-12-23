@@ -251,4 +251,15 @@
    </metadata>
   </info>
  </separator>
+ <bookmark href="kdeconnect://4d76022a5910415f9073cc44af2025c3/">
+  <title>OnePlus</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="kdeconnect"/>
+   </metadata>
+   <metadata owner="http://www.kde.org">
+    <ID>1766497461/1</ID>
+   </metadata>
+  </info>
+ </bookmark>
 </xbel>
