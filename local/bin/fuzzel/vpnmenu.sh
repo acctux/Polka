@@ -23,4 +23,4 @@ choice="$(printf "%s\n" \
 
 [ -z "$choice" ] && exit 1
 
-kitty sudo python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"
+alacritty -e sudo python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"

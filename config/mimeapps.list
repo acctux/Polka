@@ -53,12 +53,9 @@ application/x-7z-compressed=file-roller.desktop
 application/x-rar-compressed=file-roller.desktop
 # Miscellaneous MIME Types
 inode/directory=nemo.desktop
-x-scheme-handler/http=vivaldi.desktop
-x-scheme-handler/https=vivaldi.desktop
+x-scheme-handler/http=firedragon.desktop
+x-scheme-handler/https=firedragon.desktop
 x-scheme-handler/mailto=firebird.desktop
-x-scheme-handler/ftp=vivaldi.desktop
-x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop
-x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop
 x-scheme-handler/magnet=deluge.desktop
 
 [Added Associations]
@@ -117,9 +114,7 @@ application/x-rar-compressed=file-roller.desktop;
 # Miscellaneous MIME Types
 inode/directory=nemo.desktop;
 application/octet-stream=featherpad.desktop;
-x-scheme-handler/http=vivaldi.desktop;
-x-scheme-handler/https=vivaldi.desktop;
+x-scheme-handler/http=firedragon.desktop
+x-scheme-handler/https=firedragon.desktop
 x-scheme-handler/mailto=firebird.desktop;
-x-scheme-handler/ftp=vivaldi.desktop;
-x-scheme-handler/tg=userapp-AyuGram Desktop-C8ZRG3.desktop;
-x-scheme-handler/tonsite=userapp-AyuGram Desktop-BVUQG3.desktop;
+x-scheme-handler/magnet=deluge.desktop;

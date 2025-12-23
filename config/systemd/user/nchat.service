@@ -5,7 +5,7 @@ After=graphical-session.target
 [Service]
 Type=forking
 # WARNING: use %I instead of %u here; %u=root in system services.
-ExecStart=/usr/sbin/tmuxp load /home/nick/Polka/local/bin/tmux/nchat.yaml -d
+ExecStart=/usr/sbin/tmuxp load nchat -d
 ExecStop=/usr/sbin/tmux kill-session -t "nchat"
 
 [Install]

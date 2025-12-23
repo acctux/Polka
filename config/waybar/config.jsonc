@@ -216,10 +216,7 @@
     "on-click-right": "kdeconnect-sms"
   },
   "custom/telegram": {
-    "exec": "/home/nick/Polka/local/bin/nchat/telegram.py",
-    "interval": 30,
-    "return-type": "json",
-    "format": "{}",
+    "format": "",
     "tooltip": true,
     "on-click": "Telegram & disown",
     "class": "telegram"

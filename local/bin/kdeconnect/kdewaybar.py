@@ -50,7 +50,7 @@ def is_phone_mounted():
         return False
 
 
-def query_device_reachability():
+def main():
     global STATE
     new_state = DISCONNECTED
     try:
@@ -78,13 +78,6 @@ def query_device_reachability():
     except Exception:
         STATE = DISCONNECTED
         render()
-
-
-def main():
-    try:
-        query_device_reachability()
-    except Exception:
-        raise
 
 
 if __name__ == "__main__":

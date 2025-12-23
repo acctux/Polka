@@ -7,7 +7,7 @@ import os
 import shutil
 import re
 
-PHONE_PATH = Path.home() / "Documents" / "Phone"
+PHONE_PATH = Path.home() / "Phone"
 ANDROID_MOUNT = PHONE_PATH / "Internal"
 SD_MOUNT = PHONE_PATH / "SD"
 SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
@@ -82,13 +82,7 @@ def set_phone_icon(icon_path):
         return
     try:
         run(
-            [
-                "gio",
-                "set",
-                str(PHONE_PATH),
-                "metadata::custom-icon",
-                f"file://{icon_path}",
-            ]
+                f"gio set {PHONE_PATH} metadata::custom-icon file://{icon_path}"
         )
         print(f"Custom icon set for {PHONE_PATH}")
     except subprocess.CalledProcessError as e:
@@ -128,7 +122,7 @@ def unmount_storage():
 
 def mount_kde():
     if ANDROID_MOUNT.is_mount():
-        # unmount_storage()
+        unmount_storage()
         return
     device_id = select_device()
     activate_sftp(device_id)
