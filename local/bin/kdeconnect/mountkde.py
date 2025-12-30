@@ -14,7 +14,9 @@ SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
 ANDROID_USER = "kdeconnect"
 ANDROID_DIR = "/storage/emulated/0"
 SD_DIR = "/storage/0000-0000"
-PHONE_ICON = "/home/nick/.local/share/icons/WhiteSur-grey-dark/places/scalable/folder-android.svg"
+PHONE_ICON = (
+    "/home/nick/.local/share/icons/WhiteSur-dark/places/scalable/folder-android.svg"
+)
 
 
 def run(cmd, capture=True, check=False):
@@ -81,9 +83,7 @@ def set_phone_icon(icon_path):
         print(f"Icon not found: {icon_path}")
         return
     try:
-        run(
-                f"gio set {PHONE_PATH} metadata::custom-icon file://{icon_path}"
-        )
+        run(f"gio set {PHONE_PATH} metadata::custom-icon file://{icon_path}")
         print(f"Custom icon set for {PHONE_PATH}")
     except subprocess.CalledProcessError as e:
         print(f"Failed to set icon for {PHONE_PATH}: {e.stderr}")
@@ -125,6 +125,7 @@ def mount_kde():
         unmount_storage()
         return
     device_id = select_device()
+    print(f"found {device_id}")
     activate_sftp(device_id)
     host = detect_host(device_id)
     port = get_ssh_port(host)

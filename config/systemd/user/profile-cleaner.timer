@@ -1,9 +1,0 @@
-[Unit]
-Description=Run profile-cleaner monthly
-
-[Timer]
-OnCalendar=weekly
-Persistent=true
-
-[Install]
-WantedBy=timers.target

@@ -6,7 +6,7 @@ import json
 # ── Config ─────────────────────────────────────
 DEVICE_ID = "4d76022a5910415f9073cc44af2025c3"
 ICON = ""
-ANDROID_MOUNT = Path.home() / "Documents" / "Phone" / "Internal"
+ANDROID_MOUNT = Path.home() / "Phone" / "Internal"
 
 CONNECTED = {
     "text": ICON,
@@ -53,30 +53,25 @@ def is_phone_mounted():
 def main():
     global STATE
     new_state = DISCONNECTED
-    try:
-        if is_phone_mounted():
-            new_state = MOUNTED
-        else:
-            result = subprocess.run(
-                ["kdeconnect-cli", "-l"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            if result.returncode != 0:
-                return
-            for line in result.stdout.splitlines():
-                if DEVICE_ID in line:
-                    if "reachable" in line:
-                        new_state = CONNECTED
-                    else:
-                        new_state = DISCONNECTED
-                    break
-        if new_state != STATE:
-            STATE = new_state
-            render()
-    except Exception:
-        STATE = DISCONNECTED
+    result = subprocess.run(
+        ["kdeconnect-cli", "-l"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode != 0:
+        return
+    for line in result.stdout.splitlines():
+        if DEVICE_ID in line:
+            if "reachable" in line:
+                new_state = CONNECTED
+                if is_phone_mounted():
+                    new_state = MOUNTED
+            else:
+                new_state = DISCONNECTED
+            break
+    if new_state != STATE:
+        STATE = new_state
         render()
 
 
