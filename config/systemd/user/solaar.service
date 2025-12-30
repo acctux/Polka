@@ -1,7 +1,6 @@
 [Unit]
 Description=Solaar launcher service
-After=wayland-wm@hyprland.desktop.service
-Requires=wayland-wm@hyprland.desktop.service
+After=graphical-session.target
 
 [Service]
 Type=simple
@@ -9,4 +8,4 @@ ExecStart=/usr/bin/solaar -w hide
 Restart=no
 
 [Install]
-WantedBy=wayland-wm@hyprland.desktop.service
+WantedBy=graphical-session.target

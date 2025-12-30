@@ -8,8 +8,8 @@ ConditionEnvironment=WAYLAND_DISPLAY
 Type=oneshot
 ExecStartPre=/usr/bin/systemctl --user start solaar.service
 ExecStart=/bin/sleep 10
-ExecStartPost=/usr/bin/systemctl --user restart solaar.service
-RemainAfterExit=true
+ExecStartPost=/usr/bin/systemctl --user stop solaar.service
+
 [Install]
 WantedBy=graphical-session.target
 
