@@ -65,7 +65,6 @@ def save_stats(rx, tx):
 def compute_speeds(prev, rx, tx):
     if not prev:
         return 0, 0
-
     dt = time.time() - prev.get("t", 0)
     if dt <= 0.5:
         return 0, 0
@@ -84,12 +83,11 @@ def get_firewalld_zone():
 
 
 def build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name):
-    lines = [f"{iface}\n · {strength}%\n · {rssi} dBm\n{zone_name}󱨑"]
-    if upload or download:
-        lines.append(f"↑ {upload / 1_048_576:.1f}M  ↓ {download / 1_048_576:.1f}M")
+    lines = [
+        f"{iface}\n·{strength}%\n·{rssi}dBm\n{zone_name}󱨑↑\n{upload / 1_048_576:.1f}M\n↓{download / 1_048_576:.1f}M\n"
+    ]
     if vpn:
         lines.insert(0, f"VPN: {vpn}")
-
     return "\n".join(lines)
 
 
@@ -112,7 +110,7 @@ def main():
     station_info = get_station_info(iface)
     rssi, rx_bytes, tx_bytes = parse_wifi_info(station_info)
     if rssi is None or rx_bytes is None or tx_bytes is None:
-        output_json("󰤫", f"No WiFi link\n{get_firewalld_zone()} 󱨑", False)
+        output_json("󰤫", f"No WiFi link\n{get_firewalld_zone()}", False)
         return
     strength, icon = compute_signal_strength(rssi)
     prev = load_previous_stats()
