@@ -20,54 +20,54 @@ individual_dirs = [
     "config/nvim",
     "local/bin",
 ]
-secret_dots = "~/Lit/docs/base"
+secret_dots = "~/Lit/Docs/base"
 individual_items = [
     # ──────────────── TASK WARRIOR ────────────────
     {
-        "src": "~/Lit/docs/base/task/taskchampion.sqlite3",
+        "src": "~/Lit/Docs/base/task/taskchampion.sqlite3",
         "dest": "~/.config/task/taskchampion.sqlite3",
     },
     # ──────────────── ZSH HISTORY ─────────────────
-    {"src": "~/Lit/docs/base/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
+    {"src": "~/Lit/Docs/base/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
     # ─────────────────── FONTS ───────────────────
     {
-        "src": "~/Lit/docs/base/fonts/calibri.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibri.ttf",
         "dest": "~/.local/share/fonts/calibri.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/calibrib.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibrib.ttf",
         "dest": "~/.local/share/fonts/calibrib.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/calibrii.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibrii.ttf",
         "dest": "~/.local/share/fonts/calibrii.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/calibril.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibril.ttf",
         "dest": "~/.local/share/fonts/calibril.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/calibrili.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibrili.ttf",
         "dest": "~/.local/share/fonts/calibrili.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/calibriz.ttf",
+        "src": "~/Lit/Docs/base/fonts/calibriz.ttf",
         "dest": "~/.local/share/fonts/calibriz.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/times.ttf",
+        "src": "~/Lit/Docs/base/fonts/times.ttf",
         "dest": "~/.local/share/fonts/times.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/timesbd.ttf",
+        "src": "~/Lit/Docs/base/fonts/timesbd.ttf",
         "dest": "~/.local/share/fonts/timesbd.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/timesbi.ttf",
+        "src": "~/Lit/Docs/base/fonts/timesbi.ttf",
         "dest": "~/.local/share/fonts/timesbi.ttf",
     },
     {
-        "src": "~/Lit/docs/base/fonts/timesi.ttf",
+        "src": "~/Lit/Docs/base/fonts/timesi.ttf",
         "dest": "~/.local/share/fonts/timesi.ttf",
     },
 ]
@@ -86,7 +86,6 @@ def safe_rm_file(path: Path) -> None:
     if not path.exists():
         return
     if path.is_dir():
-        log.warning(f"Refused to remove directory: {path}")
         return
     log.info(f"Remove file: {path}")
     path.unlink(missing_ok=True)
