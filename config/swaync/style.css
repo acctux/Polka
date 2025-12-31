@@ -21,7 +21,6 @@
 @define-color close_button_bg rgba(51, 204, 255, 0.15);
 @define-color close_button_hover_bg rgba(51, 204, 255, 0.30);
 @define-color mpris_player_bg rgba(16, 16, 19, 0.9); /* darkest background */
-
 /* ── Base Reset ───────────────────────────────────────────────────── */
 * {
   font-family: "FiraMono Nerd Font Medium", "SF Pro Text", sans-serif;
@@ -36,7 +35,6 @@
   text-shadow: none;
   outline: none;
 }
-
 /* ── 2. Control Center Container ─────────────────────────────────── */
 .control-center {
   background-color: @theme_bg;
