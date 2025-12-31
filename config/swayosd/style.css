@@ -1,13 +1,13 @@
 window {
-  border-radius: 0;
+  border-radius: 1;
   opacity: 0.97;
   border: 1px solid #0072ff;
-  background-color: #101013;
+  background-color: rgba(8, 8, 10, 0.8);
 }
 
 label {
   font-family: 'CaskaydiaMono Nerd Font';
-  font-size: 11pt;
+  font-size: 13pt;
   color: #e5e7eb;
 }
 
