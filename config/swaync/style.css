@@ -25,7 +25,7 @@
 
 /* ── Base Reset ───────────────────────────────────────────────────── */
 * {
-  font-family: "CaskaydiaMono Nerd Font", "SF Pro Text", sans-serif;
+  font-family: "FiraMono Nerd Font Medium", "SF Pro Text", sans-serif;
   font-size: 14px;
   color: @theme_fg;
   border: none;

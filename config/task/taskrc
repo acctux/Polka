@@ -1,11 +1,8 @@
 ### taskwarrior configuration options
-
-# taskwarrior's configuration
 data.location=~/Lit/docs/base/task
 verbose=affected,blank,context,edit,header,footnote,label,new-id,project,special,sync,recur
 uda.priority.values=H,M,,L
 color.alternate=yellow
-
 # taskwarrior-tui reads color attributes from the following to display the same colors of tasks as the CLI
 color.tagged=black on rgb444
 
@@ -16,7 +13,6 @@ report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,s
 report.next.filter=(status:pending or status:waiting) page:limit
 
 ### taskwarrior-tui configuration options
-
 # uda.taskwarrior-tui.keyconfig.done=x
 # uda.taskwarrior-tui.keyconfig.delete=d
 # uda.taskwarrior-tui.shortcuts.1=~/local/bin/task-sync.sh
