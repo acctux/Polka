@@ -45,8 +45,7 @@ def is_phone_mounted():
             return True
         else:
             return False
-    except Exception as e:
-        print(f"Error checking mount status: {e}")
+    except Exception:
         return False
 
 
