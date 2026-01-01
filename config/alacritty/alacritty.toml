@@ -34,7 +34,7 @@ green = "#50fa7b"
 yellow = "#f1fa8c"
 blue = "#0072ff"
 magenta = "#ff79c6"
-cyan = "#8be9fd"
+cyan = "#33ccff"
 white = "#bfbfbf"
 
 [colors.bright]
@@ -159,5 +159,5 @@ mods = "Control"
 action = "ResetFontSize"
 
 [general]
-live_config_reload = true
+live_config_reload = false
 working_directory = "None"

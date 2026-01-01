@@ -11,8 +11,8 @@
   "timeout-low": 5,
   "timeout-critical": 0,
   "fit-to-screen": false,
-  "control-center-width": 400,
-  "control-center-height": 900,
+  "control-center-width": 380,
+  "control-center-height": 800,
   "notification-window-width": 400,
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
@@ -24,7 +24,9 @@
   "widgets": [
     "buttons-grid",
     "volume",
-    "mpris"
+    "backlight",
+    "mpris",
+    "widgets"
   ],
   "widget-config": {
     "title": {
@@ -68,13 +70,6 @@
         {
           "label": "󰍃",
           "command": "swaymsg exit"
-        },
-        {
-          "label": "󰂛",
-          "command": "swaync-client -d",
-          "type": "toggle",
-          "tooltip": "DND",
-          "update-command": "echo $(swaync-client --get-dnd)"
         }
       ]
     }
