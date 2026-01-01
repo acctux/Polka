@@ -87,7 +87,7 @@ def build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name):
         f"{iface}\n·{strength}%\n·{rssi}dBm\n↑{upload / 1_048_576:.1f}M\n↓{download / 1_048_576:.1f}M\n{zone_name}󱨑"
     ]
     if vpn:
-        lines.insert(0, f"VPN: {vpn}")
+        lines.insert(0, f"{vpn}")
     return "\n".join(lines)
 
 
@@ -105,7 +105,7 @@ def output_json(icon, tooltip, vpn_active):
 
 
 def main():
-    vpn_interfaces = run(["wg", "show", "interfaces"])
+    vpn = run(["wg", "show", "interfaces"])
     iface = find_wifi_interface() or "wlan0"
     station_info = get_station_info(iface)
     rssi, rx_bytes, tx_bytes = parse_wifi_info(station_info)
@@ -117,10 +117,8 @@ def main():
     upload, download = compute_speeds(prev, rx_bytes, tx_bytes)
     zone_name = get_firewalld_zone()
     save_stats(rx_bytes, tx_bytes)
-    tooltip = build_tooltip(
-        iface, strength, rssi, upload, download, vpn_interfaces, zone_name
-    )
-    output_json(icon, tooltip, bool(vpn_interfaces))
+    tooltip = build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name)
+    output_json(icon, tooltip, bool(vpn))
 
 
 if __name__ == "__main__":
