@@ -1,12 +1,12 @@
 [Unit]
-Description=Delete user folder on logout/shutdown
-DefaultDependencies=no
-Before=exit.target
+Description=Delete Phone folder on login
+After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/nick/Polka/local/bin/kdeconnect/exit_cleanup.py
-RemainAfterExit=yes
+ExecStart=/usr/bin/rm -rf /home/nick/Phone
+ConditionPathIsDirectory=/home/nick/Phone
 
 [Install]
-WantedBy=exit.target
+WantedBy=graphical-session.target
+
