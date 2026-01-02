@@ -22,7 +22,7 @@ TEXT_COLOR = Color("rgba(229, 231, 235, 0.55)")
 SHADOW_COLOR = Color("rgba(16, 16, 19, 1)")
 BOTTOM_PADDING = 1250
 SIDE_PADDING = 200
-TRANSITION_DURATION = 1.2
+TRANSITION_DURATION = 3
 
 
 # ====================== Functions ======================
@@ -138,8 +138,8 @@ def set_wallpaper(
                 "swww",
                 "img",
                 str(image_path),
-                "--transition-type",
-                "wipe",
+                # "--transition-type",
+                # "wipe",
                 "--transition-duration",
                 str(transition_duration),
                 "--transition-fps",

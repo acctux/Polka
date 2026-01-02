@@ -1,5 +1,6 @@
 export TERMINAL=alacritty
 export EDITOR=nvim
+export VISUAL=nvim
 export BROWSER=firedragon
 export TERM=xterm-256color
 export GPG_TTY=$(tty)
@@ -12,7 +13,7 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_QPA_PLATFORMTHEME=qt6ct
 export GDK_BACKEND="wayland,x11"
 export CLUTTER_BACKEND=wayland
-export SDL_VIDEODRIVER=wayland
+export SDL_VIDEODRIVER="wayland,x11"
 export LIBVA_DRIVER_NAME=nvidia
 export GBM_BACKEND=nvidia-drm
 export __GLX_VENDOR_LIBRARY_NAME=nvidia

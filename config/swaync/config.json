@@ -11,7 +11,7 @@
   "timeout-low": 5,
   "timeout-critical": 0,
   "fit-to-screen": false,
-  "control-center-width": 380,
+  "control-center-width": 340,
   "control-center-height": 780,
   "notification-window-width": 400,
   "keyboard-shortcuts": true,
@@ -62,19 +62,19 @@
           "tooltip": "Reboot"
         },
         {
-          "label": "",
-          "command": "systemctl suspend",
-          "tooltip": "Suspend"
-        },
-        {
           "label": "󰌾",
           "command": "hyprlock",
-          "tooltip": "Suspend"
+          "tooltip": "Lock"
         },
         {
           "label": "󰍃",
           "command": "uwsm stop",
           "tooltip": "Logout"
+        },
+        {
+          "label": "",
+          "command": "",
+          "tooltip": "Power"
         }
       ]
     }
