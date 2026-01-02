@@ -49,7 +49,7 @@
     "on-click-right": "solaar & disown",
     "format-disabled": "",
     "format-connected": "󰂱",
-    "tooltip-format-connected": "\n{num_connections} connected\n\n{device_battery_percentage}%\n\n{device_enumerate}",
+    "tooltip-format-connected": "Connected:{num_connections}\nBattery:{device_battery_percentage}%",
     "format-off": "󰂲",
     "interval": 30,
     "format-no-controller": ""
@@ -142,7 +142,6 @@
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
     "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
     "on-click-right": "rofimoji & disown",
-    "on-click-middle": "/home/nick/Polka/local/bin/folders/mountencrypted.sh",
     "signal": 6,
     "format": "{}",
     "tooltip": false
@@ -235,6 +234,7 @@
   },
   "custom/logo": {
     "format": "",
+    "tooltip": false,
     "on-click": "fuzzel --config=/home/nick/.config/fuzzel/left-menu.ini",
     "on-click-middle": "~/Polka/local/bin/wall/wall.py & disown"
   }
