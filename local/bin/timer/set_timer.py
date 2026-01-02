@@ -99,7 +99,7 @@ def cycle_unit():
 # ----------------------------------------------------------------------
 def get_adjust_delta(amount_str: str) -> int:
     amount_str = amount_str.strip().lower()
-    if match := re.match(r"^\d+\s*[hms]$", amount_str):
+    if re.match(r"^\d+\s*[hms]$", amount_str):
         return parse_duration(amount_str)
     try:
         value = int(amount_str)

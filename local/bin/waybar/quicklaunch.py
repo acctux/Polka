@@ -4,16 +4,13 @@ import sys
 import subprocess
 from pathlib import Path
 
-FOLDERS = [
-    ("/home/nick/Documents", "󱧶"),
-    ("/home/nick/Documents/Decrypted", "󰉑"),
-    ("/home/nick/Polka", "󱂵"),
-    ("/home/nick/Lit/noah", "󰉒"),
-    ("/etc", "󱂀"),
-    ("/usr/local/bin", "󱁿"),
+COMMANDS = [
+    ("Mount Encrypted", "", ["kitty"]),
+    ("Timer", "󱎫", ["firefox"]),
 ]
-INDEX_FILE = Path.home() / ".cache/nemo_scroll_index"
-HIDE_FILE = Path.home() / ".cache/nemo_scroll_hide"
+
+INDEX_FILE = Path.home() / ".cache/quicklaunch_index"
+HIDE_FILE = Path.home() / ".cache/quicklaunch_hide"
 
 
 def load_index():
@@ -39,8 +36,7 @@ def save_hide(value: bool):
 
 
 def toggle_hide():
-    current = load_hide()
-    new = not current
+    new = not load_hide()
     save_hide(new)
     return new
 
@@ -50,28 +46,26 @@ def main():
     hide = load_hide()
     for arg in sys.argv[1:]:
         if arg == "up":
-            index = (index + 1) % len(FOLDERS)
+            index = (index + 1) % len(COMMANDS)
             save_index(index)
         elif arg == "down":
-            index = (index - 1) % len(FOLDERS)
+            index = (index - 1) % len(COMMANDS)
             save_index(index)
         elif arg == "exec":
-            folder, _ = FOLDERS[index]
-            subprocess.Popen(["nemo", folder])
+            _, _, command = COMMANDS[index]
+            subprocess.Popen(command)
             return
         elif arg == "--toggle":
             hide = toggle_hide()
-    folder, icon = FOLDERS[index]
-    folder_name = f" {Path(folder).name}"
-    if hide:
-        folder_name = ""
+    label, icon, _ = COMMANDS[index]
+    text = "" if hide else f" <span size='8pt'>{label}</span>"
     waybar_class = "hidden" if hide else "visible"
     print(
         json.dumps(
             {
-                "text": f"{icon}<span size='8pt'>{folder_name}</span>",
+                "text": f"{icon}{text}",
                 "class": waybar_class,
-                "on-click": "/home/nick/Polka/local/bin/folders/nemo_scroll.py exec",
+                "on-click": "/home/nick/Polka/local/bin/waybar_cmd_scroll.py exec",
             }
         )
     )
@@ -79,3 +73,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
