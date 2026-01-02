@@ -24,7 +24,7 @@
 /* ── Base Reset ───────────────────────────────────────────────────── */
 * {
   font-family: "FiraMono Nerd Font Medium", "SF Pro Text", sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   color: @theme_fg;
   border: none;
   border-radius: 0;
@@ -150,18 +150,18 @@
 /* ── 5. Sliders (Volume, Backlight) ─────────────────────────────── */
 .widget-volume label,
 .widget-backlight label {
-  font-size: 16px;
+  font-size: 15px;
   color: @theme_fg;
   min-width: 24px;
   margin-right: 14px;
 }
 scale trough {
-  min-height: 8px;
+  min-height: 7px;
   border-radius: 6px;
   background-color: @slider_trough_bg;
 }
 scale trough progress {
-  min-height: 8px;
+  min-height: 7px;
   border-radius: 6px;
   background-color: @slider_thumb_bg;
   transition: background-color 0.5s ease;
@@ -178,7 +178,7 @@ trough highlight {
 }
 scale slider {
   min-width: 14px;
-  min-height: 8px;
+  min-height: 7px;
   border-radius: 2px;
   /* background-color: @slider_thumb_bg; */
   background-color: transparent;
