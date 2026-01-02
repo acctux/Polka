@@ -9,7 +9,9 @@ SLEEP = 1
 SCROLL_SPEED = 1
 SEP = "  "
 EXCLUDED = {"JBL_Go_4"}
-MIN_LEN = 14
+DIV = 4
+MIN_LEN = 6
+MAX_LEN = 12
 
 
 def run(cmd):
@@ -31,6 +33,12 @@ def get_active_player():
         if status == "Playing":
             return p
     return None
+
+
+def window_len(text_len):
+    length = max(MIN_LEN, min(MAX_LEN, text_len))
+    length = (length // DIV) * DIV
+    return max(MIN_LEN, length)
 
 
 def get_metadata(player):
@@ -56,12 +64,18 @@ def save_state(track, pos):
 
 
 def scroll_text(text, pos, delta):
-    if len(text) <= MIN_LEN:
-        return 0.0, text
-    pos = (pos + delta * SCROLL_SPEED) % len(text)
-    looped = text + SEP + text
+    text_len = len(text)
+    win = window_len(text_len)
+    if text_len <= win:
+        return 0.0, text[:win]
+    cycle = text + SEP
+    cycle_len = len(cycle)
+    looped = cycle * 2
+    pos = pos + delta * SCROLL_SPEED
+    if pos >= cycle_len:
+        pos -= cycle_len
     start = int(pos)
-    return pos, looped[start : start + MIN_LEN]
+    return pos, looped[start : start + win]
 
 
 def get_volume():
@@ -95,7 +109,8 @@ def main():
         saved_track, saved_pos, saved_ts = load_state()
         if track != saved_track:
             pos = 0.0
-            display = track[:MIN_LEN]
+            win = window_len(len(track))
+            display = track[:win]
         else:
             pos, display = scroll_text(track, saved_pos, now - saved_ts)
         save_state(track, pos)
@@ -113,3 +128,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -8,7 +8,7 @@ from wand.image import Image as WandImage
 from wand.drawing import Drawing
 from wand.color import Color
 
-# ====================== Configuration ======================
+# ======================== Config ========================
 HOME = Path.home()
 WALLPAPER_DIR = HOME / ".local/bin/wall/wallpapers"
 QUOTES_FILE = HOME / ".local/bin/wall/quotes.txt"
@@ -56,15 +56,6 @@ def random_wallpaper() -> Path | None:
     return selected
 
 
-def random_quote() -> str:
-    if not QUOTES_FILE.exists():
-        return ""
-    quotes = [
-        line.strip() for line in QUOTES_FILE.read_text().splitlines() if line.strip()
-    ]
-    return random.choice(quotes) if quotes else ""
-
-
 def resize_to_screen(image_path: Path) -> Path:
     screen_w, screen_h = get_screen_resolution()
     with WandImage(filename=str(image_path)) as img:
@@ -80,9 +71,13 @@ def resize_to_screen(image_path: Path) -> Path:
     return TEMP_RESIZED
 
 
-def add_quote_with_wand(image_path: Path, quote: str) -> Path:
-    if not quote:
-        return image_path
+def add_quote_with_wand(image_path: Path) -> Path:
+    if not QUOTES_FILE.exists():
+        quote = ""
+    quotes = [
+        line.strip() for line in QUOTES_FILE.read_text().splitlines() if line.strip()
+    ]
+    quote = random.choice(quotes) if quotes else ""
     with WandImage(filename=str(image_path)) as img:
         left, top = SIDE_PADDING, 200
         box_width, box_height = (
@@ -157,8 +152,7 @@ def main():
     wallpaper = random_wallpaper()
     if not wallpaper:
         return
-    quote = random_quote()
-    final_image = add_quote_with_wand(resize_to_screen(wallpaper), quote)
+    final_image = add_quote_with_wand(resize_to_screen(wallpaper))
     set_wallpaper(final_image)
 
 
