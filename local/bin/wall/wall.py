@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import random
-import shutil
 import subprocess
 from pathlib import Path
 from wand.image import Image as WandImage
@@ -10,17 +9,17 @@ from wand.color import Color
 
 # ======================== Config ========================
 HOME = Path.home()
-WALLPAPER_DIR = HOME / ".local/bin/wall/wallpapers"
-QUOTES_FILE = HOME / ".local/bin/wall/quotes.txt"
-FONT_PATH = Path("/usr/share/fonts/OTF/FiraMonoNerdFont-Medium.otf")
-CACHE_FILE = HOME / ".cache/wallpaper_with_quote.png"
-LAST_WALLPAPER_FILE = CACHE_FILE.parent / ".last_wallpaper"
-TEMP_RESIZED = HOME / ".cache/wallpaper_resized.png"
+CACHE_DIR = HOME / ".cache"
+WALL_SCRIPT_DIR = HOME / ".local/bin/wall"
+WALL_IMG_DIR = WALL_SCRIPT_DIR / "wallpapers"
+QUOTES_FILE = WALL_SCRIPT_DIR / "quotes.txt"
+FONT_PATH = "/usr/share/fonts/OTF/FiraMonoNerdFont-Medium.otf"
+CACHE_FILE = CACHE_DIR / "wallpaper_with_quote.png"
+LAST_WALL_FILE = CACHE_DIR / ".last_wallpaper"
+TEMP_RESIZED = CACHE_DIR / "wallpaper_resized.png"
 FONT_SIZE = 11
 TEXT_COLOR = Color("rgba(229, 231, 235, 0.55)")
 SHADOW_COLOR = Color("rgba(16, 16, 19, 1)")
-SHADOW_OFFSET_X = 0
-SHADOW_OFFSET_Y = 0
 BOTTOM_PADDING = 1250
 SIDE_PADDING = 200
 TRANSITION_DURATION = 1.2
@@ -36,23 +35,21 @@ def get_screen_resolution() -> tuple[int, int]:
     return 1920, 1080
 
 
-def random_wallpaper() -> Path | None:
-    if not WALLPAPER_DIR.is_dir():
+def random_wallpaper(image_dir: Path, last_wall_file: Path) -> Path | None:
+    if not image_dir.is_dir():
         return None
     images = [
         p
-        for p in WALLPAPER_DIR.iterdir()
+        for p in image_dir.iterdir()
         if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
     ]
     if not images:
         return None
-    last = (
-        LAST_WALLPAPER_FILE.read_text().strip() if LAST_WALLPAPER_FILE.exists() else ""
-    )
+    last = last_wall_file.read_text().strip() if last_wall_file.exists() else ""
     candidates = [p for p in images if str(p) != last] or images
     selected = random.choice(candidates)
-    LAST_WALLPAPER_FILE.parent.mkdir(parents=True, exist_ok=True)
-    LAST_WALLPAPER_FILE.write_text(str(selected))
+    last_wall_file.parent.mkdir(parents=True, exist_ok=True)
+    last_wall_file.write_text(str(selected))
     return selected
 
 
@@ -71,7 +68,15 @@ def resize_to_screen(image_path: Path) -> Path:
     return TEMP_RESIZED
 
 
-def add_quote_with_wand(image_path: Path) -> Path:
+def add_quote_with_wand(
+    image_path: Path,
+    side_padding: int = SIDE_PADDING,
+    bottom_padding: int = BOTTOM_PADDING,
+    font_path: str = FONT_PATH,
+    font_size: int = FONT_SIZE,
+    shadow_color: Color = SHADOW_COLOR,
+    text_color: Color = TEXT_COLOR,
+) -> Path:
     if not QUOTES_FILE.exists():
         quote = ""
     quotes = [
@@ -79,10 +84,10 @@ def add_quote_with_wand(image_path: Path) -> Path:
     ]
     quote = random.choice(quotes) if quotes else ""
     with WandImage(filename=str(image_path)) as img:
-        left, top = SIDE_PADDING, 200
+        left, top = side_padding, 200
         box_width, box_height = (
-            img.width - 2 * SIDE_PADDING,
-            img.height - BOTTOM_PADDING - 200,
+            img.width - 2 * side_padding,
+            img.height - bottom_padding - 200,
         )
         text_x = int(left + box_width / 2)
         text_y = int(top + box_height / 2)
@@ -93,14 +98,14 @@ def add_quote_with_wand(image_path: Path) -> Path:
             background=Color("transparent"),
         ) as shadow_img:
             with Drawing() as shadow_draw:
-                shadow_draw.font = str(FONT_PATH)
-                shadow_draw.font_size = FONT_SIZE
-                shadow_draw.fill_color = SHADOW_COLOR
+                shadow_draw.font = font_path
+                shadow_draw.font_size = font_size
+                shadow_draw.fill_color = shadow_color
                 shadow_draw.text_alignment = "center"
                 shadow_draw.gravity = "center"
                 shadow_draw.text(
-                    text_x + SHADOW_OFFSET_X,
-                    text_y + SHADOW_OFFSET_Y,
+                    text_x,
+                    text_y,
                     quote,
                 )
                 shadow_draw(shadow_img)
@@ -110,9 +115,9 @@ def add_quote_with_wand(image_path: Path) -> Path:
             img.composite(shadow_img, 0, 0)
         # ---------------- Main text ----------------
         with Drawing() as draw:
-            draw.font = str(FONT_PATH)
-            draw.font_size = FONT_SIZE
-            draw.fill_color = TEXT_COLOR
+            draw.font = font_path
+            draw.font_size = font_size
+            draw.fill_color = text_color
             draw.text_alignment = "center"
             draw.gravity = "center"
             draw.text(text_x, text_y, quote)
@@ -125,7 +130,7 @@ def add_quote_with_wand(image_path: Path) -> Path:
 def set_wallpaper(
     image_path: Path, transition_duration: float = TRANSITION_DURATION
 ) -> bool:
-    if not shutil.which("swww") or not image_path.exists():
+    if not image_path.exists():
         return False
     try:
         subprocess.run(
@@ -143,16 +148,25 @@ def set_wallpaper(
             check=True,
         )
         return True
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as e:
+        print(f"{e}")
         return False
 
 
 # ====================== Main ======================
 def main():
-    wallpaper = random_wallpaper()
+    wallpaper = random_wallpaper(WALL_IMG_DIR, LAST_WALL_FILE)
     if not wallpaper:
         return
-    final_image = add_quote_with_wand(resize_to_screen(wallpaper))
+    final_image = add_quote_with_wand(
+        resize_to_screen(wallpaper),
+        SIDE_PADDING,
+        BOTTOM_PADDING,
+        FONT_PATH,
+        FONT_SIZE,
+        SHADOW_COLOR,
+        TEXT_COLOR,
+    )
     set_wallpaper(final_image)
 
 
