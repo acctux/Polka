@@ -1,168 +1,165 @@
 #!/usr/bin/env python3
+
 import random
-import textwrap
 import shutil
 import subprocess
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
-from typing import Optional
+from wand.image import Image as WandImage
+from wand.drawing import Drawing
+from wand.color import Color
 
+# ====================== Configuration ======================
 HOME = Path.home()
 WALLPAPER_DIR = HOME / ".local/bin/wall/wallpapers"
 QUOTES_FILE = HOME / ".local/bin/wall/quotes.txt"
 FONT_PATH = Path("/usr/share/fonts/OTF/FiraMonoNerdFont-Medium.otf")
 CACHE_FILE = HOME / ".cache/wallpaper_with_quote.png"
-TEMP_RESIZED_FILE = HOME / ".cache/wallpaper_resized.png"
-MAX_CHARS = 200
-TEXT_COLOR = (229, 231, 235, 179)
-SHADOW_COLOR = (16, 16, 19, 217)
-SHADOW_BLUR_RADIUS = 2
-VERT_MARGIN = 1066
-X_OFFSET = 0
-FONT_SIZE = 10
+LAST_WALLPAPER_FILE = CACHE_FILE.parent / ".last_wallpaper"
+TEMP_RESIZED = HOME / ".cache/wallpaper_resized.png"
+FONT_SIZE = 11
+TEXT_COLOR = Color("rgba(229, 231, 235, 0.55)")
+SHADOW_COLOR = Color("rgba(16, 16, 19, 1)")
+SHADOW_OFFSET_X = 0
+SHADOW_OFFSET_Y = 0
+BOTTOM_PADDING = 1250
+SIDE_PADDING = 200
+TRANSITION_DURATION = 1.2
 
 
-def get_screen_size() -> tuple[int, int]:
-    try:
-        output = subprocess.run(
-            ["hyprctl", "monitors"], capture_output=True, text=True, check=True
-        ).stdout
-        for line in output.splitlines():
-            if "@" in line and "x" in line:
-                res_part = line.strip().split("@")[0].strip()
-                width, height = map(int, res_part.split("x"))
-                print(f"[INFO] Detected screen size via hyprctl: {width}x{height}")
-                return width, height
-    except Exception as e:
-        print(f"[ERROR] Failed to detect screen size with hyprctl: {e}")
-    print("[WARNING] Using default screen size: 1920x1080")
+# ====================== Functions ======================
+def get_screen_resolution() -> tuple[int, int]:
+    output = subprocess.check_output(["hyprctl", "monitors"], text=True)
+    for line in output.splitlines():
+        if "x" in line and "@" in line:
+            w, h = map(int, line.split("@")[0].strip().split("x"))
+            return w, h
     return 1920, 1080
 
 
-def choose_random_file(
-    directory: Path, exts: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".webp")
-) -> Optional[Path]:
-    if not directory.is_dir():
-        print(f"[ERROR] Not a directory: {directory}")
+def random_wallpaper() -> Path | None:
+    if not WALLPAPER_DIR.is_dir():
         return None
-    files = [f for f in directory.iterdir() if f.is_file() and f.suffix.lower() in exts]
-    if not files:
-        print(f"[WARNING] No image files found in: {directory}")
+    images = [
+        p
+        for p in WALLPAPER_DIR.iterdir()
+        if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}
+    ]
+    if not images:
         return None
-    selected = random.choice(files)
-    print(f"[INFO] Selected file: {selected.name}")
+    last = (
+        LAST_WALLPAPER_FILE.read_text().strip() if LAST_WALLPAPER_FILE.exists() else ""
+    )
+    candidates = [p for p in images if str(p) != last] or images
+    selected = random.choice(candidates)
+    LAST_WALLPAPER_FILE.parent.mkdir(parents=True, exist_ok=True)
+    LAST_WALLPAPER_FILE.write_text(str(selected))
     return selected
 
 
-def get_random_quote(file_path: Path) -> str:
-    if not file_path.exists():
-        print(f"[ERROR] Quotes file not found at: {file_path}")
-    try:
-        with file_path.open("r", encoding="utf-8") as f:
-            quotes = [line.strip() for line in f if line.strip()]
-        if not quotes:
-            print(f"[WARNING] Quote file at {file_path} is empty.")
-            return ""
-        quote = random.choice(quotes)
-        print(f"[INFO] Selected quote: {quote}")
-        return quote
-    except Exception as e:
-        print(f"[ERROR] Failed to read quotes from file: {e}")
+def random_quote() -> str:
+    if not QUOTES_FILE.exists():
         return ""
+    quotes = [
+        line.strip() for line in QUOTES_FILE.read_text().splitlines() if line.strip()
+    ]
+    return random.choice(quotes) if quotes else ""
 
 
-def resize_image_to_screen(image_path: Path) -> Path:
-    try:
-        image = Image.open(image_path).convert("RGBA")
-    except Exception as e:
-        print(f"[ERROR] Failed to open image for resizing: {e}")
+def resize_to_screen(image_path: Path) -> Path:
+    screen_w, screen_h = get_screen_resolution()
+    with WandImage(filename=str(image_path)) as img:
+        img.transform(resize=f"{screen_w}x{screen_h}^")
+        img.crop(
+            left=max((img.width - screen_w) // 2, 0),
+            top=max((img.height - screen_h) // 2, 0),
+            width=screen_w,
+            height=screen_h,
+        )
+        TEMP_RESIZED.parent.mkdir(parents=True, exist_ok=True)
+        img.save(filename=str(TEMP_RESIZED))
+    return TEMP_RESIZED
+
+
+def add_quote_with_wand(image_path: Path, quote: str) -> Path:
+    if not quote:
         return image_path
-    screen_width, screen_height = get_screen_size()
-    img_width, img_height = image.size
-    aspect_ratio = img_width / img_height
-    screen_aspect = screen_width / screen_height
-    if aspect_ratio > screen_aspect:
-        new_height = screen_height
-        new_width = int(new_height * aspect_ratio)
-    else:
-        new_width = screen_width
-        new_height = int(new_width / aspect_ratio)
-    try:
-        image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        print(f"[INFO] Resized image to {new_width}x{new_height}")
-    except Exception as e:
-        print(f"[WARNING] Failed to resize image: {e}. Using original size.")
-        return image_path
-    if new_width != screen_width or new_height != screen_height:
-        left = (new_width - screen_width) // 2
-        top = (new_height - screen_height) // 2
-        image = image.crop((left, top, left + screen_width, top + screen_height))
-    TEMP_RESIZED_FILE.parent.mkdir(parents=True, exist_ok=True)
-    image.save(TEMP_RESIZED_FILE, format="PNG")
-    return TEMP_RESIZED_FILE
-
-
-def draw_quote(image_path: Path, quote: str, x_offset: int, font_size: int) -> Path:
-    try:
-        base = Image.open(image_path)
-    except Exception as e:
-        print(f"[ERROR] Failed to open image: {e}")
-        return image_path
-    width, height = base.size
-    try:
-        font = ImageFont.truetype(str(FONT_PATH), font_size)
-    except Exception:
-        print("[WARNING] Failed to load font, using default.")
-        font = ImageFont.load_default()
-    lines = textwrap.wrap(quote, width=MAX_CHARS)
-    txt_layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
-    shadow_layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
-    draw_shadow = ImageDraw.Draw(shadow_layer)
-    draw_text = ImageDraw.Draw(txt_layer)
-    y = height - VERT_MARGIN - font_size * len(lines)
-    for line in lines:
-        line_width = draw_text.textlength(line, font=font)
-        x = (width - line_width) // 2 + x_offset
-        draw_shadow.text((x, y), line, font=font, fill=SHADOW_COLOR)
-        y += font_size
-    blurred_shadow = shadow_layer.filter(
-        ImageFilter.GaussianBlur(radius=SHADOW_BLUR_RADIUS)
-    )
-    combined = Image.alpha_composite(base, blurred_shadow)
-    y = height - VERT_MARGIN - font_size * len(lines)
-    for line in lines:
-        line_width = draw_text.textlength(line, font=font)
-        x = (width - line_width) // 2 + x_offset
-        draw_text.text((x, y), line, font=font, fill=TEXT_COLOR)
-        y += font_size
-    final = Image.alpha_composite(combined, txt_layer)
-    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    final.save(CACHE_FILE, format="PNG")
+    with WandImage(filename=str(image_path)) as img:
+        left, top = SIDE_PADDING, 200
+        box_width, box_height = (
+            img.width - 2 * SIDE_PADDING,
+            img.height - BOTTOM_PADDING - 200,
+        )
+        text_x = int(left + box_width / 2)
+        text_y = int(top + box_height / 2)
+        # ---------------- Shadow layer ----------------
+        with WandImage(
+            width=img.width,
+            height=img.height,
+            background=Color("transparent"),
+        ) as shadow_img:
+            with Drawing() as shadow_draw:
+                shadow_draw.font = str(FONT_PATH)
+                shadow_draw.font_size = FONT_SIZE
+                shadow_draw.fill_color = SHADOW_COLOR
+                shadow_draw.text_alignment = "center"
+                shadow_draw.gravity = "center"
+                shadow_draw.text(
+                    text_x + SHADOW_OFFSET_X,
+                    text_y + SHADOW_OFFSET_Y,
+                    quote,
+                )
+                shadow_draw(shadow_img)
+            # Blur the shadow
+            shadow_img.gaussian_blur(radius=0, sigma=1.5)
+            # Composite shadow onto main image
+            img.composite(shadow_img, 0, 0)
+        # ---------------- Main text ----------------
+        with Drawing() as draw:
+            draw.font = str(FONT_PATH)
+            draw.font_size = FONT_SIZE
+            draw.fill_color = TEXT_COLOR
+            draw.text_alignment = "center"
+            draw.gravity = "center"
+            draw.text(text_x, text_y, quote)
+            draw(img)
+        CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        img.save(filename=str(CACHE_FILE))
     return CACHE_FILE
 
 
-def set_wallpaper(image_path: Path) -> bool:
-    if not shutil.which("swww"):
-        print("[ERROR] 'swww' command not found. Please ensure it is installed.")
+def set_wallpaper(
+    image_path: Path, transition_duration: float = TRANSITION_DURATION
+) -> bool:
+    if not shutil.which("swww") or not image_path.exists():
         return False
     try:
-        subprocess.run(["swww", "img", str(image_path)], check=True)
+        subprocess.run(
+            [
+                "swww",
+                "img",
+                str(image_path),
+                "--transition-type",
+                "wipe",
+                "--transition-duration",
+                str(transition_duration),
+                "--transition-fps",
+                "144",
+            ],
+            check=True,
+        )
         return True
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Failed to set wallpaper: {e}")
+    except subprocess.CalledProcessError:
         return False
 
 
+# ====================== Main ======================
 def main():
-    wallpaper = choose_random_file(WALLPAPER_DIR)
-    if wallpaper:
-        resized_wallpaper = resize_image_to_screen(wallpaper)
-        quote = get_random_quote(QUOTES_FILE)
-        final_img = draw_quote(resized_wallpaper, quote, X_OFFSET, FONT_SIZE)
-        if final_img.exists() and set_wallpaper(final_img):
-            print("[INFO] Wallpaper updated successfully.")
-        else:
-            print("[ERROR] Failed to update wallpaper.")
+    wallpaper = random_wallpaper()
+    if not wallpaper:
+        return
+    quote = random_quote()
+    final_image = add_quote_with_wand(resize_to_screen(wallpaper), quote)
+    set_wallpaper(final_image)
 
 
 if __name__ == "__main__":
