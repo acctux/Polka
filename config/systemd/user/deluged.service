@@ -1,0 +1,12 @@
+[Unit]
+Description=Deluge Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/deluged --do-not-daemon
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+

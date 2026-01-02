@@ -2,17 +2,17 @@
   "$schema": "/etc/xdg/swaync/configSchema.json",
   "positionX": "right",
   "positionY": "top",
-  "control-center-margin-top": 0,
+  "control-center-margin-top": 6,
   "control-center-margin-bottom": 10,
-  "control-center-margin-right": 0,
+  "control-center-margin-right": 6,
   "notification-body-image-height": 100,
   "notification-body-image-width": 200,
   "timeout": 10,
   "timeout-low": 5,
   "timeout-critical": 0,
   "fit-to-screen": false,
-  "control-center-width": 360,
-  "control-center-height": 700,
+  "control-center-width": 380,
+  "control-center-height": 800,
   "notification-window-width": 400,
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
@@ -53,28 +53,24 @@
       "actions": [
         {
           "label": "󰐥",
-          "command": "systemctl poweroff",
-          "tooltip": "Poweroff"
+          "command": "systemctl poweroff"
         },
         {
           "label": "󰜉",
-          "command": "systemctl reboot",
-          "tooltip": "Reboot"
+          "command": "systemctl reboot"
         },
         {
-          "label": "",
+          "label": "󱖐",
           "command": "systemctl suspend",
           "tooltip": "Suspend"
         },
         {
           "label": "󰌾",
-          "command": "hyprlock",
-          "tooltip": "Suspend"
+          "command": "hyprlock"
         },
         {
           "label": "󰍃",
-          "command": "uwsm stop",
-          "tooltip": "Logout"
+          "command": "swaymsg exit"
         }
       ]
     }

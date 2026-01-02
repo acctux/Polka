@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "icon-theme": "WhiteSur-grey-dark",
+  "icon-theme": "WhiteSur-dark",
   "modules-left": [
     "custom/logo",
     "temperature",
@@ -17,6 +17,8 @@
     "custom/kdeconnect",
     "custom/empty",
     "custom/nemo",
+    "custom/empty",
+    "custom/deluge",
     "custom/empty",
     "custom/telegram",
     "custom/empty",
@@ -138,7 +140,7 @@
   },
   "custom/kb-switch": {
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
-    "on-click": "~/Polka/local/bin/keyboard/kb-switch.sh",
+    "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
     "on-click-right": "rofimoji & disown",
     "on-click-middle": "/home/nick/Polka/local/bin/folders/mountencrypted.sh",
     "signal": 6,
@@ -146,7 +148,7 @@
     "tooltip": false
   },
   "custom/wifi": {
-    "on-click-right": "protonvpn-app",
+    "on-click-right": "/home/nick/.local/bin/fuzzel/vpnmenu.sh & disown",
     "on-click-middle": "firewall-config",
     "on-click": "alacritty -e impala & disown",
     "format": "{}",
@@ -164,6 +166,16 @@
     "on-click": "pavucontrol &",
     "on-click-middle": "playerctl play-pause",
     "on-click-right": "alacritty -e /home/nick/Polka/local/bin/mpd/rmpclaunch.sh & disown"
+  },
+  "custom/deluge": {
+    "format": "{}",
+    "exec": "~/Polka/local/bin/deluged/deluge_way.py",
+    "return-type": "json",
+    "hide-empty-text": true,
+    "interval": 10,
+    "tooltip": true,
+    "on-click": "deluge-gtk & disown",
+    "on-click-right": "systemctl --user stop deluged.service"
   },
   "custom/nemo": {
     "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",

@@ -6,12 +6,12 @@
 @define-color module_bg rgba(16, 16, 19, 0.4);      /* darkest background */
 @define-color module_hover_bg rgba(255, 50, 50, 0.8);
 @define-color button_bg rgba(51, 204, 255, 0.28);
-@define-color button_hover_bg rgba(0, 255, 153, 0.8);
+@define-color button_hover_bg rgba(51, 204, 255, 0.8);
 @define-color accent_color rgba(0, 114, 255, 0.8);
 @define-color accent_color_hover rgba(51, 204, 255, 0.6);
-@define-color border_medium rgba(51, 204, 255, 0.8);
+@define-color border_light rgba(51, 204, 255, 0.8);
 @define-color border_dark rgba(0, 114, 255, 0.06);
-@define-color border_light rgba(0, 114, 255, 0.5);
+@define-color border_medium rgba(0, 114, 255, 0.5);
 @define-color icon_primary rgba(0, 255, 153, 0.85);
 @define-color icon_secondary rgba(0, 255, 153, 0.5);
 @define-color slider_trough_bg rgba(0, 0, 0, 0);
@@ -24,7 +24,7 @@
 /* ── Base Reset ───────────────────────────────────────────────────── */
 * {
   font-family: "FiraMono Nerd Font Medium", "SF Pro Text", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: @theme_fg;
   border: none;
   border-radius: 0;
@@ -38,10 +38,10 @@
 /* ── 2. Control Center Container ─────────────────────────────────── */
 .control-center {
   background-color: @theme_bg;
-  border: 1px solid @border_medium;
-  border-radius: 12px;
-  padding: 18px 12px;
-  min-width: 250px;
+  border: 1px solid @border_light;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 360px;
 }
 
 /* ── 3. Widget Modules ───────────────────────────────────────────── */
@@ -53,16 +53,16 @@
 .control-center-list > box > *:not(.widget-title) {
   background-color: @module_bg;
   border-radius: 10px;
-  padding: 18px;
+  padding: 0 6px;
   margin-bottom: 14px;
-  border: 1px solid @border_light;
+  border: 1px solid @border_medium;
 }
 .widget-volume,
 .widget-backlight {
-  padding: 10px 14px;
+  padding: 4px 10px;
 }
 .widget-buttons-grid {
-  padding: 12px 20px;
+  padding: 4px 0;
 }
 .control-center > box > *:last-child {
   margin-bottom: 0;
@@ -75,7 +75,7 @@
   margin-bottom: 8px;
 }
 .widget-title label {
-  font-family: "Noto Sans";
+  font-family: "Liberation Sans";
   font-size: 14px;
   font-weight: 500;
   color: @theme_fg_secondary;
@@ -84,12 +84,12 @@
 }
 .widget-title button {
   font-family: inherit;
-  font-size: 18px;
+  font-size: 20px;
   color: @theme_fg_secondary;
   background-color: @button_bg;
   border: none;
   border-radius: 10px;
-  padding: 7px 24px;
+  padding: 0;
   transition: background-color 0.15s ease;
 }
 .widget-title button:hover,
@@ -101,21 +101,20 @@
 .widget-mpris {
   padding: 0;
   border: none;
-  border-radius: 18px;
   background: transparent;
 }
 .widget-mpris .widget-mpris-player {
-  background-color: @mpris_player_bg;
+  background-color: @theme_bg;
   border-radius: 10px;
-  border: 1px solid @border_light;
-  padding: 16px;
+  border: 1px solid @border_medium;
+  padding: 6px 10px;
 }
 .widget-mpris .widget-mpris-album-art {
   background: none;
-  min-width: 50px;
-  min-height: 50px;
-  border-radius: 16px;
-  margin-right: 12px;
+  min-width: 40px;
+  min-height: 30px;
+  border-radius: 10px;
+  margin-right: 4px;
 }
 .widget-mpris .widget-mpris-title {
   font-size: 12px;
@@ -133,16 +132,16 @@
   all: unset;
   background: transparent;
   border-radius: 50%;
-  padding: 7px;
+  padding: 5px;
   color: @icon_secondary;
-  font-size: 14px;
+  font-size: 16px;
   min-width: 34px;
   min-height: 34px;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 .widget-mpris .widget-mpris-player button:hover {
   background-color: @button_hover_bg;
-  color: @icon_primary;
+  color: @border_light;
 }
 .widget-mpris .widget-mpris-player button:disabled {
   color: alpha(@icon_secondary, 0.3);
@@ -151,7 +150,7 @@
 /* ── 5. Sliders (Volume, Backlight) ─────────────────────────────── */
 .widget-volume label,
 .widget-backlight label {
-  font-size: 18px;
+  font-size: 16px;
   color: @theme_fg;
   min-width: 24px;
   margin-right: 14px;
@@ -191,16 +190,16 @@ scale slider {
   background: none;
 }
 .widget-buttons-grid > flowbox > flowboxchild {
-  padding: 3px 9px;
+  padding: 0 0 0 12px;
   background: none;
 }
 .widget-buttons-grid > flowbox > flowboxchild > button {
   background-color: theme_bg;
-  border-radius: 80px;
-  padding: 14px;
-  min-width: 18px;
-  min-height: 18px;
-  border: 1px solid @theme_bg;
+  border-radius: 30px;
+  padding: 10px;
+  min-width: 30px;
+  min-height: 4px;
+  border: 1px solid transparent;
   color: @theme_fg_secondary;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
@@ -218,15 +217,18 @@ scale slider {
 
 /* ── 7. Notification Center ─────────────────────────────────────── */
 .control-center-list {
+  font-size: 12px;
   padding-bottom: 1px;
   background-color: transparent;
 }
 .control-center .notification-row {
+  font-size: 12px;
   margin-bottom: 12px;
 }
 .control-center .notification-background {
   background-color: @module_bg;
   border: 1px solid @border_medium;
+  font-size: 12px;
   padding: 16px;
   border-radius: 18px;
   transition: background-color 0.15s ease;
@@ -235,11 +237,13 @@ scale slider {
   border-radius: 18px;
 }
 .control-center .notification .summary {
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: @theme_fg;
   margin-bottom: 5px;
 }
 .control-center .notification .body {
+  font-size: 14px;
   color: @theme_fg_secondary;
 }
 .control-center .notification .time {
@@ -304,14 +308,16 @@ scale slider {
   background-color: alpha(@popup_bg, 1.0);
 }
 .floating-notifications .notification .summary {
+  font-size: 14px;
   font-weight: 700;
   color: @theme_fg;
 }
 .floating-notifications .notification .body {
+  font-size: 12px;
   color: @theme_fg;
 }
 .floating-notifications .notification .time {
-  font-size: 14px;
+  font-size: 12px;
   color: @icon_secondary;
   margin-left: 10px;
 }
