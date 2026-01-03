@@ -36,6 +36,7 @@
   ],
   "hyprland/workspaces": {
     "format": "{icon}",
+    "active-only": false,
     "format-icons": {
       "active": ""
     },
@@ -198,7 +199,7 @@
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
     "return-type": "json",
-    "format": "<span size='7pt'> </span><span size='11pt'>{}</span>",
+    "format": "<span size='9pt'> </span><span size='11pt'>{}</span>",
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,

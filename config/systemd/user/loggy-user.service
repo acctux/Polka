@@ -3,13 +3,10 @@ Description=Run Solaar when Logitech mouse connects
 PartOf=graphical-session.target
 After=graphical-session.target
 ConditionEnvironment=WAYLAND_DISPLAY
-
-[Service]
-Type=oneshot
+[Service] 
+Type=oneshot 
 ExecStartPre=/usr/bin/systemctl --user start solaar.service
 ExecStart=/bin/sleep 10
 ExecStartPost=/usr/bin/systemctl --user stop solaar.service
-
 [Install]
 WantedBy=graphical-session.target
-
