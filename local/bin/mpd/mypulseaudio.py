@@ -2,6 +2,7 @@
 import subprocess
 import json
 import time
+import html
 from pathlib import Path
 
 CACHE_FILE = Path.home() / ".cache" / "nowplaying_scroll.json"
@@ -114,8 +115,10 @@ def main():
         else:
             pos, display = scroll_text(track, saved_pos, now - saved_ts)
         save_state(track, pos)
-        text = f"{volume_icon(volume)}<span size='9pt'> {display}</span>"
-        tooltip = f"{volume}%\n{track}"
+        safe_display = html.escape(display)
+        text = f"{volume_icon(volume)}<span size='9pt'> {safe_display}</span>"
+        safe_track = html.escape(track)
+        tooltip = f"{volume}%\n{safe_track}"
         print(
             json.dumps(
                 {"text": text, "tooltip": tooltip, "class": "playing"},
@@ -128,4 +131,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

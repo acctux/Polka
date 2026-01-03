@@ -194,7 +194,7 @@ scale slider {
   background: none;
 }
 .widget-buttons-grid > flowbox > flowboxchild > button {
-  background-color: theme_bg;
+  background-color: transparent;
   border-radius: 30px;
   padding: 10px;
   min-width: 30px;
@@ -239,17 +239,17 @@ scale slider {
 .control-center .notification .summary {
   font-size: 14px;
   font-weight: 600;
-  color: @theme_fg;
+  color: @theme_fg_secondary;
   margin-bottom: 5px;
 }
 .control-center .notification .body {
   font-size: 13px;
-  color: @theme_fg_secondary;
+  color: @theme_fg;
 }
 .control-center .notification .time {
   font-size: 12px;
   font-weight: 500;
-  color: @theme_fg_secondary;
+  color: @theme_fg;
   margin-right: 35px;
 }
 .control-center .notification .notification-alt-actions {

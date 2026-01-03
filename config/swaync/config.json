@@ -25,8 +25,7 @@
     "buttons-grid",
     "volume",
     "backlight",
-    "mpris",
-    "widgets"
+    "mpris"
   ],
   "widget-config": {
     "title": {
