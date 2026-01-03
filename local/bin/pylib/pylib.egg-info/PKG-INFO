@@ -1,7 +1,0 @@
-Metadata-Version: 2.4
-Name: pylib
-Version: 0.1.0
-Summary: My personal Python library with colored logging
-Author: Nick
-Description-Content-Type: text/markdown
-Requires-Dist: colorlog>=6.7.0
