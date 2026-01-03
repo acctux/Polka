@@ -24,11 +24,12 @@ button {
 /* === Tooltip === */
 tooltip {
   background: rgba(16,16,19,0.8);
-  border-radius: 5px;
+  padding: 0 4px;
+  border-radius: 10px;
+  font-size: 14px;
   border: 1px solid rgba(30, 58, 138, 0.8);
 }
 tooltip label {
-  padding: 0 2px;
   font-size: 14px;
   background: transparent;
   font-weight: 400;
@@ -114,6 +115,7 @@ tooltip label {
 #battery {
   color: #33ccff;
 }
+#custom-updates,
 #bluetooth.connected,
 #custom-deluge.downloading,
 #custom-kdeconnect.mounted,
@@ -122,11 +124,13 @@ tooltip label {
   color: #00ff99;
 }
 #custom-notification.notification,
+#custom-updates.yellow,
 #custom-taskwarrior.todo,
 #battery.warning {
   color: #ffee33;
 }
 #custom-taskwarrior.critical,
+#custom-updates.red,
 #custom-notification,
 #temperature.critical,
 #custom-wifi,
@@ -229,6 +233,7 @@ button:hover,
 #custom-nemo:hover,
 #custom-kb-switch:hover,
 #clock:hover,
+#custom-updates:hover,
 #custom-taskwarrior:hover,
 #temperature:hover {
   background-color: rgba(16,16,19,0.3);

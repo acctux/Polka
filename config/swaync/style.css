@@ -237,17 +237,17 @@ scale slider {
   border-radius: 18px;
 }
 .control-center .notification .summary {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: @theme_fg;
   margin-bottom: 5px;
 }
 .control-center .notification .body {
-  font-size: 14px;
+  font-size: 13px;
   color: @theme_fg_secondary;
 }
 .control-center .notification .time {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: @theme_fg_secondary;
   margin-right: 35px;
@@ -313,7 +313,7 @@ scale slider {
   color: @theme_fg;
 }
 .floating-notifications .notification .body {
-  font-size: 12px;
+  font-size: 13px;
   color: @theme_fg;
 }
 .floating-notifications .notification .time {
@@ -347,7 +347,7 @@ scale slider {
 }
 .floating-notifications .notification-action button,
 .floating-notifications .notification-alt-actions button {
-  font-size: 16px;
+  font-size: 15px;
   color: @theme_fg;
   background-color: @button_bg;
   border-radius: 12px;

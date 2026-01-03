@@ -2,39 +2,44 @@
 import subprocess
 import json
 
-urgent = False
-tasks = []
 
-result = subprocess.run(["task", "export"], capture_output=True, text=True)
+def export_tasks():
+    result = subprocess.run(
+        ["task", "status:pending", "export"], capture_output=True, text=True
+    )
+    return json.loads(result.stdout)
 
-try:
-    data = json.loads(result.stdout)
-except json.JSONDecodeError:
-    print(json.dumps({"text": "!", "tooltip": "Error parsing task export"}))
-    exit(1)
 
-for task in data:
-    if task.get("status") != "pending":
-        continue
-    description = task.get("description", "")
-    urgency = float(task.get("urgency", 0))
-    tasks.append((description, urgency))
-    if urgency >= 9:
-        urgent = True
+def collect_pending_tasks(data):
+    tasks = []
+    urgent = False
+    for task in data:
+        description = task.get("description", "")
+        urgency = float(task.get("urgency", 0))
+        tasks.append((description))
+        if urgency >= 7:
+            urgent = True
+    tasks.sort(key=lambda x: x[1], reverse=True)
+    return tasks, urgent
 
-# Sort tasks by urgency descending
-tasks.sort(key=lambda x: x[1], reverse=True)
 
-count = len(tasks)
-# Add extra blank line between tasks
-tooltip = f"Active: {count}\n\n" + "\n\n".join(f"•{desc}" for desc, _ in tasks)
-
-output = {"text": str(count), "tooltip": tooltip}
-
-if count != 0:
-    if urgent:
-        output["class"] = "critical"
-    else:
+def build_output(tasks, urgent):
+    count = len(tasks)
+    tooltip = f"Active:{count}\n" + "\n".join(f"•{desc}" for desc in tasks)
+    output = {"text": str(count), "tooltip": tooltip}
+    if count != 0:
         output["class"] = "todo"
+        if urgent:
+            output["class"] = "critical"
+    return output
 
-print(json.dumps(output))
+
+def main():
+    data = export_tasks()
+    tasks, urgent = collect_pending_tasks(data)
+    output = build_output(tasks, urgent)
+    print(json.dumps(output))
+
+
+if __name__ == "__main__":
+    main()

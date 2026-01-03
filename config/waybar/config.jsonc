@@ -4,10 +4,10 @@
   "icon-theme": "WhiteSur-dark",
   "modules-left": [
     "custom/logo",
+    "custom/updates",
     "temperature",
     "custom/kb-switch",
     "custom/taskwarrior",
-    "custom/updates",
     "custom/empty",
     "hyprland/workspaces"
   ],
@@ -53,24 +53,6 @@
     "format-off": "󰂲",
     "interval": 30,
     "format-no-controller": ""
-  },
-  "custom/notification": {
-    "tooltip-format": "Left: Notifications\nRight: Do not disturb",
-    "format": "<span size='8pt'>{icon}</span>",
-    "format-icons": {
-      "notification": "",
-      "none": "",
-      "dnd-notification": "󱙍 ",
-      "dnd-none": "󱙍 ",
-      "inhibited-notification": "󰍢 ",
-      "inhibited-none": "󰍢 ",
-      "dnd-inhibited-notification": "󱙍 ",
-      "dnd-inhibited-none": "󱙍  "
-    },
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw"
   },
   "temperature": {
     "critical-threshold": 80,
@@ -135,6 +117,25 @@
   "custom/empty": {
     "tooltip": false,
     "format": " "
+  },
+  "custom/notification": {
+    "tooltip-format": "Left: Notifications\nRight: Do not disturb",
+    "format": "<span size='8pt'>{icon}</span>",
+    "format-icons": {
+      "notification": "",
+      "none": "",
+      "dnd-notification": "󱙍 ",
+      "dnd-none": "󱙍 ",
+      "inhibited-notification": "󰍢 ",
+      "inhibited-none": "󰍢 ",
+      "dnd-inhibited-notification": "󱙍 ",
+      "dnd-inhibited-none": "󱙍  "
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw"
   },
   "custom/kb-switch": {
     "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
@@ -204,7 +205,7 @@
     "on-click": "alacritty -e taskwarrior-tui"
   },
   "custom/updates": {
-    "format": "{}<span size='4pt'> </span><span size='9.5pt'></span>",
+    "format": "{}<span size='4pt'> </span>",
     "return-type": "json",
     "exec": "~/Polka/local/bin/waybar/updates.py",
     "interval": 1800,

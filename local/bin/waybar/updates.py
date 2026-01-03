@@ -5,7 +5,10 @@ import os
 import time
 
 KEYWORDS = ["linux-", "python-", "nvidia-", "fuse"]
-MAX_TOOLTIP_LINES = 26
+MAX_TOOLTIP_LINES = 24
+THRESHOLD = 5
+THRESHOLD_YELLOW = 10
+THRESHOLD_RED = 25
 
 
 def check_lock_files():
@@ -17,9 +20,10 @@ def check_lock_files():
 
 def get_updates():
     try:
-        output = subprocess.check_output(["pacman", "-Qu"], text=True)
-        packages = [line.split()[0] for line in output.splitlines()]
-        return packages
+        output = subprocess.check_output(
+            ["checkupdates"], text=True, stderr=subprocess.DEVNULL
+        )
+        return [line.split()[0] for line in output.splitlines()]
     except subprocess.CalledProcessError:
         return []
 
@@ -37,14 +41,40 @@ def generate_tooltip(packages, max_lines, keywords):
     return "\n".join(tooltip_lines)
 
 
+def get_css_class(updates):
+    css_class = ""
+    if updates > THRESHOLD_YELLOW:
+        css_class = "yellow"
+    if updates > THRESHOLD_RED:
+        css_class = "red"
+    return css_class
+
+
 def main():
     check_lock_files()
     packages = get_updates()
-    total_updates = len(packages)
-    if total_updates > 5:
-        tooltip = generate_tooltip(packages, MAX_TOOLTIP_LINES, KEYWORDS)
-        output = {"text": str(total_updates), "tooltip": tooltip}
-        print(json.dumps(output))
+    updates = len(packages)
+    if updates < THRESHOLD:
+        print(
+            json.dumps(
+                {
+                    "text": "",
+                }
+            )
+        )
+        return
+    css_class = get_css_class(updates)
+    tooltip = generate_tooltip(packages, MAX_TOOLTIP_LINES, KEYWORDS)
+    print(
+        json.dumps(
+            {
+                "text": str(updates),
+                "alt": str(updates),
+                "tooltip": tooltip or "Click to update your system",
+                "class": css_class,
+            }
+        )
+    )
 
 
 if __name__ == "__main__":
