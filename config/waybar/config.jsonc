@@ -29,7 +29,6 @@
     "backlight",
     "custom/empty",
     "custom/volume",
-    "custom/empty",
     "battery",
     "clock",
     "custom/notification"
@@ -117,7 +116,7 @@
   },
   "custom/empty": {
     "tooltip": false,
-    "format": " "
+    "format": "<span size='2pt'> </span>"
   },
   "custom/notification": {
     "tooltip-format": "Left: Notifications\nRight: Do not disturb",

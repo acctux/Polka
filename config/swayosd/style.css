@@ -1,24 +1,51 @@
-window {
-  border-radius: 1;
-  opacity: 0.97;
-  border: 1px solid #0072ff;
-  background-color: rgba(8, 8, 10, 0.8);
+window#osd {
+  border-radius: 10px;
+  border: 1px solid rgba(51, 204, 255, 0.8);
+  background: rgba(8, 8, 10, 0.8); /* original background */
 }
 
-label {
-  font-family: 'FiraMono Nerd Font Medium';
-  font-size: 13pt;
+window#osd #container {
+  margin: 4px 14px 4px 6px;
+  padding: 0;
+  background: transparent;
+}
+
+window#osd image {
+  -gtk-icon-transform: scale(0.65);
+}
+
+window#osd image,
+window#osd label {
   color: #e5e7eb;
 }
 
-image {
-  color: #a5b4fc;
+window#osd label {
+  color: #e5e7eb;
 }
 
-progressbar {
-  border-radius: 0;
+window#osd progressbar:disabled,
+window#osd image:disabled {
+  opacity: 0.5;
 }
 
-progress {
-  background-color: #10b981;
+/* Segmented progress bar */
+window#osd progressbar {
+  min-height: 7px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+}
+
+window#osd trough {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: rgba(165, 180, 252, 0.5); /* semi-transparent trough */
+}
+
+window#osd progress {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  background: #10b981; /* active progress color */
 }

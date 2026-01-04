@@ -132,7 +132,6 @@ def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
     dotted_first = "." + parts[0]
     dot_path = Path(dotted_first, *parts[1:])
     dst_dir = dest / dot_path
-
     dst_dir.parent.mkdir(parents=True, exist_ok=True)
     if dst_dir.is_symlink() and dst_dir.resolve(strict=False) == src_dir.resolve():
         return False
@@ -204,4 +203,3 @@ def polka(
 
 if __name__ == "__main__":
     polka(dots_name, dest, skip_patterns, individual_items)
-

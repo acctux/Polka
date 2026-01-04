@@ -229,12 +229,12 @@ scale slider {
   background-color: @module_bg;
   border: 1px solid @border_medium;
   font-size: 12px;
-  padding: 16px;
-  border-radius: 18px;
+  padding: 12px;
+  border-radius: 10px;
   transition: background-color 0.15s ease;
 }
 .control-center .notification-row:hover .notification-background {
-  border-radius: 18px;
+  border-radius: 10px;
 }
 .control-center .notification .summary {
   font-size: 14px;
@@ -250,7 +250,7 @@ scale slider {
   font-size: 12px;
   font-weight: 500;
   color: @theme_fg;
-  margin-right: 35px;
+  margin-right: 30px;
 }
 .control-center .notification .notification-alt-actions {
   margin-top: 12px;
@@ -310,7 +310,7 @@ scale slider {
 .floating-notifications .notification .summary {
   font-size: 14px;
   font-weight: 700;
-  color: @theme_fg;
+  color: @theme_fg_secondary;
 }
 .floating-notifications .notification .body {
   font-size: 13px;
