@@ -1,8 +1,10 @@
-#!/usr/bin/env python3
 import logging
 import sys
 
 
+##########################################
+# LOG
+###########################################
 class ColorFormatter(logging.Formatter):
     COLORS = {
         logging.INFO: "\033[34m",
@@ -28,3 +30,6 @@ def get_logger(name: str) -> logging.Logger:
         logger.setLevel(logging.INFO)
         logger.propagate = False
     return logger
+
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
