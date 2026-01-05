@@ -3,9 +3,7 @@ Description=Deluge Daemon
 After=network.target
 
 [Service]
-Type=simple
-ExecStart=/usr/sbin/deluged --do-not-daemon
-Restart=on-failure
+ExecStart=/usr/bin/deluged -d -P %h/.config/deluge/deluge.pid
 
 [Install]
 WantedBy=default.target

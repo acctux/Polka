@@ -300,8 +300,9 @@ scale slider {
   background-color: @popup_bg;
   border: 1px solid @border_medium;
   border-radius: 10px;
+  min-height: 48px;
   padding: 12px;
-  margin: 8px 14px;
+  margin: 4px 4px;
   transition: background-color 0.15s ease;
 }
 .floating-notifications .notification-row:hover .notification-background {

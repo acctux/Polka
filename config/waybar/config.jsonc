@@ -4,6 +4,7 @@
   "icon-theme": "WhiteSur-dark",
   "modules-left": [
     "custom/logo",
+    "battery",
     "custom/updates",
     "temperature",
     "custom/kb-switch",
@@ -29,7 +30,6 @@
     "backlight",
     "custom/empty",
     "custom/volume",
-    "battery",
     "clock",
     "custom/notification"
   ],
@@ -49,7 +49,9 @@
     "on-click-right": "solaar & disown",
     "format-disabled": "",
     "format-connected": "󰂱",
-    "tooltip-format-connected": "Connected:{num_connections}\nBattery:{device_battery_percentage}%",
+    "tooltip-format-connected": "Connected:{num_connections}\n{device_alias}\nBattery:{device_battery_percentage}%",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t| Battery life: {device_battery_percentage}%",
     "format-off": "󰂲",
     "interval": 30,
     "format-no-controller": ""
@@ -119,7 +121,6 @@
     "format": "<span size='2pt'> </span>"
   },
   "custom/notification": {
-    "tooltip-format": "Left: Notifications\nRight: Do not disturb",
     "format": "<span size='8pt'>{icon}</span>",
     "format-icons": {
       "notification": "",
@@ -132,6 +133,7 @@
       "dnd-inhibited-none": "󱙍  "
     },
     "return-type": "json",
+    "tooltip": false,
     "exec-if": "which swaync-client",
     "exec": "swaync-client -swb",
     "on-click": "swaync-client -t -sw",
@@ -210,7 +212,7 @@
     "exec": "~/Polka/local/bin/waybar/updates.py",
     "interval": 1800,
     "hide-empty-text": true,
-    "on-click": "alacriitty -e paru & disown"
+    "on-click": "alacritty -e paru & disown"
   },
   "custom/kdeconnect": {
     "format": "{}",

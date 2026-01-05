@@ -5,7 +5,6 @@ After=graphical-session.target
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/rm -rf /home/nick/Phone
-ConditionPathIsDirectory=/home/nick/Phone
 
 [Install]
 WantedBy=graphical-session.target
