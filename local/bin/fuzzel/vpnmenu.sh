@@ -7,8 +7,7 @@ choice="$(
     fuzzel --dmenu \
       --hide-prompt \
       --lines "$lines" \
-      --width 14 \
-      --config=/home/nick/.config/fuzzel/timemenu.ini \
+      --config=/home/nick/.config/fuzzel/vpnmenu.ini \
       'Select config:'
 )"
 
