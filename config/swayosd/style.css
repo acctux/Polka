@@ -1,4 +1,6 @@
 window#osd {
+  font-family: "FiraMono Nerd Font Light", "SF Pro Text", sans-serif;
+  font-size: 15px;
   border-radius: 10px;
   border: 1px solid rgba(51, 204, 255, 0.8);
   background: rgba(8, 8, 10, 0.8); /* original background */
@@ -11,7 +13,7 @@ window#osd #container {
 }
 
 window#osd image {
-  -gtk-icon-transform: scale(0.6);
+  -gtk-icon-transform: scale(0.7);
 }
 
 window#osd image,
