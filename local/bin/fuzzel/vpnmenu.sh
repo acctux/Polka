@@ -1,10 +1,17 @@
-#!/bin/sh
+list="/run/wireguard/connections.list"
+
+lines="$(grep -c . "$list")"
 
 choice="$(
-  cat /run/wireguard/connections.list |
-    fuzzel --dmenu 'Select config:'
+  cat "$list" |
+    fuzzel --dmenu \
+      --hide-prompt \
+      --lines "$lines" \
+      --width 14 \
+      --config=/home/nick/.config/fuzzel/timemenu.ini \
+      'Select config:'
 )"
 
 [ -z "$choice" ] && exit 1
 
-alacritty -e sudo python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"
+sudo -A python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"
