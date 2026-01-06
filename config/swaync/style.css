@@ -1,15 +1,15 @@
 /* ── 1. Palette & Globals (Using @define-color) ──────────────────── */
 @define-color theme_fg rgba(252,252,252, 0.98);
 @define-color theme_fg_secondary rgba(0, 255, 153, 0.78);
-@define-color theme_bg rgba(8, 8, 10, 0.8);        /* darkest background */
-@define-color popup_bg rgba(16, 16, 19, 0.8);        /* darkest background */
+@define-color theme_bg rgba(8, 8, 10, 0.7);        /* darkest background */
+@define-color popup_bg rgba(16, 16, 19, 0.7);        /* darkest background */
 @define-color module_bg rgba(16, 16, 19, 0.4);      /* darkest background */
-@define-color module_hover_bg rgba(255, 50, 50, 0.8);
+@define-color module_hover_bg rgba(255, 50, 50, 0.7);
 @define-color button_bg rgba(51, 204, 255, 0.28);
-@define-color button_hover_bg rgba(51, 204, 255, 0.8);
-@define-color accent_color rgba(0, 114, 255, 0.8);
+@define-color button_hover_bg rgba(51, 204, 255, 0.7);
+@define-color accent_color rgba(0, 114, 255, 0.7);
 @define-color accent_color_hover rgba(51, 204, 255, 0.6);
-@define-color border_light rgba(51, 204, 255, 0.8);
+@define-color border_light rgba(51, 204, 255, 0.7);
 @define-color border_dark rgba(0, 114, 255, 0.06);
 @define-color border_medium rgba(0, 114, 255, 0.5);
 @define-color icon_primary rgba(0, 255, 153, 0.85);
@@ -20,7 +20,7 @@
 @define-color close_button_hover_bg rgba(0, 114, 255, 0.30);
 @define-color close_button_bg rgba(51, 204, 255, 0.15);
 @define-color close_button_hover_bg rgba(51, 204, 255, 0.30);
-@define-color mpris_player_bg rgba(16, 16, 19, 0.9); /* darkest background */
+@define-color mpris_player_bg rgba(16, 16, 19, 0.7); /* darkest background */
 /* ── Base Reset ───────────────────────────────────────────────────── */
 * {
   font-family: "FiraMono Nerd Font Medium", "SF Pro Text", sans-serif;
