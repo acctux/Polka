@@ -24,10 +24,10 @@ button {
 /* === Tooltip === */
 tooltip {
   background: rgba(16,16,19,0.7);
-  padding: 0 4px;
+  padding: 0;
   border-radius: 10px;
   font-size: 14px;
-  border: 1px solid rgba(30, 58, 138, 0.7);
+  border: 1px solid rgba(51, 204, 255, 0.7);
 }
 tooltip label {
   font-size: 14px;
