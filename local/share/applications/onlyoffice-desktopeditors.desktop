@@ -1,12 +1,12 @@
 [Desktop Entry]
 Version=1.0
-Name=OnlyOffice
+Name=ONLYOFFICE
 GenericName=Document Editor
 GenericName[ru]=Редактор документов
 Comment=Edit office documents
 Comment[ru]=Редактировать офисные документы
 Type=Application
-Exec=/usr/bin/onlyoffice-desktopeditors %F
+Exec=/home/nick/Polka/local/bin/onlyoffice/onlyofficelaunch.sh %F
 Terminal=false
 Icon=onlyoffice-desktopeditors
 Keywords=Text;Document;OpenDocument Text;Microsoft Word;Microsoft Works;odt;doc;docx;rtf;
@@ -21,7 +21,7 @@ Name[de]=Neues Dokument
 Name[fr]=Nouveau document
 Name[es]=Nuevo documento
 Name[ru]=Новый документ
-Exec=/usr/bin/onlyoffice-desktopeditors --new:word
+Exec=/home/nick/Polka/local/bin/onlyoffice/onlyofficelaunch.sh --new:word
 
 [Desktop Action NewSpreadsheet]
 Name=New spreadsheet
@@ -29,7 +29,7 @@ Name[de]=Neue Tabelle
 Name[fr]=Nouveau classeur
 Name[es]=Nueva hoja de cálculo
 Name[ru]=Новая таблица
-Exec=/usr/bin/onlyoffice-desktopeditors --new:cell
+Exec=/home/nick/Polka/local/bin/onlyoffice/onlyofficelaunch.sh --new:cell
 
 [Desktop Action NewPresentation]
 Name=New presentation
@@ -37,7 +37,7 @@ Name[de]=Neue Präsentation
 Name[fr]=Nouvelle présentation
 Name[es]=Nueva presentación
 Name[ru]=Новая презентация
-Exec=/usr/bin/onlyoffice-desktopeditors --new:slide
+Exec=/home/nick/Polka/local/bin/onlyoffice/onlyofficelaunch.sh --new:slide
 
 [Desktop Action NewForm]
 Name=New PDF
@@ -45,4 +45,4 @@ Name[de]=Neues PDF
 Name[fr]=Nouveau PDF
 Name[es]=Nuevo PDF
 Name[ru]=Новый PDF
-Exec=/usr/bin/onlyoffice-desktopeditors --new:form
+Exec=/home/nick/Polka/local/bin/onlyoffice/onlyofficelaunch.sh --new:form
