@@ -114,7 +114,6 @@
     "format": "{:%H:%M}",
     "on-click-right": "gsimplecal & disown",
     "on-click-middle": "~/Polka/local/bin/fuzzel/time_menu.sh",
-    "signal": 4,
     "interval": 60
   },
   "custom/empty": {
@@ -201,7 +200,7 @@
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
     "return-type": "json",
-    "format": "<span size='9pt'> </span><span size='11pt'>{}</span>",
+    "format": "<span size='9pt'> </span>{}",
     "interval": 300,
     "hide-empty-text": true,
     "signal": 8,
