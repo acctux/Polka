@@ -17,10 +17,10 @@ CHOICE=$(printf "%s\n" "$MENU" | fuzzel --dmenu --hide-prompt --prompt="OCR Acti
 
 case "$CHOICE" in
 "$CHOICE_1")
-  bash /home/nick/Polka/local/bin/ocrcopy/ocrcopy.sh
+  /home/nick/Polka/local/bin/ocr/ocrcopy.sh
   ;;
 "$CHOICE_2")
-  bash /home/nick/Polka/local/bin/maimpdf/maimregion.sh
+  /home/nick/Polka/local/bin/ocr/maimregion.sh
   ;;
 "$CHOICE_3")
   nemo /home/nick/Polka/local/bin/maimpdf/screens

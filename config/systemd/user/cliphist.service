@@ -1,12 +1,12 @@
 [Unit]
-Description=Cliphist image service
+Description=Clipse service
 After=graphical-session.target
 PartOf=graphical-session.target
 ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
-ExecStart=wl-paste --type image --watch cliphist store
+ExecStart=wl-paste --watch cliphist store
 Restart=on-failure
 
 [Install]

@@ -42,12 +42,12 @@ tooltip label {
   background-color: rgba(16,16,19,0.9);
   border-radius: 4px;
 }
-.modules-right {
-  margin-right: 1px; 
-}
-.modules-left  { 
-  margin-left: 1px; 
-}
+/* .modules-right { */
+/*   margin-right: 1px;  */
+/* } */
+/* .modules-left  {  */
+/*   margin-left: 1px;  */
+/* } */
 
 /* === Shared Spacing === */
 #battery,

@@ -3,18 +3,8 @@ TERM = "xterm-256color"
 
 [window]
 dynamic_padding = true
-decorations = "full"
-opacity = 1.00
+decorations = "None"
 title = "Alacritty@yulia"
-decorations_theme_variant = "Dark"
-
-[window.dimensions]
-columns = 100
-lines = 30
-
-[window.class]
-instance = "Alacritty"
-general = "Alacritty"
 
 [scrolling]
 history = 10000
@@ -25,7 +15,7 @@ draw_bold_text_with_bright_colors = true
 
 [colors.primary]
 background = "#101013"
-foreground = "#d3dae3"
+foreground = "#F4F5F6"
 
 [colors.normal]
 black = "#21222c"
@@ -49,22 +39,9 @@ white = "#ffffff"
 
 [font]
 size = 10.5
-
-[font.normal]
-family = "FiraMono Nerd Font"
-style = "Regular"
-
-[font.bold]
-family = "FiraMono Nerd Font"
-style = "Bold"
-
-[font.italic]
-family = "FiraMono Nerd Font"
-style = "Italic"
-
-[font.bold_italic]
-family = "FiraMono Nerd Font"
-style = "Bold Italic"
+normal = { family = "FiraMono Nerd Font", style = "Regular" }
+bold = { family = "FiraMono Nerd Font", style = "Bold" }
+italic = { family = "FiraMono Nerd Font", style = "Italic" }
 
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
@@ -75,9 +52,6 @@ style = "Underline"
 vi_mode_style = "None"
 unfocused_hollow = true
 thickness = 0.15
-
-[mouse]
-hide_when_typing = true
 
 [[mouse.bindings]]
 mouse = "Middle"
@@ -160,4 +134,3 @@ action = "ResetFontSize"
 
 [general]
 live_config_reload = false
-working_directory = "None"
