@@ -78,6 +78,7 @@ tooltip label {
 /* === Shared Font Sizes === */
 #custom-volume,
 #custom-notification,
+#custom-steam,
 #backlight,
 #custom-kdeconnect,
 #bluetooth,
@@ -95,6 +96,7 @@ tooltip label {
 #custom-deluge,
 #custom-nemo,
 #custom-volume,
+#custom-steam,
 #custom-telegram,
 #backlight,
 #bluetooth,
@@ -167,6 +169,7 @@ tooltip label {
 #custom-volume.playing {
  font-weight: 600;
 }
+#custom-steam,
 #bluetooth {
   padding-right: 7px;
   padding-left: 5px;
@@ -197,6 +200,7 @@ tooltip label {
 button:hover,
 #custom-kdeconnect:hover,
 #custom-timer:hover,
+#custom-steam:hover,
 #backlight:hover,
 #custom-nemo:hover,
 #custom-deluge:hover,

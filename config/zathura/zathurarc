@@ -8,3 +8,4 @@ set smoothscroll true
 set scroll-step 20
 # Optional: show page number in statusbar
 set statusbar true
+set selection-clipboard clipboard

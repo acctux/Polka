@@ -14,6 +14,7 @@
   ],
   "modules-right": [
     "custom/timer",
+    "custom/steam",
     "custom/empty",
     "custom/kdeconnect",
     "custom/empty",
@@ -224,6 +225,15 @@
     "on-click": "~/Polka/local/bin/kdeconnect/mountkde.py",
     "on-click-middle": "kdeconnect-app",
     "on-click-right": "kdeconnect-sms"
+  },
+  "custom/steam": {
+    "format": "{}",
+    "escape": true,
+    "return-type": "json",
+    "exec": "/home/nick/Polka/local/bin/steam/steam.py",
+    "interval": 10,
+    "hide-empty-text": true,
+    "on-click": "steam"
   },
   "custom/telegram": {
     "format": "",

@@ -11,7 +11,7 @@
 @define-color accent_color_hover rgba(51, 204, 255, 0.6);
 @define-color border_light rgba(51, 204, 255, 0.7);
 @define-color border_dark rgba(0, 114, 255, 0.06);
-@define-color border_medium rgba(0, 114, 255, 0.5);
+@define-color border_medium rgba(0, 114, 255, 0.6);
 @define-color icon_primary rgba(0, 255, 153, 0.85);
 @define-color icon_secondary rgba(0, 255, 153, 0.5);
 @define-color slider_trough_bg rgba(0, 0, 0, 0);
