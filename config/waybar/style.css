@@ -44,17 +44,6 @@ tooltip label {
 }
 
 /* === Shared Spacing === */
-#battery,
-#bluetooth,
-#temperature,
-#clock,
-#custom-logo,
-#custom-timer,
-#custom-telegram,
-#custom-taskwarrior,
-#custom-updates {
-  padding: 0 6px;
-}
 #workspaces button {
   padding: 0 2px;
   border-radius: 5px;
@@ -135,6 +124,10 @@ tooltip label {
 }
 
 /* === Individual === */
+#temperature {
+  padding-right: 4px;
+  padding-left: 4px;
+}
 #custom-updates {
   padding-right: 9px;
   padding-left: 5px;

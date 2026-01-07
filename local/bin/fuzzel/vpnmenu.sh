@@ -13,4 +13,4 @@ choice="$(
 
 [ -z "$choice" ] && exit 1
 
-sudo -A python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"
+alacritty -e sudo python /home/nick/Polka/local/bin/protonvpn/protonconnect.py "$choice"

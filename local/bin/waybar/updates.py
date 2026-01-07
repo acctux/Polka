@@ -4,7 +4,7 @@ import json
 import os
 import time
 
-KEYWORDS = ["linux-", "python-", "nvidia-", "fuse"]
+KEYWORDS = ["linux-", "python-", "nvidia-", "fuse", "systemd"]
 MAX_TOOLTIP_LINES = 24
 THRESHOLD = 5
 THRESHOLD_YELLOW = 10
