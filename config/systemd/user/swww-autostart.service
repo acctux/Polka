@@ -5,7 +5,7 @@ PartOf=graphical-session.target
 ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
-Type=simple
+Type=oneshot
 ExecStartPre=/usr/sbin/systemctl --user start swww-daemon.service
 ExecStart=/usr/sbin/sleep 20
 ExecStartPost=/usr/sbin/systemctl --user restart swww-daemon.service
