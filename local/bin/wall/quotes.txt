@@ -116,17 +116,16 @@
 “Men are not punished for their sins, but by them.”–Elbert Hubbard
 “The greatest crimes do not arise from a want of feeling for others, but from an over-sensibility for ourselves.”–Edmund Burke
 “The mob is the mother of tyrants.”–Diogenes
-“Fortune is of a sluggish growth, but ruin is rapid.”–Lucius Annaeus Seneca
+“Fortune is of a sluggish growth, but ruin is rapid.”–Seneca
 “A slave is he who cannot speak his thoughts.”–Euripides
 “The way to gain a good reputation is to endeavor to be what you desire to appear.”–Socrates
 “It is not poverty so much as pretence that harasses a ruined man.”–Juvenal
 “A multitude of laws in a country is like a great number of physicians—a sign of weakness and malady.”–Voltaire
 “Do not bite at the bait of pleasure, till you know there is no hook beneath it.”–Thomas Jefferson
 “The man who boasts of his influence depends on others to believe it.”–Sallust
-“No man was ever wise by chance.”–Lucius Annaeus Seneca
+“No man was ever wise by chance.”– Seneca
 “Better to be a beggar and free than a king and a slave.”–Epictetus
 “Vices are learned without a teacher.”–Seneca the Younger
-“Men trust their ears less than their eyes.”–Herodotus
 “An army of sheep led by a lion is better than an army of lions led by a sheep.”–Alexander the Great
 “To rule is easy, to govern difficult.”–Johann Wolfgang von Goethe
 “A man without enemies is a man without character.”–Thomas Jefferson
@@ -155,7 +154,7 @@
 “I look at Africa and see the destiny of the British Empire.”–Cecil Rhodes
 “Speak softly and carry a big stick; you will go far.”–Theodore Roosevelt
 “Do what you can, with what you have, where you are.”–Theodore Roosevelt
-“Believe you can and youre halfway there.”–Theodore Roosevelt
+“Believe you can and you're halfway there.”–Theodore Roosevelt
 “Far better it is to dare mighty things, to win glorious triumphs, even though checkered by failure… than to rank with those timid spirits who neither enjoy much nor suffer much, because they live in a gray twilight that knows not victory nor defeat.”–Theodore Roosevelt
 “The only man who never makes mistakes is the man who never does anything.”–Theodore Roosevelt
 “It is hard to fail, but it is worse never to have tried to succeed.”–Theodore Roosevelt
@@ -163,6 +162,4 @@
 “Courtesy is as much a mark of a gentleman as courage.”–Theodore Roosevelt
 “In any moment of decision, the best thing you can do is the right thing, the next best thing is the wrong thing, and the worst thing you can do is nothing.”–Theodore Roosevelt
 “The most successful men in the end are those whose success is the result of steady accretion.”–Theodore Roosevelt
-“Whether you think you can, or you think you can’t – you’re right.”–Henry Ford
-“Any customer can have a car painted any color that he wants so long as it is black.”–Henry Ford
 "At some future period, not very distant as measured by centuries, the civilized races of man will almost certainly exterminate, and replace, the savage races throughout the world." - Charles Darwin

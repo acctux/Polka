@@ -1,26 +1,55 @@
 {
   "$schema": "/etc/xdg/swaync/configSchema.json",
+  "ignore-gtk-theme": true,
   "positionX": "right",
   "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "layer-shell": true,
+  "layer-shell-cover-screen": true,
+  "cssPriority": "user",
   "control-center-margin-top": 0,
-  "control-center-margin-bottom": 10,
+  "control-center-margin-bottom": 460,
   "control-center-margin-right": 0,
+  "control-center-margin-left": 0,
+  "notification-2fa-action": true,
+  "notification-inline-replies": false,
   "notification-body-image-height": 100,
   "notification-body-image-width": 200,
   "timeout": 10,
   "timeout-low": 5,
-  "timeout-critical": 0,
-  "fit-to-screen": false,
-  "control-center-width": 340,
-  "control-center-height": 780,
-  "notification-window-width": 400,
+  "timeout-critical": 5,
+  "fit-to-screen": true,
+  "relative-timestamps": true,
+  "control-center-width": 300,
+  "control-center-height": 500,
+  "notification-window-width": 300,
   "keyboard-shortcuts": true,
+  "notification-grouping": true,
   "image-visibility": "when-available",
-  "transition-time": 500,
+  "transition-time": 200,
   "hide-on-clear": false,
   "hide-on-action": true,
+  "text-empty": "No Notifications",
   "script-fail-notify": true,
-  "text-empty": "Nothing here",
+  "scripts": {
+    "example-script": {
+      "exec": "echo 'Do something...'",
+      "urgency": "Normal"
+    },
+    "example-action-script": {
+      "exec": "echo 'Do something actionable!'",
+      "urgency": "Normal",
+      "run-on": "action"
+    }
+  },
+  "notification-visibility": {
+    "example-name": {
+      "state": "muted",
+      "urgency": "Low",
+      "app-name": "Spotify"
+    }
+  },
   "widgets": [
     "buttons-grid",
     "volume",
@@ -29,52 +58,60 @@
     "notifications"
   ],
   "widget-config": {
+    "notifications": {
+      "vexpand": true
+    },
+    "inhibitors": {
+      "text": "Inhibitors",
+      "button-text": "Clear All",
+      "clear-all-button": true
+    },
     "title": {
-      "text": "Notification Center",
+      "text": "Notifications",
       "clear-all-button": true,
-      "button-text": "󰆴 Clear"
+      "button-text": "Clear All"
     },
     "dnd": {
       "text": "Do Not Disturb"
     },
     "label": {
-      "max-lines": 1,
-      "text": "Notification Center"
+      "max-lines": 5,
+      "text": "Label Text"
     },
-    "mpris": {},
+    "mpris": {
+      "blacklist": [],
+      "autohide": false,
+      "show-album-art": "always",
+      "loop-carousel": false
+    },
     "volume": {
-      "label": "󰕾"
+      "label": "󰕾",
+      "show-per-app-icon": true,
+      "show-per-app": true
     },
     "backlight": {
-      "label": "󰃟",
-      "device": "amdgpu_bl1"
+      "label": "󰃠",
+      "device": "amdgpu_bl1",
+      "subsystem": "backlight"
     },
     "buttons-grid": {
+      "buttons-per-row": 4,
       "actions": [
         {
           "label": "󰐥",
-          "command": "systemctl poweroff",
-          "tooltip": "Poweroff"
+          "command": "systemctl poweroff"
         },
         {
           "label": "󰜉",
-          "command": "systemctl reboot",
-          "tooltip": "Reboot"
+          "command": "systemctl reboot"
         },
         {
-          "label": "󰌾",
-          "command": "hyprlock",
-          "tooltip": "Lock"
+          "label": "󰗼",
+          "command": "uwsm stop"
         },
         {
-          "label": "󰍃",
-          "command": "uwsm stop",
-          "tooltip": "Logout"
-        },
-        {
-          "label": "",
-          "command": "",
-          "tooltip": "Power"
+          "label": "󰍁",
+          "command": "__NV_PRIME_RENDER_OFFLOAD=0 __GLX_VENDOR_LIBRARY_NAME=mesa pidof hyprlock || __NV_PRIME_RENDER_OFFLOAD=0 __GLX_VENDOR_LIBRARY_NAME=mesa hyprlock"
         }
       ]
     }

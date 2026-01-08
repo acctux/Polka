@@ -105,10 +105,9 @@
   },
   "clock": {
     "tooltip-format": "{:%A, %B %d}",
-    "format-alt": "{:%a, %d %b %Y}",
     "format": "{:%H:%M}",
-    "on-click-right": "gsimplecal & disown",
-    "on-click-middle": "~/Polka/local/bin/fuzzel/time_menu.sh",
+    "on-click": "gsimplecal",
+    "on-click-right": "~/Polka/local/bin/fuzzel/time_menu.sh",
     "interval": 60
   },
   "custom/empty": {
