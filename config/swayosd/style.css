@@ -3,7 +3,7 @@ window#osd {
   font-size: 15px;
   border-radius: 10px;
   border: 1px solid rgba(51, 204, 255, 0.7);
-  background: rgba(8, 8, 10, 0.7); /* original background */
+  background: rgba(16, 16, 19, 0.7); /* original background */
 }
 
 window#osd #container {
@@ -13,7 +13,7 @@ window#osd #container {
 }
 
 window#osd image {
-  -gtk-icon-transform: scale(0.7);
+  -gtk-icon-transform: scale(0.6);
 }
 
 window#osd image,
@@ -32,7 +32,7 @@ window#osd image:disabled {
 
 /* Segmented progress bar */
 window#osd progressbar {
-  min-height: 7px;
+  min-height: 5px;
   border-radius: 999px;
   background: transparent;
   border: none;
@@ -49,5 +49,5 @@ window#osd progress {
   min-height: inherit;
   border-radius: inherit;
   border: none;
-  background: #10b981; /* active progress color */
+  background: linear-gradient(to right, rgba(0, 114, 255, 0.7), rgba(51, 204, 255, 0.9));
 }

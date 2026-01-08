@@ -46,11 +46,11 @@
 @define-color theme_fg_secondary rgba(0, 255, 153, 0.78);
 @define-color theme_bg rgba(8, 8, 10, 0.7);
 @define-color popup_bg rgba(16, 16, 19, 0.7);
-@define-color module_hover_bg rgba(255, 50, 50, 0.7);
+@define-color module_hover_bg rgba(255, 50, 50, 0.9);
 @define-color accent_color rgba(0, 114, 255, 0.7);
 @define-color accent_color_hover rgba(51, 204, 255, 0.6);
 @define-color border_medium rgba(0, 114, 255, 0.6);
-@define-color icon_primary rgba(0, 255, 153, 0.85);
+@define-color icon_primary rgba(0, 255, 153, 0.7);
 @define-color slider_trough_bg rgba(165, 180, 252, 0.5);
 @define-color slider_thumb_bg rgb(16, 185, 129,0.9);
 @define-color bg-selected rgba(0, 114, 255, 0.7);
@@ -338,7 +338,7 @@ notificationwindow, blankwindow, blankwindow {
 
 .control-center {
   /* The Control Center which contains the old notifications + widgets */
-  background: var(--cc-bg);
+  background: rgba(var(--noti-bg),var(--noti-bg-alpha));
   color: var(--text-color);
   border-radius: var(--border-radius);
   border: var(--border);
@@ -389,7 +389,10 @@ notificationwindow, blankwindow, blankwindow {
 .floating-notifications .notification {
   box-shadow: none;
 }
-
+.control-center .notification .summary {
+  font-weight: 600;
+  color: @theme_fg_secondary;
+}
 /*** Widgets ***/
 .widget {
   margin: 4px 4px;
@@ -410,7 +413,7 @@ notificationwindow, blankwindow, blankwindow {
 
 /* Label widget */
 .widget-label > label {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 /* Mpris widget */
@@ -513,26 +516,25 @@ notificationwindow, blankwindow, blankwindow {
 }
 
 .widget-menubar > .menu-button-bar > .start {
-  margin-left: 6px;
+  margin-left: 2px;
 }
 
 .widget-menubar > .menu-button-bar > .end {
-  margin-right: 6px;
+  margin-right: 2px;
 }
 
 .widget-menubar > .menu-button-bar > .widget-menubar-container button {
   border-radius: var(--border-radius);
-  margin: 0 4px;
+  margin: 0;
 }
 
 .widget-menubar > revealer * {
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 .widget-menubar > revealer * button {
   border-radius: var(--border-radius);
-  margin: 4px;
-  margin-top: 0;
+  margin: 0;
 }
 
 .widget-menubar > revealer * button:last-child {
@@ -549,49 +551,71 @@ notificationwindow, blankwindow, blankwindow {
   -gtk-icon-size: var(--widget-volume-row-icon-size);
 }
 .widget-volume {
-  margin-top: 14px;
+  padding: 0 6px;
+  margin: 8px 10px 4px;
+  border-radius: var(--border-radius);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+  color: @theme_fg;
 }
 
+.widget-volume>box>button {
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget-volume>box>button:hover {
+  color: @theme_fg_secondary;
+  /*transform: scale(1.05); */
+}
 .per-app-volume {
   background-color: var(--noti-bg-alt);
-  margin: 2px 4px;
-  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
   border-radius: var(--border-radius);
-}
-scale trough {
-  margin-right: 4px;
-  min-height: 7px;
-  border-radius: 6px;
+  color: @theme_fg_secondary;
 }
 scale trough progress {
-  min-height: 4px;
-  border-radius: 6px;
   transition: background-color 0.5s ease;
 }
-
 trough highlight {
-  padding: 3px;
-  border-radius: 12px;
-  transition: all 0.7s ease;
+  background: linear-gradient(to right, rgba(0, 114, 255, 0.7), rgba(51, 204, 255, 0.9));
 }
 scale slider {
+  box-shadow: none;
+  border-radius: 5px;
   /* background-color: @slider_thumb_bg; */
+  transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
   background-color: transparent;
 }
-
+scale slider:hover {
+  box-shadow: inset 0 0 0 1px var(--noti-border-color);
+  background-color: var(--cc-bg);
+  color: @bg-selected;
+  /* background-color: @slider_thumb_bg; */
+}
 /* === Bigger Nerd Font Icons for Volume & Brightness Labels === */
 
 .widget-volume label:first-child,
 .widget-backlight label:first-child {
-  font-size: 1.1rem;     /* increase or tweak: try 2rem if you want even bigger */
-  margin-right: 6px;
+  font-size: 1.25rem;     /* increase or tweak: try 2rem if you want even bigger */
+  margin-right: 4px;
   color: var(--text-color); /* keeps same color as text */
 }
 
+.widget-backlight {
+  padding: 0 6px;
+  margin: 4px 10px;
+  border-radius: var(--border-radius);
+  color: @theme_fg;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
 /* ── 6. Button Grid ─────────────────────────────────────────────── */
 .widget-buttons-grid > flowbox {
   border-bottom: 1px solid @border_medium;
-  padding: 0 0 2px;
+  padding: 0 0 6px;
   margin: 0;
   background: none;
 }
@@ -599,26 +623,23 @@ scale slider {
   background-color: transparent;
 }
 .widget-buttons-grid > flowbox > flowboxchild > button {
-  background-color: transparent;
-  border: 1px solid transparent;
   color: var(--text-color);
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease, box-shadow 1s ease, border 1s ease;
 }
 
 .widget-buttons-grid flowboxchild:nth-child(-n+5) > button {
-  font-size: 1.2rem;
+  border: 1px solid transparent;
+  font-size: 1.3rem;
   background-color: transparent;
-  border-radius: 999px;
-  margin: 0 2px;
-  padding: 2px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+  padding: 3px;
   min-width: 6px;
   min-height: 2px;
-  border: 1px solid transparent;
-  transition: background-color 0.5s ease, color 0.5s ease, border 0.5s ease;
 }
 .widget-buttons-grid flowboxchild:nth-child(-n+5) > button:hover {
-  border: 1px solid @module_hover_bg;
-  color: @icon_primary;
+  border: 1px solid var(--noti-border-color);
+  color: @module_hover_bg;
 }
 .widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked {
   background-color: var(--noti-bg-hover);
@@ -626,7 +647,7 @@ scale slider {
   color: @icon_primary;
 }
 .widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked:hover {
-  border: 1px solid var(--noti-border-color);
+  box-shadow: inset 0 0 0 1px var(--noti-border-color);
 }
 .control-center .notification-background {
   margin: 4px 0;
