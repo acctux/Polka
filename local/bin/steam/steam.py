@@ -18,7 +18,6 @@ def steam_running():
 def main():
     if not steam_running():
         sys.exit(0)  # Output nothing → Waybar hides the module
-
     output = {
         "text": ICON,
         "tooltip": TOOLTIP,

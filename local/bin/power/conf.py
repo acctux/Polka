@@ -1,13 +1,14 @@
 SERVICES = [
-    "cliphist-text.service",
+    "cliphist.service",
     "clip-persist.service",
     "hypridle.service",
     "kdeconnectd.service",
     "waybar.service",
     # "mpd-mpris.service", # Necessary?
-    "psd.service",
+    # "psd.service",
     "swaync.service",
-    "emailcheck.timer",
-    "task-reminder.timer",
-    "wall.timer",
+    "telegram.service",
+    # "emailcheck.timer",
+    # "task-reminder.timer",
+    # "wall.timer",
 ]

@@ -84,7 +84,7 @@ def get_firewalld_zone():
 
 def build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name):
     lines = [
-        f"{iface}\n·{strength}%\n·{rssi}dBm\n↑{upload / 1_048_576:.1f}M\n↓{download / 1_048_576:.1f}M\n{zone_name}󱨑"
+        f"{iface}\t\n·{strength}%\n·{rssi}dBm\n↑{upload / 1_048_576:.1f}M\n↓{download / 1_048_576:.1f}M\n{zone_name} 󱨑"
     ]
     if vpn:
         lines.insert(0, f"{vpn}")

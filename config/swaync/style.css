@@ -16,12 +16,13 @@
   --notification-group-icon-size: 32px;
   --border: 1px solid var(--noti-border-color);
   --border-radius: 10px;
+  --slider_trough_fg: rgba(0, 114, 255, 0.7), rgba(51, 204, 255, 0.7);
   --notification-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.3),
     0 1px 3px 1px rgba(0, 0, 0, 0.7),
     0 2px 6px 2px rgba(0, 0, 0, 0.3);
   --font-size-body: 13px;
-  --font-size-summary: 12px;
+  --font-size-summary: 14px;
   /* Backwards compatibility */
   --hover-tranistion: background 0.15s ease-in-out;
   --group-collapse-tranistion: opacity 400ms ease-in-out;
@@ -420,7 +421,7 @@ notificationwindow, blankwindow, blankwindow {
 :root {
   --mpris-album-art-overlay: rgba(0, 0, 0, 0.75);
   --mpris-button-hover: rgba(0, 0, 0, 0.5);
-  --mpris-album-art-icon-size: 70px;
+  --mpris-album-art-icon-size: 64px;
   --mpris-album-art-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -473,12 +474,15 @@ notificationwindow, blankwindow, blankwindow {
 }
 
 .widget-mpris > box > button {
+  font-size: 0.9rem;
+  padding: 0;
   /* Change player side buttons */
 }
 
 .widget-mpris > box > button:disabled {
   /* Change player side buttons insensitive */
 }
+
 
 /* Buttons widget */
 .widget-buttons-grid flowboxchild > button {
@@ -554,7 +558,6 @@ notificationwindow, blankwindow, blankwindow {
   padding: 0 6px;
   margin: 8px 10px 4px;
   border-radius: var(--border-radius);
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
   color: @theme_fg;
 }
 
@@ -581,7 +584,7 @@ scale trough progress {
   transition: background-color 0.5s ease;
 }
 trough highlight {
-  background: linear-gradient(to right, rgba(0, 114, 255, 0.7), rgba(51, 204, 255, 0.9));
+  background: linear-gradient(to right, var(--slider_trough_fg));
 }
 scale slider {
   box-shadow: none;
@@ -610,12 +613,11 @@ scale slider:hover {
   margin: 4px 10px;
   border-radius: var(--border-radius);
   color: @theme_fg;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
 }
 /* ── 6. Button Grid ─────────────────────────────────────────────── */
 .widget-buttons-grid > flowbox {
   border-bottom: 1px solid @border_medium;
-  padding: 0 0 6px;
+  padding: 0 0 4px;
   margin: 0;
   background: none;
 }
@@ -630,10 +632,10 @@ scale slider:hover {
 .widget-buttons-grid flowboxchild:nth-child(-n+5) > button {
   border: 1px solid transparent;
   font-size: 1.3rem;
+  margin: 0 6px;
   background-color: transparent;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
   border-radius: 30px;
-  padding: 3px;
+  padding: 4px;
   min-width: 6px;
   min-height: 2px;
 }

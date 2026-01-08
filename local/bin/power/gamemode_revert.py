@@ -6,7 +6,6 @@ from conf import SERVICES
 HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
 INPUT_CONF = Path.home() / ".config/hypr/input.conf"
 
-# Bindings to restore
 BINDINGS_TO_UNCOMMENT = [
     "bindm = SHIFT, mouse:273, movewindow",
     "bindm = SHIFT, mouse:272, resizewindow",
@@ -14,7 +13,6 @@ BINDINGS_TO_UNCOMMENT = [
 
 
 def start_user_services(SERVICES):
-    """Restart specific user services/timers."""
     for svc in SERVICES:
         try:
             subprocess.run(["systemctl", "--user", "start", svc], check=False)
@@ -25,22 +23,17 @@ def start_user_services(SERVICES):
 
 
 def revert_hyprland_source():
-    """Replace 'gamemode.conf' with 'looknfeel.conf' and uncomment input.conf line."""
     if not HYPRLAND_CONF.exists():
         print(f"Config not found: {HYPRLAND_CONF}")
         return False
-
     text = HYPRLAND_CONF.read_text()
     modified = False
-
     if "source = gamemode.conf" in text:
         text = text.replace("source = gamemode.conf", "source = looknfeel.conf")
         modified = True
-
     if "# source = input.conf" in text:
         text = text.replace("# source = input.conf", "source = input.conf")
         modified = True
-
     if modified:
         HYPRLAND_CONF.write_text(text)
         print(f"Updated Hyprland config: {HYPRLAND_CONF}")
@@ -51,15 +44,12 @@ def revert_hyprland_source():
 
 
 def uncomment_hypr_bindings():
-    """Uncomment previously commented window move/resize bindings."""
     if not INPUT_CONF.exists():
         print(f"Input config not found: {INPUT_CONF}")
         return False
-
     changed = False
     lines = INPUT_CONF.read_text().splitlines()
     new_lines = []
-
     for line in lines:
         stripped = line.strip()
         if any(stripped == f"# {b}" for b in BINDINGS_TO_UNCOMMENT):
@@ -68,7 +58,6 @@ def uncomment_hypr_bindings():
             changed = True
         else:
             new_lines.append(line)
-
     if changed:
         INPUT_CONF.write_text("\n".join(new_lines) + "\n")
     return changed
@@ -76,15 +65,11 @@ def uncomment_hypr_bindings():
 
 def main():
     hypr_reloaded = False
-
     if revert_hyprland_source():
         hypr_reloaded = True
-
     if uncomment_hypr_bindings():
         hypr_reloaded = True
-
     start_user_services(SERVICES)
-
     if hypr_reloaded:
         subprocess.run(["hyprctl", "reload"], check=False)
         print("Hyprland reloaded.")
