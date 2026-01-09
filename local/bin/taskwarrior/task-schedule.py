@@ -22,7 +22,14 @@ DATED_TASKS = [
 
 
 def run(cmd: list[str]) -> str:
-    return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL).strip()
+    try:
+        return subprocess.check_output(
+            cmd,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except subprocess.CalledProcessError:
+        return ""
 
 
 def task_exists(description: str) -> bool:
@@ -82,4 +89,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

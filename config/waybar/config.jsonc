@@ -17,7 +17,7 @@
     "custom/timer",
     "custom/steam",
     "custom/kdeconnect",
-    "custom/nemo",
+    "custom/tlp",
     "custom/deluge",
     "custom/telegram",
     "bluetooth",
@@ -171,15 +171,15 @@
     "on-click": "deluge-gtk & disown",
     "on-click-right": "systemctl --user stop deluged.service"
   },
-  "custom/nemo": {
-    "exec": "/home/nick/Polka/local/bin/folders/nemo_scroll.py",
+  "custom/tlp": {
+    "exec": "/home/nick/Polka/local/bin/waybar/quicklaunch.py",
     "return-type": "json",
     "interval": 1,
-    "on-click": "/home/nick/Polka/local/bin/folders/nemo_scroll.py exec",
-    "on-click-right": "/home/nick/Polka/local/bin/folders/nemo_scroll.py --toggle",
+    "on-click": "/home/nick/Polka/local/bin/waybar/quicklaunch.py exec",
+    "on-click-right": "/home/nick/Polka/local/bin/waybar/quicklaunch.py toggle",
     "on-click-middle": "/home/nick/Polka/local/bin/folders/mountencrypted.sh",
-    "on-scroll-up": "/home/nick/Polka/local/bin/folders/nemo_scroll.py up",
-    "on-scroll-down": "/home/nick/Polka/local/bin/folders/nemo_scroll.py down"
+    "on-scroll-up": "/home/nick/Polka/local/bin/waybar/quicklaunch.py up",
+    "on-scroll-down": "/home/nick/Polka/local/bin/waybar/quicklaunch.py down"
   },
   "custom/timer": {
     "format": "{}",
@@ -193,10 +193,10 @@
   },
   "custom/taskwarrior": {
     "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
+    "hide-empty-text": false,
     "return-type": "json",
     "format": "<span size='9pt'> </span>{}",
     "interval": 300,
-    "hide-empty-text": true,
     "signal": 8,
     "on-click": "alacritty -e taskwarrior-tui"
   },

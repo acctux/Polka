@@ -42,7 +42,7 @@ window#osd trough {
   min-height: inherit;
   border-radius: inherit;
   border: none;
-  background: rgba(165, 180, 252, 0.5); /* semi-transparent trough */
+  background: rgba(55, 70, 90, 0.5); /* semi-transparent trough */
 }
 
 window#osd progress {

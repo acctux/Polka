@@ -6,4 +6,4 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 MODE="$1"
-sudo python3 tlp.py "$MODE"
+sudo python3 /usr/local/bin/tlp.py "$MODE"

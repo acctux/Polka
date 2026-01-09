@@ -4,13 +4,50 @@ import sys
 import subprocess
 from pathlib import Path
 
+# -----------------------------
+# TLP Commands
+# -----------------------------
 COMMANDS = [
-    ("Mount Encrypted", "", ["kitty"]),
-    ("Timer", "󱎫", ["firefox"]),
+    (
+        "Battery",
+        "󰌪",
+        [
+            "alacritty",
+            "-e",
+            "bash",
+            "-c",
+            "sudo",
+            "python3",
+            "/home/nick/Polka/local/bin/power/tlp.py",
+            "batmode",
+        ],
+    ),
+    (
+        "Default",
+        "",
+        [
+            "alacritty",
+            "-e",
+            "bash",
+            "-c",
+            "sudo python3 /home/nick/Polka/local/bin/power/tlp.py default",
+        ],
+    ),
+    (
+        "Power",
+        "",
+        [
+            "alacritty",
+            "-e",
+            "bash",
+            "-c",
+            "sudo python3 /home/nick/Polka/local/bin/power/tlp.py none",
+        ],
+    ),
 ]
 
-INDEX_FILE = Path.home() / ".cache/quicklaunch_index"
-HIDE_FILE = Path.home() / ".cache/quicklaunch_hide"
+INDEX_FILE = Path.home() / ".cache/tlp_scroll_index"
+STATE_FILE = Path.home() / ".cache/tlp_scroll_state"  # stores last executed mode
 
 
 def load_index():
@@ -24,26 +61,22 @@ def save_index(i):
     INDEX_FILE.write_text(str(i))
 
 
-def load_hide():
+def load_state():
     try:
-        return HIDE_FILE.read_text().strip() == "1"
+        return int(STATE_FILE.read_text().strip())
     except Exception:
-        return False
+        return None
 
 
-def save_hide(value: bool):
-    HIDE_FILE.write_text("1" if value else "0")
+def save_state(index):
+    STATE_FILE.write_text(str(index))
 
 
-def toggle_hide():
-    new = not load_hide()
-    save_hide(new)
-    return new
-
-
+# -----------------------------
+# Main
+# -----------------------------
 def main():
     index = load_index()
-    hide = load_hide()
     for arg in sys.argv[1:]:
         if arg == "up":
             index = (index + 1) % len(COMMANDS)
@@ -52,20 +85,20 @@ def main():
             index = (index - 1) % len(COMMANDS)
             save_index(index)
         elif arg == "exec":
-            _, _, command = COMMANDS[index]
+            label, _, command = COMMANDS[index]
             subprocess.Popen(command)
+            save_state(index)
             return
-        elif arg == "--toggle":
-            hide = toggle_hide()
     label, icon, _ = COMMANDS[index]
-    text = "" if hide else f" <span size='8pt'>{label}</span>"
-    waybar_class = "hidden" if hide else "visible"
+    active_index = load_state()
+    waybar_class = "active" if index == active_index else "inactive"
+    text = f"{icon}"
     print(
         json.dumps(
             {
-                "text": f"{icon}{text}",
+                "text": text,
                 "class": waybar_class,
-                "on-click": "/home/nick/Polka/local/bin/waybar_cmd_scroll.py exec",
+                "on-click": "/home/nick/Polka/local/bin/power/tlp_scroll.py exec",
             }
         )
     )
@@ -73,4 +106,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

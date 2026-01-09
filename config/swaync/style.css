@@ -419,10 +419,10 @@ notificationwindow, blankwindow, blankwindow {
 
 /* Mpris widget */
 :root {
-  --mpris-album-art-overlay: rgba(0, 0, 0, 0.75);
+  --mpris-album-art-overlay: rgba(16, 16, 19, 0.4);
   --mpris-button-hover: rgba(0, 0, 0, 0.5);
-  --mpris-album-art-icon-size: 64px;
-  --mpris-album-art-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+  --mpris-album-art-icon-size: 84px;
+  --mpris-album-art-shadow: 0px 0px 8px rgba(16, 16, 19, 0.75);
 }
 
 .widget-mpris {
@@ -437,10 +437,11 @@ notificationwindow, blankwindow, blankwindow {
 }
 
 .widget-mpris .widget-mpris-player .mpris-background {
-  filter: blur(10px);
+  filter: blur(8px);
 }
 
 .widget-mpris .widget-mpris-player .mpris-overlay {
+  font-size: 0.9rem;
   padding: 4px;
   background-color: var(--mpris-album-art-overlay);
 }
@@ -456,9 +457,9 @@ notificationwindow, blankwindow, blankwindow {
   -gtk-icon-size: var(--mpris-album-art-icon-size);
 }
 
-.widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-title {
-  font-weight: bold;
+.widget-mpris-title {
   font-size: 0.9rem;
+  font-weight: 400;
 }
 
 .widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-subtitle {
@@ -673,10 +674,10 @@ scale slider:hover {
 /* ── Targeted Icon Padding Fixes ───────────────────── */
 
 /* Wi-Fi + Hyprsunset */
-/* .widget-buttons-grid flowboxchild:nth-child(5) > button label, */
-/* .widget-buttons-grid flowboxchild:nth-child(7) > button label { */
-/*   padding-right: 8px; */
-/* } */
+.widget-buttons-grid flowboxchild:nth-child(3) > button:hover,
+.widget-buttons-grid flowboxchild:nth-child(4) > button:hover {
+  color: rgba(255, 238, 51, 0.9);
+}
 /**/
 /* /* Hypridle */ */
 /* .widget-buttons-grid flowboxchild:nth-child(8) > button label { */
