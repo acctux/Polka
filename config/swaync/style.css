@@ -183,7 +183,7 @@ notificationwindow, blankwindow, blankwindow {
 .notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
   /* Notification time-ago */
   font-size: var(--font-size-summary);
-  font-weight: bold;
+  font-weight: 600;
   background: transparent;
   color: var(--text-color);
   text-shadow: none;
