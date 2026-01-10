@@ -1,9 +1,0 @@
-[Unit]
-Description=Reset hyprsunset profile at 9 PM daily
-
-[Timer]
-OnCalendar=21:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target
