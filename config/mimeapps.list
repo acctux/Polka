@@ -10,7 +10,7 @@ image/webp=imv.desktop
 image/heif=imv.desktop
 image/x-raw=imv.desktop
 # Document MIME Types
-application/pdf=org.pwmt.zathura-pdf-mupdf.desktop
+application/pdf=evince.desktop
 application/epub=evince.desktop
 application/json=featherpad.desktop
 text/plain=featherpad.desktop
@@ -70,7 +70,7 @@ image/webp=imv.desktop;
 image/heif=imv.desktop;
 image/x-raw=imv.desktop;
 # Document MIME Types
-application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;vivaldi.desktop
+application/pdf=evince.desktop;
 application/epub=evince.desktop;
 application/json=featherpad.desktop;
 text/plain=featherpad.desktop;
