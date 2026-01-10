@@ -50,7 +50,7 @@ def select_device():
 
 def activate_sftp(device_id):
     run(
-        f"qdbus org.kde.kdeconnect /modules/kdeconnect/devices/{device_id}/sftp org.kde.kdeconnect.device.sftp.mountAndWait",
+        f"dbus-send --session --dest=org.kde.kdeconnect --print-reply /modules/kdeconnect/devices/{device_id}/sftp org.kde.kdeconnect.device.sftp.mountAndWait",
         check=True,
     )
 

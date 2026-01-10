@@ -8,7 +8,6 @@ options:
   main-pane-width: 75%
 window_management: vertical
 shell_command_before:
-  - "systemctl --user is-active --quiet mpd.service || systemctl --user start mpd.service"
   - "systemctl --user is-active --quiet mpd-mpris.service || systemctl --user start mpd-mpris.service"
 windows:
   - window_name: Rmpc

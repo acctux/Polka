@@ -1,39 +1,17 @@
-# --------------------------------------------------
 # Default applications
-# --------------------------------------------------
 export TERMINAL=alacritty
 export EDITOR=nvim
 export VISUAL=nvim
 export BROWSER=firedragon
-
-# --------------------------------------------------
-# Terminal & locale behavior
-# --------------------------------------------------
+# theme
 export TERM=xterm-256color
-
-# --------------------------------------------------
-# Cursor theme
-# --------------------------------------------------
 export XCURSOR_THEME=capitaine-cursors-light
 export XCURSOR_SIZE=24
-
-# --------------------------------------------------
-# GTK & Qt theming
-# --------------------------------------------------
 export GTK_THEME=Sweet-Ambar-Blue-Dark-v40
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_QPA_PLATFORMTHEME=qt6ct
-
-# --------------------------------------------------
-# Electron & SDL
-# --------------------------------------------------
-export ELECTRON_OZONE_PLATFORM_HINT=auto
-export SDL_VIDEODRIVER="wayland,x11"
-
-# --------------------------------------------------
-# NVIDIA / Graphics configuration
-# --------------------------------------------------
+# NVIDIA 
 export LIBVA_DRIVER_NAME=nvidia
 export VDPAU_DRIVER=nvidia
 export GBM_BACKEND=nvidia-drm
@@ -42,30 +20,19 @@ export __NV_PRIME_RENDER_OFFLOAD=1
 export __VK_LAYER_NV_optimus=NVIDIA_only
 export NVD_BACKEND=direct
 export CUDA_DISABLE_PERF_BOOST=1
-
-# --------------------------------------------------
-# Media & services
-# --------------------------------------------------
-export MPD_HOST=127.0.0.1
-
-# --------------------------------------------------
+# Graphics configuration
+export ELECTRON_OZONE_PLATFORM_HINT=auto
+export SDL_VIDEODRIVER="wayland,x11"
 # Authentication helpers (GUI prompts)
-# --------------------------------------------------
 export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
 export SSH_ASKPASS_REQUIRE=prefer
 export SUDO_ASKPASS=/usr/lib/seahorse/ssh-askpass
 export GIT_ASKPASS=/usr/lib/seahorse/ssh-askpass
 export SUDO_PROMPT="$(tput setaf 6 bold)Password:$(tput sgr0) "
-
-# --------------------------------------------------
-# Taskwarrior
-# --------------------------------------------------
+# Data dir
+export MPD_HOST=127.0.0.1
 export TASKRC="$XDG_CONFIG_HOME/task/taskrc"
 export TASKDATA="$XDG_CONFIG_HOME/task"
-
-# --------------------------------------------------
-# Zsh configuration
-# --------------------------------------------------
 export ZDOTDIR="$HOME/.config/zsh"
 export HISTFILE="$HOME/.config/zsh/.zsh_history"
 

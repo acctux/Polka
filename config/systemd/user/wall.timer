@@ -1,11 +1,11 @@
-
 [Unit]
+After=graphical-session.target
 Description=Run Wall Script every 30 minutes
 
 [Timer]
 OnBootSec=15sec
 OnUnitActiveSec=30min
-Persistent=true
+Persistent=false
 
 [Install]
 WantedBy=timers.target

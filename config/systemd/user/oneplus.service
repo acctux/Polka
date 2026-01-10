@@ -1,0 +1,9 @@
+[Unit]
+Description=OnePlus bookmark notify
+Requires=kdeconnectd.service
+After=kdeconnectd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/sleep 5 && /usr/sbin/python /home/nick/Polka/local/bin/kdeconnect/mountkde.py
+

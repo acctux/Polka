@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import subprocess
 import json
 
 # ── Config ─────────────────────────────────────
@@ -29,49 +28,35 @@ MOUNTED = {
 STATE = DISCONNECTED.copy()
 
 
-def render():
-    print(json.dumps(STATE), flush=True)
-
-
 def is_phone_mounted():
+    if not ANDROID_MOUNT.exists() or not ANDROID_MOUNT.is_dir():
+        return False
+    return any(p.is_dir() for p in ANDROID_MOUNT.iterdir())
+
+
+def is_device_in_places(device_id: str) -> bool:
+    xbel_file = Path.home() / ".local/share/user-places.xbel"
+    if not xbel_file.exists():
+        return False
+    search_str = f"kdeconnect://{device_id}/"
     try:
-        result = subprocess.run(
-            ["findmnt", "--target", str(ANDROID_MOUNT)],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        if result.returncode == 0:
-            return True
-        else:
-            return False
+        with xbel_file.open("r", encoding="utf-8") as f:
+            for line in f:
+                if search_str in line:
+                    return True
     except Exception:
         return False
+    return False
 
 
 def main():
-    global STATE
-    new_state = DISCONNECTED
-    result = subprocess.run(
-        ["kdeconnect-cli", "-l"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    if result.returncode != 0:
-        return
-    for line in result.stdout.splitlines():
-        if DEVICE_ID in line:
-            if "reachable" in line:
-                new_state = CONNECTED
-                if is_phone_mounted():
-                    new_state = MOUNTED
-            else:
-                new_state = DISCONNECTED
-            break
-    if new_state != STATE:
-        STATE = new_state
-        render()
+    if is_device_in_places(DEVICE_ID):
+        state = CONNECTED
+        if is_phone_mounted():
+            state = MOUNTED
+    else:
+        state = DISCONNECTED
+    print(json.dumps(state), flush=True)
 
 
 if __name__ == "__main__":

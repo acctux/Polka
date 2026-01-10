@@ -11,9 +11,9 @@
   --text-color: rgba(252, 252, 252, 1);
   --text-color-disabled: rgba(0, 255, 153, 0.5);
   --bg-selected: rgba(0, 114, 255, 0.7);
-  --notification-icon-size: 32px;
+  --notification-icon-size: 48px;
   --notification-app-icon-size: calc(var(--notification-icon-size) / 3);
-  --notification-group-icon-size: 32px;
+  --notification-group-icon-size: 48px;
   --border: 1px solid var(--noti-border-color);
   --border-radius: 10px;
   --slider_trough_fg: rgba(0, 114, 255, 0.7), rgba(51, 204, 255, 0.7);
@@ -21,7 +21,7 @@
     0 0 0 1px rgba(0, 0, 0, 0.3),
     0 1px 3px 1px rgba(0, 0, 0, 0.7),
     0 2px 6px 2px rgba(0, 0, 0, 0.3);
-  --font-size-body: 13px;
+  --font-size-body: 14px;
   --font-size-summary: 14px;
   /* Backwards compatibility */
   --hover-tranistion: background 0.15s ease-in-out;
@@ -152,7 +152,7 @@ notificationwindow, blankwindow, blankwindow {
   /* Notification Primary Image */
   -gtk-icon-filter: none;
   -gtk-icon-size: var(--notification-icon-size);
-  border-radius: 100px;
+  border-radius: 10px;
   /* Size in px */
   margin: 4px;
 }
@@ -197,7 +197,6 @@ notificationwindow, blankwindow, blankwindow {
   background: transparent;
   color: var(--text-color);
   text-shadow: none;
-  line-height: 1.20;
   margin-bottom: 3px;
 }
 
@@ -297,7 +296,7 @@ notificationwindow, blankwindow, blankwindow {
 .notification-group .notification-group-headers {
   /* Notification Group Headers */
 }
-
+/etc/pacman.d/mirrorlist
 .notification-group .notification-group-headers .notification-group-icon {
   color: var(--text-color);
   -gtk-icon-size: var(--notification-group-icon-size);
@@ -396,7 +395,7 @@ notificationwindow, blankwindow, blankwindow {
 }
 /*** Widgets ***/
 .widget {
-  margin: 4px 4px;
+  margin: 2px 4px;
   padding: 0 4px;
   border-radius: var(--border-radius);
 }
@@ -459,7 +458,7 @@ notificationwindow, blankwindow, blankwindow {
 
 .widget-mpris-title {
   font-size: 0.9rem;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .widget-mpris .widget-mpris-player .mpris-overlay .widget-mpris-subtitle {
@@ -555,6 +554,7 @@ notificationwindow, blankwindow, blankwindow {
 .widget-volume row image {
   -gtk-icon-size: var(--widget-volume-row-icon-size);
 }
+.widget-backlight,
 .widget-volume {
   padding: 0 6px;
   margin: 8px 10px 4px;
@@ -604,21 +604,14 @@ scale slider:hover {
 
 .widget-volume label:first-child,
 .widget-backlight label:first-child {
-  font-size: 1.25rem;     /* increase or tweak: try 2rem if you want even bigger */
+  font-size: 1.3rem;     /* increase or tweak: try 2rem if you want even bigger */
   margin-right: 4px;
   color: var(--text-color); /* keeps same color as text */
-}
-
-.widget-backlight {
-  padding: 0 6px;
-  margin: 4px 10px;
-  border-radius: var(--border-radius);
-  color: @theme_fg;
 }
 /* ── 6. Button Grid ─────────────────────────────────────────────── */
 .widget-buttons-grid > flowbox {
   border-bottom: 1px solid @border_medium;
-  padding: 0 0 4px;
+  padding: 0 0 2px;
   margin: 0;
   background: none;
 }
@@ -632,11 +625,11 @@ scale slider:hover {
 
 .widget-buttons-grid flowboxchild:nth-child(-n+5) > button {
   border: 1px solid transparent;
-  font-size: 1.3rem;
-  margin: 0 6px;
+  font-size: 1.4rem;
+  margin: 0 2px;
   background-color: transparent;
   border-radius: 30px;
-  padding: 4px;
+  padding: 2px;
   min-width: 6px;
   min-height: 2px;
 }

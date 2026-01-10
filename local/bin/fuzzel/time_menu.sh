@@ -14,10 +14,8 @@ case "$CHOICE" in
   python "$HOME/Polka/local/bin/timer/set_timer.py"
   ;;
 "$CHOICE_2")
-  ZONEINFO=/usr/share/zoneinfo
-  ZONETAB="$ZONEINFO/zone1970.tab"
   CURRENT_TZ=$(timedatectl show --property=Timezone --value)
-  TZONE=$(awk 'NF && $1 !~ /^#/ {print $3}' "$ZONETAB" | sort -u |
+  TZONE=$(timedatectl list-timezones | sort -u |
     fuzzel --dmenu --prompt="Timezone ($CURRENT_TZ): ")
   if [ -n "$TZONE" ]; then
     alacritty -e sudo timedatectl set-timezone "$TZONE"

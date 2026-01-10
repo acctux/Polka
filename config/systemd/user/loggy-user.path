@@ -2,7 +2,7 @@
 Description=Watch for mouse flag file
 
 [Path]
-PathExists=/tmp/mouse_connected.flag
+PathChanged=/tmp/mouse_connected.flag
 
 [Install]
 WantedBy=graphical-session.target

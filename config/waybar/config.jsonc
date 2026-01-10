@@ -232,7 +232,7 @@
   "custom/telegram": {
     "format": "",
     "tooltip": false,
-    "on-click": "Telegram & disown",
+    "on-click": "AyuGram & disown",
     "class": "telegram"
   },
   "custom/logo": {
