@@ -2,7 +2,7 @@
 Description=Run Wall Script every 30 minutes
 
 [Timer]
-OnBootSec=10sec
+OnBootSec=20sec
 OnUnitActiveSec=30min
 Persistent=false
 

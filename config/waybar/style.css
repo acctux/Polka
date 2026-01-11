@@ -125,10 +125,13 @@ tooltip label {
 }
 
 /* === Individual === */
-#battery,
-#temperature {
+#battery {
   padding-right: 4px;
   padding-left: 4px;
+}
+#temperature {
+  padding-right: 4px;
+  padding-left: 2px;
 }
 #custom-updates {
   padding-right: 9px;

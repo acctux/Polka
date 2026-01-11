@@ -3,7 +3,7 @@
   --noti-border-color: rgba(51, 204, 255, 0.7);
   --noti-bg: 16, 16, 19;
   --noti-bg-alpha: 0.7;
-  --noti-bg-darker: rgba(16, 16, 19, 1);
+  --noti-bg-darker: rgba(16, 16, 19, 0.7);
   --noti-bg-hover: rgba(51, 204, 255, 0.15);
   --noti-bg-focus: rgba(0, 114, 255, 0.3);
   --noti-close-bg: rgba(51, 204, 255, 0.15);
@@ -319,7 +319,7 @@ notificationwindow, blankwindow, blankwindow {
 }
 
 .notification-group.collapsed .notification-row .notification {
-  background-color: rgba(var(--noti-bg), 1);
+  background-color: rgba(var(--noti-bg), var(--noti-bg-alpha));
 }
 
 .notification-group.collapsed .notification-row:not(:last-child) {

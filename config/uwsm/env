@@ -11,15 +11,13 @@ export GTK_THEME=Sweet-Ambar-Blue-Dark-v40
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_QPA_PLATFORMTHEME=qt6ct
-# NVIDIA 
-export LIBVA_DRIVER_NAME=nvidia
-export VDPAU_DRIVER=nvidia
-export GBM_BACKEND=nvidia-drm
+# NVIDIA
+export LIBVA_DRIVER_NAME=radeonsi
+export VDPAU_DRIVER=radeonsi
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
-export __NV_PRIME_RENDER_OFFLOAD=1
+export __NV_PRIME_RENDER_OFFLOAD=0
 export __VK_LAYER_NV_optimus=NVIDIA_only
 export NVD_BACKEND=direct
-export CUDA_DISABLE_PERF_BOOST=1
 # Graphics configuration
 export ELECTRON_OZONE_PLATFORM_HINT=auto
 export SDL_VIDEODRIVER="wayland,x11"

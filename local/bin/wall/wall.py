@@ -23,18 +23,11 @@ SHADOW_COLOR = Color("rgba(16, 16, 19, 1)")
 BOTTOM_PADDING = 1250
 SIDE_PADDING = 200
 TRANSITION_DURATION = 3
+screen_w = 1920
+screen_h = 1080
 
 
 # ====================== Functions ======================
-def get_screen_resolution() -> tuple[int, int]:
-    output = subprocess.check_output(["hyprctl", "monitors"], text=True)
-    for line in output.splitlines():
-        if "x" in line and "@" in line:
-            w, h = map(int, line.split("@")[0].strip().split("x"))
-            return w, h
-    return 1920, 1080
-
-
 def random_wallpaper(image_dir: Path, last_wall_file: Path) -> Path | None:
     if not image_dir.is_dir():
         return None
@@ -53,8 +46,7 @@ def random_wallpaper(image_dir: Path, last_wall_file: Path) -> Path | None:
     return selected
 
 
-def resize_to_screen(image_path: Path) -> Path:
-    screen_w, screen_h = get_screen_resolution()
+def resize_to_screen(image_path: Path, screen_w=1920, screen_h=1080) -> Path:
     with WandImage(filename=str(image_path)) as img:
         img.transform(resize=f"{screen_w}x{screen_h}^")
         img.crop(
@@ -158,8 +150,9 @@ def main():
     wallpaper = random_wallpaper(WALL_IMG_DIR, LAST_WALL_FILE)
     if not wallpaper:
         return
+    resized_wp = resize_to_screen(wallpaper, screen_w, screen_h)
     final_image = add_quote_with_wand(
-        resize_to_screen(wallpaper),
+        resized_wp,
         SIDE_PADDING,
         BOTTOM_PADDING,
         FONT_PATH,

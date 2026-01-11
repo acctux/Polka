@@ -6,11 +6,15 @@ from conf import SERVICES  # keep your services list
 HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
 
 ORIGINAL_TEXT = """\
+source = always.conf
 source = default.conf
+source = power.conf
 """
 
 GAMEMODE_TEXT = """\
+source = always.conf
 source = gamemode.conf
+source = power.conf
 """
 
 
@@ -51,4 +55,3 @@ def toggle_hyprland_conf():
 
 if __name__ == "__main__":
     toggle_hyprland_conf()
-
