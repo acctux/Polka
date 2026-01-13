@@ -7,7 +7,6 @@ from pathlib import Path
 from xdg import BaseDirectory
 
 log = get_logger("Polka")
-# ────────────────────── CONFIG ──────────────────────
 dots_name = "Polka"
 dest = Path(BaseDirectory.xdg_config_home)
 skip_patterns = [
@@ -21,56 +20,24 @@ individual_dirs = [
     "config/nvim",
     "local/bin",
 ]
-secret_dots = "~/Lit/Docs/base"
+sec_dots = "~/Lit/Docs/base"
+sec_t = "~/Lit/Docs/base/task"
+conf = BaseDirectory.xdg_config_home
+task = f"{BaseDirectory.xdg_config_home}/task"
+fnt = f"{BaseDirectory.xdg_data_home}/fonts"
 individual_items = [
-    # ──────────────── TASK WARRIOR ────────────────
-    {
-        "src": "~/Lit/Docs/base/task/taskchampion.sqlite3",
-        "dest": "~/.config/task/taskchampion.sqlite3",
-    },
-    # ──────────────── ZSH HISTORY ─────────────────
-    {"src": "~/Lit/Docs/base/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
-    # ─────────────────── FONTS ───────────────────
-    {
-        "src": "~/Lit/Docs/base/fonts/calibri.ttf",
-        "dest": "~/.local/share/fonts/calibri.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/calibrib.ttf",
-        "dest": "~/.local/share/fonts/calibrib.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/calibrii.ttf",
-        "dest": "~/.local/share/fonts/calibrii.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/calibril.ttf",
-        "dest": "~/.local/share/fonts/calibril.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/calibrili.ttf",
-        "dest": "~/.local/share/fonts/calibrili.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/calibriz.ttf",
-        "dest": "~/.local/share/fonts/calibriz.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/times.ttf",
-        "dest": "~/.local/share/fonts/times.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/timesbd.ttf",
-        "dest": "~/.local/share/fonts/timesbd.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/timesbi.ttf",
-        "dest": "~/.local/share/fonts/timesbi.ttf",
-    },
-    {
-        "src": "~/Lit/Docs/base/fonts/timesi.ttf",
-        "dest": "~/.local/share/fonts/timesi.ttf",
-    },
+    {"src": f"{sec_t}/taskchampion.sqlite3", "dest": f"{task}/taskchampion.sqlite3"},
+    {"src": f"{sec_dots}/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
+    {"src": f"{sec_dots}/fonts/calibri.ttf", "dest": f"{fnt}/calibri.ttf"},
+    {"src": f"{sec_dots}/fonts/calibrib.ttf", "dest": f"{fnt}/calibrib.ttf"},
+    {"src": f"{sec_dots}/fonts/calibrii.ttf", "dest": f"{fnt}/calibrii.ttf"},
+    {"src": f"{sec_dots}/fonts/calibril.ttf", "dest": f"{fnt}/calibril.ttf"},
+    {"src": f"{sec_dots}/fonts/calibrili.ttf", "dest": f"{fnt}/calibrili.ttf"},
+    {"src": f"{sec_dots}/fonts/calibriz.ttf", "dest": f"{fnt}/calibriz.ttf"},
+    {"src": f"{sec_dots}/fonts/times.ttf", "dest": f"{fnt}/times.ttf"},
+    {"src": f"{sec_dots}/fonts/timesbd.ttf", "dest": f"{fnt}/timesbd.ttf"},
+    {"src": f"{sec_dots}/fonts/timesbi.ttf", "dest": f"{fnt}/timesbi.ttf"},
+    {"src": f"{sec_dots}/fonts/timesi.ttf", "dest": f"{fnt}/timesi.ttf"},
 ]
 
 
@@ -114,14 +81,20 @@ def valid_src(rel: Path, skip_patterns, individual_dirs) -> bool:
     )
 
 
-def deploy_base(src: Path, dots: Path, dest: Path, skip_patterns) -> bool:
+def deploy_base(src: Path, dots: Path, dest: Path) -> bool:
     rel = src.relative_to(dots)
-    if valid_src(rel, skip_patterns, individual_dirs):
-        return False
-    dst = dest / ("." + rel.as_posix())
+    parts = rel.parts
+    if parts[0] == "config":
+        dst = Path(BaseDirectory.xdg_config_home) / Path(*parts[1:])
+    elif parts[0] == "local":
+        dst = Path.home() / ".local" / Path(*parts[1:])
+    elif parts[0] in ["ssh", "gnupg"]:
+        dst = Path.home() / f".{parts[0]}" / Path(*parts[1:])
+    else:
+        dst = dest / ("." + rel.as_posix())
     if dst.is_symlink() and dst.resolve(strict=False) == src.resolve():
         return False
-    safe_rm_file(dest)
+    safe_rm_file(dst)
     make_link(src, dst)
     log.info(f"Linked: {dst} -> {src}")
     return True
@@ -130,9 +103,15 @@ def deploy_base(src: Path, dots: Path, dest: Path, skip_patterns) -> bool:
 def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
     rel = src_dir.relative_to(dots)
     parts = rel.parts
-    dotted_first = "." + parts[0]
-    dot_path = Path(dotted_first, *parts[1:])
-    dst_dir = dest / dot_path
+    if parts[0] == "config":
+        dot_path = Path(*parts[1:])
+        dst_dir = Path(BaseDirectory.xdg_config_home) / dot_path
+    elif parts[0] == "local":
+        dot_path = Path(*parts[1:])
+        dst_dir = Path.home() / ".local" / Path(*parts[1:])
+    else:
+        dot_path = Path("." + parts[0], *parts[1:])
+        dst_dir = dest / dot_path
     dst_dir.parent.mkdir(parents=True, exist_ok=True)
     if dst_dir.is_symlink() and dst_dir.resolve(strict=False) == src_dir.resolve():
         return False
@@ -168,7 +147,7 @@ def polka(
 ) -> None:
     dots = Path.home() / dots_name
     if not dots.is_dir():
-        log.info(f"Error: {dots} does not exist!")
+        log.error(f"Error: {dots} does not exist!")
         return
     skipped = 0
     linked = 0
@@ -186,7 +165,7 @@ def polka(
         if valid_src(rel, skip_patterns, individual_dirs):
             skipped += 1
             continue
-        if deploy_base(src, dots, dest, skip_patterns):
+        if deploy_base(src, dots, dest):
             linked += 1
     for item in individual_items:
         src = Path(item["src"]).expanduser()
@@ -198,7 +177,6 @@ def polka(
     if shutil.which("hyprctl"):
         subprocess.run(["hyprctl", "reload"], check=False)
         log.info("Hyprland reloaded")
-    log.info("Deployment complete!")
     log.info(f"Linked: {linked} | Skipped: {skipped}")
 
 

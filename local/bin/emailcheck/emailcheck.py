@@ -107,6 +107,8 @@ def send_notification(subject):
 
 
 def main():
+    if not CREDENTIAL_FILE.exists():
+        create_credentials_file()  # prompts via Zenity and saves creds
     creds = load_credentials(CREDENTIAL_FILE)
     old_subject = read_last_subject()
     start_bridge_service()

@@ -10,9 +10,6 @@ from datetime import datetime, timezone
 STATE_FILE = Path.home() / ".cache" / "timer_state.json"
 
 
-# ----------------------------------------------------------------------
-# State I/O
-# ----------------------------------------------------------------------
 def load_state() -> dict:
     if not STATE_FILE.exists():
         return {}
@@ -33,9 +30,6 @@ def clear_state():
         STATE_FILE.unlink()
 
 
-# ----------------------------------------------------------------------
-# Helpers
-# ----------------------------------------------------------------------
 def notify(msg: str):
     subprocess.run(["notify-send", "-a", "Timer", msg], check=False)
 
@@ -67,9 +61,6 @@ def default_step_for_unit() -> int:
     return 5 if get_current_unit() == "seconds" else 1
 
 
-# ----------------------------------------------------------------------
-# Unit mode – fully persisted in JSON
-# ----------------------------------------------------------------------
 UNITS = ["minutes", "hours", "seconds"]
 UNIT_MULTIPLIER = {"minutes": 60, "hours": 3600, "seconds": 1}
 
@@ -94,9 +85,6 @@ def cycle_unit():
     set_unit(new_unit)
 
 
-# ----------------------------------------------------------------------
-# Smart delta: respects current unit unless explicit suffix
-# ----------------------------------------------------------------------
 def get_adjust_delta(amount_str: str) -> int:
     amount_str = amount_str.strip().lower()
     if re.match(r"^\d+\s*[hms]$", amount_str):
@@ -108,9 +96,6 @@ def get_adjust_delta(amount_str: str) -> int:
     return value * UNIT_MULTIPLIER[get_current_unit()]
 
 
-# ----------------------------------------------------------------------
-# Timer logic
-# ----------------------------------------------------------------------
 def is_running():
     s = load_state()
     return bool(s.get("start_time") and s.get("paused_at") is None)
@@ -197,9 +182,6 @@ def adjust_timer(delta: int):
     save_state(s)
 
 
-# ----------------------------------------------------------------------
-# CLI
-# ----------------------------------------------------------------------
 def main():
     if len(sys.argv) == 1:
         res = subprocess.run(
