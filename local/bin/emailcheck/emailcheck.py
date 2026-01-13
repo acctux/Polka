@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import imaplib2
 import subprocess
 import time
@@ -8,6 +9,35 @@ SCRIPT_DIR = Path.home() / ".ssh"
 CREDENTIAL_FILE = SCRIPT_DIR / "bridge_creds.txt"
 LAST_SUBJECT_FILE = Path.home() / ".cache" / "last_email_subject.txt"
 SLEEP_TIME = 30
+
+
+def zenity_prompt(title, text, hide=False):
+    cmd = [
+        "zenity",
+        "--entry",
+        f"--title={title}",
+        f"--text={text}",
+    ]
+    if hide:
+        cmd.append("--hide-text")
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError("User cancelled credential entry")
+    return result.stdout.strip()
+
+
+def create_credentials_file():
+    SCRIPT_DIR.mkdir(parents=True, exist_ok=True)
+    creds = {
+        "IMAP_HOST": zenity_prompt("ProtonMail Bridge", "Enter IMAP host:"),
+        "IMAP_PORT": zenity_prompt("ProtonMail Bridge", "Enter IMAP port:"),
+        "USERNAME": zenity_prompt("ProtonMail Bridge", "Enter username:"),
+        "PASSWORD": zenity_prompt("ProtonMail Bridge", "Enter password:", hide=True),
+    }
+    with open(CREDENTIAL_FILE, "w") as f:
+        for k, v in creds.items():
+            f.write(f"{k}={v}\n")
+    os.chmod(CREDENTIAL_FILE, 0o600)  # secure permissions
 
 
 def load_credentials(file_path):

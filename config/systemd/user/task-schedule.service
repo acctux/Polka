@@ -3,6 +3,4 @@ Description=Run Taskwarrior daily scheduling script
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/env python3 /home/nick/Polka/local/bin/taskwarrior/task-schedule.py
-StandardOutput=append:/home/nick/Polka/local/bin/taskwarrior/task-schedule.log
-StandardError=append:/home/nick/Polka/local/bin/taskwarrior/task-schedule.log
+ExecStart=%h/Polka/local/bin/taskwarrior/task-schedule.py

@@ -5,4 +5,4 @@ After=swww-daemon.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/nick/Polka/local/bin/wall/wall.py
+ExecStart=%h/Polka/local/bin/wall/wall.py

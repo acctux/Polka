@@ -70,18 +70,25 @@ tooltip label {
 #custom-steam,
 #backlight,
 #custom-kdeconnect,
+#custom-nemo,
 #bluetooth,
 #custom-wifi,
 #custom-tlp,
+#custom-nemo,
 #custom-telegram,
 #custom-kb-switch,
 #custom-taskwarrior,
 #custom-logo {
   font-size: 16px;
 }
-
+#custom-kdeconnect,
+#custom-telegram {
+  font-size: 15px;
+}
 /* === Border Radius === */
 #custom-wifi,
+#custom-nemo,
+#custom-tlp,
 #custom-deluge,
 #custom-nemo,
 #custom-volume,
@@ -167,21 +174,25 @@ tooltip label {
  font-weight: 500;
   padding-right: 5px;
 }
+
 #custom-steam,
 #bluetooth {
   padding-right: 7px;
   padding-left: 5px;
 }
 #custom-tlp {
+  padding-right: 9px;
+  padding-left: 3px;
+}
+#custom-nemo {
   padding-right: 8px;
   padding-left: 4px;
 }
-
 #backlight {
-  padding: 0 7px 0 5px;
+  padding: 0 8px 0 5px;
 }
 #custom-kdeconnect {
-  padding: 0 9px 0 3px;
+  padding: 0 11px 0 3px;
 }
 #custom-logo {
   padding-right: 9px;
@@ -200,6 +211,7 @@ button:hover,
 #custom-kdeconnect:hover,
 #custom-timer:hover,
 #custom-steam:hover,
+#custom-nemo:hover,
 #backlight:hover,
 #custom-tlp:hover,
 #custom-deluge:hover,
@@ -215,7 +227,6 @@ button:hover,
   padding-right: 4px;
   padding-left: 2px;
 }
-#custom-tlp:hover,
 #custom-timer:hover {
   border-radius: 5px;
 }

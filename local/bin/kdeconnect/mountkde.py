@@ -14,22 +14,20 @@ SSH_KEY = Path.home() / ".config/kdeconnect/privateKey.pem"
 ANDROID_USER = "kdeconnect"
 ANDROID_DIR = "/storage/emulated/0"
 SD_DIR = "/storage/0000-0000"
-PHONE_ICON = (
-    "/home/nick/.local/share/icons/WhiteSur-dark/places/scalable/folder-android.svg"
-)
+PHONE_ICON = "$HOME/.local/share/icons/WhiteSur-dark/places/scalable/folder-android.svg"
 
 
-def run(cmd, capture=True, check=False):
+def run(cmd, check=False):
     result = subprocess.run(
         cmd,
         shell=True,
         text=True,
-        stdout=subprocess.PIPE if capture else None,
-        stderr=subprocess.PIPE if capture else None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     if check and result.returncode != 0:
         raise subprocess.CalledProcessError(result.returncode, cmd)
-    return result.stdout.strip() if capture else None
+    return result.stdout.strip()
 
 
 def select_device():
@@ -49,10 +47,8 @@ def select_device():
 
 
 def activate_sftp(device_id):
-    run(
-        f"dbus-send --session --dest=org.kde.kdeconnect --print-reply /modules/kdeconnect/devices/{device_id}/sftp org.kde.kdeconnect.device.sftp.mountAndWait",
-        check=True,
-    )
+    cmd = f"dbus-send --session --dest=org.kde.kdeconnect --print-reply /modules/kdeconnect/devices/{device_id}/sftp org.kde.kdeconnect.device.sftp.mountAndWait"
+    run(cmd, True)
 
 
 def detect_host(device_id):
@@ -95,11 +91,8 @@ def mount_storage(host, port):
     opts = f"rw,nosuid,nodev,IdentityFile={SSH_KEY},port={port},uid={os.getuid()},gid={os.getgid()},allow_other"
     for remote, mount_point in [(ANDROID_DIR, ANDROID_MOUNT), (SD_DIR, SD_MOUNT)]:
         try:
-            run(
-                f"sshfs -o {opts} {ANDROID_USER}@{host}:{remote} {mount_point}",
-                capture=False,
-                check=True,
-            )
+            cmd = f"sshfs -o {opts} {ANDROID_USER}@{host}:{remote} {mount_point}"
+            run(cmd, check=True)
         except subprocess.CalledProcessError:
             print(f"Failed to mount {mount_point}", file=sys.stderr)
 
@@ -108,7 +101,7 @@ def unmount_storage():
     for mp in [ANDROID_MOUNT, SD_MOUNT]:
         if mp.is_mount():
             try:
-                run(f"fusermount3 -u {mp}", capture=False, check=True)
+                run(f"fusermount3 -u {mp}", check=True)
                 print(f"Unmounted {mp}")
             except subprocess.CalledProcessError:
                 print(f"Failed to unmount {mp}", file=sys.stderr)

@@ -4,7 +4,7 @@ import json
 import subprocess
 
 # ── Config ─────────────────────────────────────
-ICON = ""
+ICON = ""
 ANDROID_MOUNT = Path.home() / "Phone" / "Internal"
 
 CONNECTED = {

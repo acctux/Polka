@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 import subprocess
 from pathlib import Path
-from conf import SERVICES  # keep your services list
 
+SERVICES = ["kdeconnectd", "waybar", "swaync", "swww-daemon"]
 HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
-
 ORIGINAL_TEXT = """\
 source = always.conf
 source = default.conf
 source = power.conf
 """
-
 GAMEMODE_TEXT = """\
 source = always.conf
 source = gamemode.conf
@@ -39,9 +37,6 @@ def start_user_services(services):
 
 
 def toggle_hyprland_conf():
-    if not HYPRLAND_CONF.exists():
-        print(f"Config not found: {HYPRLAND_CONF}")
-        return
     current = HYPRLAND_CONF.read_text()
     if current.strip() == ORIGINAL_TEXT.strip():
         HYPRLAND_CONF.write_text(GAMEMODE_TEXT)

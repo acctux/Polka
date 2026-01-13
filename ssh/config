@@ -1,12 +1,6 @@
 Host *
     AddKeysToAgent yes
     IdentityFile ~/.ssh/id_ed25519
-
-    # Multiplexing setup for efficient connections
-    ControlPath ~/.ssh/cm-%r@%h:%p.sock
+    ControlPath ~/.ssh/cm-%C
     ControlMaster auto
     ControlPersist 30m
-
-    # Additional settings for reliability
-    ServerAliveInterval 120
-    ServerAliveCountMax 3

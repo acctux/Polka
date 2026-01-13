@@ -4,78 +4,119 @@ import sys
 import subprocess
 from pathlib import Path
 
-FOLDERS = [
-    ("/home/nick/Documents", "󱧶"),
-    ("/home/nick/Documents/Decrypted", "󰉑"),
-    ("/home/nick/Polka", "󱂵"),
-    ("/home/nick/Lit/noah", "󰉒"),
-    ("/etc", "󱂀"),
-    ("/usr/local/bin", "󱁿"),
-]
-INDEX_FILE = Path.home() / ".cache/nemo_scroll_index"
-HIDE_FILE = Path.home() / ".cache/nemo_scroll_hide"
 
+class NemoScroller:
+    HOME = Path.home()
+    CACHE_DIR = HOME / ".cache"
+    INDEX_FILE = CACHE_DIR / "nemo_scroll_index"
+    HIDE_FILE = CACHE_DIR / "nemo_scroll_hide"
 
-def load_index():
-    try:
-        return int(INDEX_FILE.read_text().strip())
-    except Exception:
-        return 0
+    FOLDERS = [
+        ("󱧶", (HOME / "Documents")),
+        ("󰉑", (HOME / "Documents/Decrypted")),
+        ("󱂵", (HOME / "Polka")),
+        ("󰉒", (HOME / "Lit/Noah")),
+        ("󱂀", "/etc"),
+        ("󱁿", "/usr/local/bin"),
+    ]
 
+    @classmethod
+    def ensure_cache_dir(cls):
+        cls.CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-def save_index(i):
-    INDEX_FILE.write_text(str(i))
+    @classmethod
+    def read_int_file(cls, path: Path, default: int = 0) -> int:
+        try:
+            return int(path.read_text().strip())
+        except Exception:
+            return default
 
+    @classmethod
+    def write_int_file(cls, path: Path, value: int) -> None:
+        path.write_text(str(value))
 
-def load_hide():
-    try:
-        return HIDE_FILE.read_text().strip() == "1"
-    except Exception:
-        return False
+    @classmethod
+    def read_bool_file(cls, path: Path, default: bool = False) -> bool:
+        try:
+            return path.read_text().strip() == "1"
+        except Exception:
+            return default
 
+    @classmethod
+    def write_bool_file(cls, path: Path, value: bool) -> None:
+        path.write_text("1" if value else "0")
 
-def save_hide(value: bool):
-    HIDE_FILE.write_text("1" if value else "0")
+    @classmethod
+    def load_index(cls) -> int:
+        cls.ensure_cache_dir()
+        return cls.read_int_file(cls.INDEX_FILE, default=0)
 
+    @classmethod
+    def save_index(cls, index: int) -> None:
+        cls.ensure_cache_dir()
+        cls.write_int_file(cls.INDEX_FILE, index)
 
-def toggle_hide():
-    current = load_hide()
-    new = not current
-    save_hide(new)
-    return new
+    @classmethod
+    def load_hide(cls) -> bool:
+        cls.ensure_cache_dir()
+        return cls.read_bool_file(cls.HIDE_FILE, default=False)
 
+    @classmethod
+    def save_hide(cls, value: bool) -> None:
+        cls.ensure_cache_dir()
+        cls.write_bool_file(cls.HIDE_FILE, value)
 
-def main():
-    index = load_index()
-    hide = load_hide()
-    for arg in sys.argv[1:]:
-        if arg == "up":
-            index = (index + 1) % len(FOLDERS)
-            save_index(index)
-        elif arg == "down":
-            index = (index - 1) % len(FOLDERS)
-            save_index(index)
-        elif arg == "exec":
-            folder, _ = FOLDERS[index]
-            subprocess.Popen(["nemo", folder])
-            return
-        elif arg == "--toggle":
-            hide = toggle_hide()
-    folder, icon = FOLDERS[index]
-    folder_name = f" {Path(folder).name}"
-    if hide:
-        folder_name = ""
-    waybar_class = "hidden" if hide else "visible"
-    print(
-        json.dumps(
-            {
-                "text": f"{icon}<span size='8pt'>{folder_name}</span>",
-                "class": waybar_class,
-                "on-click": "/home/nick/Polka/local/bin/folders/nemo_scroll.py exec",
-            }
+    @classmethod
+    def toggle_hide(cls) -> bool:
+        new_hide = not cls.load_hide()
+        cls.save_hide(new_hide)
+        return new_hide
+
+    @classmethod
+    def scroll(cls, direction: str) -> None:
+        index = cls.load_index()
+        if direction == "up":
+            index = (index + 1) % len(cls.FOLDERS)
+        elif direction == "down":
+            index = (index - 1) % len(cls.FOLDERS)
+        cls.save_index(index)
+
+    @classmethod
+    def exec_current(cls) -> None:
+        index = cls.load_index()
+        _, folder = cls.FOLDERS[index]
+        subprocess.Popen(["nemo", folder])
+
+    @classmethod
+    def output_waybar(cls) -> None:
+        index = cls.load_index()
+        hide = cls.load_hide()
+        icon, folder = cls.FOLDERS[index]
+        folder_name = f" {Path(folder).name}" if not hide else ""
+        waybar_class = "hidden" if hide else "visible"
+        print(
+            json.dumps(
+                {
+                    "text": f"{icon}<span size='8pt'>{folder_name}</span>",
+                    "class": waybar_class,
+                }
+            )
         )
-    )
+
+    @classmethod
+    def run(cls, args) -> None:
+        for arg in args:
+            if arg in ("up", "down"):
+                cls.scroll(arg)
+                return
+            elif arg == "exec":
+                cls.exec_current()
+                return
+            elif arg == "--toggle":
+                cls.toggle_hide()
+                return
+        cls.output_waybar()
 
 
 if __name__ == "__main__":
-    main()
+    NemoScroller.run(sys.argv[1:])

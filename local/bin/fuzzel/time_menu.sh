@@ -7,7 +7,7 @@ MENU="$CHOICE_1
 $CHOICE_2
 Cancel"
 
-CHOICE=$(printf "%s\n" "$MENU" | fuzzel --dmenu --hide-prompt --config=/home/nick/.config/fuzzel/timemenu.ini)
+CHOICE=$(printf "%s\n" "$MENU" | fuzzel --dmenu --hide-prompt --config="$HOME/.config/fuzzel/timemenu.ini")
 
 case "$CHOICE" in
 "$CHOICE_1")

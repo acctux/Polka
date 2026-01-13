@@ -17,19 +17,13 @@ CHOICE=$(printf "%s\n" "$MENU" | fuzzel --dmenu --hide-prompt --prompt="OCR Acti
 
 case "$CHOICE" in
 "$CHOICE_1")
-  /home/nick/Polka/local/bin/ocr/ocrcopy.sh
+  $HOME/Polka/local/bin/ocr/ocrcopy.sh
   ;;
 "$CHOICE_2")
-  /home/nick/Polka/local/bin/ocr/maimregion.sh
+  $HOME/Polka/local/bin/ocr/maimregion.sh
   ;;
 "$CHOICE_3")
-  nemo /home/nick/Polka/local/bin/maimpdf/screens
-  ;;
-"$CHOICE_4")
-  systemctl --user start mpvplay.service
-  ;;
-"$CHOICE_5")
-  systemctl --user stop mpvplay.service
+  nemo $HOME/Polka/local/bin/maimpdf/screens
   ;;
 "Cancel" | "")
   exit 0
