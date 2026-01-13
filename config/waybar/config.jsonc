@@ -83,7 +83,7 @@
       ""
     ],
     "scroll-step": 10,
-    "on-click": "~/Polka/local/bin/hyprsunset/toggle-hyprsunset.sh"
+    "on-click": "~/Polka/local/bin/hyprsunset/toggle-sunset.py"
   },
   "battery": {
     "interval": 60,

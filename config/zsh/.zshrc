@@ -43,3 +43,25 @@ alias lg='lazygit'
 alias cpnames="/home/nick/Lit/scripts/cpfilenames/copyfilenames.sh"
 alias loggy='sudo systemctl restart logid'
 alias dotsync='/home/nick/.local/bin/dotsync/dotsync.py'
+
+
+gitfuzzy() {
+  if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+    echo "Not inside a Git repository."
+    return 1
+  fi
+  echo -n "Search: "
+  read search_term
+  [[ -z "$search_term" ]] && return 0
+  local selection
+  selection=$(git log --all --pretty=format:"%h %s" \
+    | fzf --ansi \
+          --prompt="Search commits: " \
+          --preview "git show --color=always {1} | rg --color=always --context 5 '$search_term'" \
+          --preview-window=up:50%:wrap)
+  [[ -n "$selection" ]] && git show --color=always "${selection%% *}" | delta
+}
+
+
+
+

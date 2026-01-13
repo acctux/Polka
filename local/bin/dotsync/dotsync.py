@@ -4,11 +4,12 @@ import shutil
 import subprocess
 from log import get_logger
 from pathlib import Path
+from xdg import BaseDirectory
 
 log = get_logger("Polka")
 # ────────────────────── CONFIG ──────────────────────
 dots_name = "Polka"
-dest = Path.home()
+dest = Path(BaseDirectory.xdg_config_home)
 skip_patterns = [
     "git",
     ".DS_Store",
