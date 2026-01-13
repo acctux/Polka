@@ -12,12 +12,12 @@ class NemoScroller:
     HIDE_FILE = CACHE_DIR / "nemo_scroll_hide"
 
     FOLDERS = [
-        ("󱧶", (HOME / "Documents")),
-        ("󰉑", (HOME / "Documents/Decrypted")),
-        ("󱂵", (HOME / "Polka")),
-        ("󰉒", (HOME / "Lit/Noah")),
-        ("󱂀", "/etc"),
-        ("󱁿", "/usr/local/bin"),
+        ("󱧶", f"xdg-open {HOME}/Documents"),
+        ("󰉑", f"{HOME}/Polka/local/bin/folders/mountencrypted.sh"),
+        ("󱂵", "xdg-open {HOME}/Polka"),
+        ("󰉒", "xdg-open {HOME}/Lit/Noah"),
+        ("󱂀", "xdg-open /etc"),
+        ("󱁿", "xdg-open /usr/local/bin"),
     ]
 
     @classmethod
@@ -84,8 +84,8 @@ class NemoScroller:
     @classmethod
     def exec_current(cls) -> None:
         index = cls.load_index()
-        _, folder = cls.FOLDERS[index]
-        subprocess.Popen(["nemo", folder])
+        _, cmd = cls.FOLDERS[index]
+        subprocess.Popen([cmd])
 
     @classmethod
     def output_waybar(cls) -> None:

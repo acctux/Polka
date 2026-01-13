@@ -5,7 +5,7 @@ PLAIN="$HOME/Documents/Decrypted"
 
 initialize_gocrypt() {
   PASSFILE=$(mktemp)
-  PASSWORD=$(zenity --password --title="Enter new gocryptfs password")
+  PASSWORD=$(zenity --password --title="Enter init password")
   echo "$PASSWORD" >"$PASSFILE"
   gocryptfs -init --passfile "$PASSFILE" "$CIPHER"
   shred -u "$PASSFILE"
@@ -18,6 +18,7 @@ mount_fs() {
   echo "$PASSWORD" >"$PASSFILE"
   gocryptfs --passfile "$PASSFILE" "$CIPHER" "$PLAIN"
   shred -u "$PASSFILE"
+  xdg-open "$PLAIN"
 }
 
 unmount_fs() {
@@ -30,6 +31,7 @@ main() {
     initialize_gocrypt
   fi
   if mountpoint -q "$PLAIN"; then
+    # xdg-open "$PLAIN"
     unmount_fs
   else
     mount_fs
