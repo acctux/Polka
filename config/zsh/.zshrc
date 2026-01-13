@@ -30,7 +30,6 @@ export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
 
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/doc/pkgfile/command-not-found.zsh
 
 alias ls='eza -a --icons=always'
 alias ll='eza -al --icons=always'

@@ -1,12 +1,11 @@
 [user]
 	name = Nick A
 	email = 226946345+acctux@users.noreply.github.com
-	signingkey =
-
+	signingkey = F3AE65D00B8E317A
 [credential]
 	helper = cache
 [commit]
-	gpgSign = false
+	gpgSign = true
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
@@ -15,3 +14,13 @@
 	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = true
+[core]
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    dark = true
+[merge]
+    conflictStyle = zdiff3
+

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+import subprocess
 
 # ── Config ─────────────────────────────────────
-DEVICE_ID = "4d76022a5910415f9073cc44af2025c3"
 ICON = ""
 ANDROID_MOUNT = Path.home() / "Phone" / "Internal"
 
@@ -11,19 +11,16 @@ CONNECTED = {
     "text": ICON,
     "tooltip": "Phone connected",
     "class": "connected",
-    "alt": "connected",
 }
 DISCONNECTED = {
     "text": "",
     "tooltip": "Phone disconnected",
     "class": "disconnected",
-    "alt": "disconnected",
 }
 MOUNTED = {
     "text": ICON,
     "tooltip": "Phone mounted",
     "class": "mounted",
-    "alt": "mounted",
 }
 STATE = DISCONNECTED.copy()
 
@@ -34,23 +31,21 @@ def is_phone_mounted():
     return any(p.is_dir() for p in ANDROID_MOUNT.iterdir())
 
 
-def is_device_in_places(device_id: str) -> bool:
-    xbel_file = Path.home() / ".local/share/user-places.xbel"
-    if not xbel_file.exists():
+def is_reachable() -> bool:
+    result = subprocess.run(
+        ["kdeconnect-cli", "-l"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    if "reachable" in result.stdout.lower():
+        return True
+    else:
         return False
-    search_str = f"kdeconnect://{device_id}/"
-    try:
-        with xbel_file.open("r", encoding="utf-8") as f:
-            for line in f:
-                if search_str in line:
-                    return True
-    except Exception:
-        return False
-    return False
 
 
 def main():
-    if is_device_in_places(DEVICE_ID):
+    if is_reachable():
         state = CONNECTED
         if is_phone_mounted():
             state = MOUNTED

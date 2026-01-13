@@ -1,5 +1,5 @@
 ### taskwarrior configuration options
-data.location=~/Lit/docs/base/task
+data.location=$XDG_CONFIG_HOME/task
 verbose=affected,blank,context,edit,header,footnote,label,new-id,project,special,sync,recur
 uda.priority.values=H,M,,L
 color.alternate=yellow
