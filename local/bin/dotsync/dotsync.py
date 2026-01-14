@@ -9,7 +9,6 @@ log = get_logger("Polka")
 HOME = Path.home()
 CONFIG = HOME / ".config"
 DOTS = HOME / "Polka"
-SKIP = ["git", ".DS_Store", "__pycache__", "*.pyc"]
 DIRS = [
     "config/systemd/user",
     "config/nvim",
@@ -17,23 +16,18 @@ DIRS = [
 ]
 SEC = HOME / "Lit/Docs/base"
 INDIVIDUAL_ITEMS = [
-    (SEC / "task/taskchampion.sqlite3", CONFIG / "task/taskchampion.sqlite3"),
+    ((SEC / "task/taskchampion.sqlite3"), (CONFIG / "task/taskchampion.sqlite3")),
     (SEC / "zsh_history", CONFIG / "zsh/.zsh_history"),
-    *[
-        (SEC / "fonts" / f"{name}.ttf", CONFIG / "fonts" / f"{name}.ttf")
-        for name in [
-            "calibri",
-            "calibrib",
-            "calibrii",
-            "calibril",
-            "calibrili",
-            "calibriz",
-            "times",
-            "timesbd",
-            "timesbi",
-            "timesi",
-        ]
-    ],
+    (SEC / "fonts/calibri.ttf", CONFIG / "fonts/calibri.ttf"),
+    (SEC / "fonts/calibrib.ttf", CONFIG / "fonts/calibrib.ttf"),
+    (SEC / "fonts/calibrii.ttf", CONFIG / "fonts/calibrii.ttf"),
+    (SEC / "fonts/calibril.ttf", CONFIG / "fonts/calibril.ttf"),
+    (SEC / "fonts/calibrili.ttf", CONFIG / "fonts/calibrili.ttf"),
+    (SEC / "fonts/calibriz.ttf", CONFIG / "fonts/calibriz.ttf"),
+    (SEC / "fonts/times.ttf", CONFIG / "fonts/times.ttf"),
+    (SEC / "fonts/timesbd.ttf", CONFIG / "fonts/timesbd.ttf"),
+    (SEC / "fonts/timesbi.ttf", CONFIG / "fonts/timesbi.ttf"),
+    (SEC / "fonts/timesi.ttf", CONFIG / "fonts/timesi.ttf"),
 ]
 
 
@@ -58,11 +52,8 @@ def link_path(src: Path, dst: Path) -> bool:
 
 
 def should_skip(rel: Path) -> bool:
-    return (
-        rel.as_posix() == ".git"
-        or rel.as_posix().startswith(".git/")
-        or any(rel.match(pat) for pat in SKIP)
-        or any(rel.is_relative_to(Path(d)) for d in DIRS)
+    return rel.as_posix().startswith(".git") or any(
+        rel.is_relative_to(Path(d)) for d in DIRS
     )
 
 
@@ -100,4 +91,3 @@ if __name__ == "__main__":
         log.error(f"Error: {DOTS} does not exist!")
     else:
         deploy_all(DOTS, HOME, DIRS, INDIVIDUAL_ITEMS)
-
