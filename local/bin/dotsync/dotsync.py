@@ -6,32 +6,31 @@ from pathlib import Path
 from log import get_logger
 
 log = get_logger("Polka")
+# -----------------------------
+# Config
+# -----------------------------
 HOME = Path.home()
-CONFIG = HOME / ".config"
-DOTS = HOME / "Polka"
-DIRS = [
+CONFIG_DIR = HOME / ".config"
+LOC_SHR_DIR = HOME / ".local" / "share"
+DOTFILES_DIR = HOME / "Polka"
+DIRECTORIES_TO_LINK = [
     "config/systemd/user",
     "config/nvim",
     "local/bin",
 ]
-SEC = HOME / "Lit/Docs/base"
-INDIVIDUAL_ITEMS = [
-    ((SEC / "task/taskchampion.sqlite3"), (CONFIG / "task/taskchampion.sqlite3")),
-    (SEC / "zsh_history", CONFIG / "zsh/.zsh_history"),
-    (SEC / "fonts/calibri.ttf", CONFIG / "fonts/calibri.ttf"),
-    (SEC / "fonts/calibrib.ttf", CONFIG / "fonts/calibrib.ttf"),
-    (SEC / "fonts/calibrii.ttf", CONFIG / "fonts/calibrii.ttf"),
-    (SEC / "fonts/calibril.ttf", CONFIG / "fonts/calibril.ttf"),
-    (SEC / "fonts/calibrili.ttf", CONFIG / "fonts/calibrili.ttf"),
-    (SEC / "fonts/calibriz.ttf", CONFIG / "fonts/calibriz.ttf"),
-    (SEC / "fonts/times.ttf", CONFIG / "fonts/times.ttf"),
-    (SEC / "fonts/timesbd.ttf", CONFIG / "fonts/timesbd.ttf"),
-    (SEC / "fonts/timesbi.ttf", CONFIG / "fonts/timesbi.ttf"),
-    (SEC / "fonts/timesi.ttf", CONFIG / "fonts/timesi.ttf"),
+BASE_DIR = HOME / "Lit/Docs/base"
+INDIVIDUAL_DIRS = [
+    (BASE_DIR / "fonts", HOME / ".local" / "share" / "fonts"),
+    (BASE_DIR / "task", CONFIG_DIR / "task"),
+    (BASE_DIR / "zsh", CONFIG_DIR / "zsh"),
 ]
 
 
+# -----------------------------
+# Utility Functions
+# -----------------------------
 def safe_remove(path: Path):
+    """Remove a file or directory safely."""
     if path.exists():
         if path.is_dir() and not path.is_symlink():
             shutil.rmtree(path)
@@ -41,53 +40,93 @@ def safe_remove(path: Path):
 
 
 def link_path(src: Path, dst: Path) -> bool:
+    """
+    Create a symlink at `dst` pointing to `src`.
+    Returns True if a new link was created, False if skipped.
+    """
     dst.parent.mkdir(parents=True, exist_ok=True)
-    rel_src = os.path.relpath(src, dst.parent)
-    if dst.is_symlink() and dst.readlink() == Path(rel_src):
+    relative_src = os.path.relpath(src, dst.parent)
+
+    # Skip if symlink already exists and points to correct location
+    if dst.is_symlink() and dst.readlink() == Path(relative_src):
         return False
+
     safe_remove(dst)
-    dst.symlink_to(rel_src, target_is_directory=src.is_dir())
-    log.info(f"Linked: {dst} → {rel_src}")
+    dst.symlink_to(relative_src, target_is_directory=src.is_dir())
+    log.info(f"Linked: {dst} → {relative_src}")
     return True
 
 
-def should_skip(rel: Path) -> bool:
-    return rel.as_posix().startswith(".git") or any(
-        rel.is_relative_to(Path(d)) for d in DIRS
-    )
+def should_skip(rel_path: Path) -> bool:
+    """Determine if a file should be skipped based on its path."""
+    if rel_path.as_posix().startswith(".git"):
+        return True
+    return any(rel_path.is_relative_to(Path(d)) for d in DIRECTORIES_TO_LINK)
 
 
-def dotted_dest(src: Path, dots: Path, dest: Path) -> Path:
-    parts = src.relative_to(dots).parts
-    return dest / Path("." + parts[0], *parts[1:])
+def dotted_destination(src: Path, source_root: Path, target_root: Path) -> Path:
+    """
+    Convert a source path inside DOTFILES_DIR to its destination in HOME,
+    prepending a dot to the first path segment.
+    """
+    parts = src.relative_to(source_root).parts
+    return target_root / Path("." + parts[0], *parts[1:])
 
 
-def deploy_all(dots: Path, dest: Path, dirs, individual_items):
-    linked = skipped = 0
-    for src in dots.rglob("*"):
-        if not src.is_file() or should_skip(src.relative_to(dots)):
-            skipped += 1
+# -----------------------------
+# Deployment Function
+# -----------------------------
+def deploy_dotfiles(dotfiles_dir: Path, home_dir: Path, dirs_to_link, individual_dirs):
+    linked_count = skipped_count = 0
+
+    # Link all regular files in the dotfiles directory
+    for src in dotfiles_dir.rglob("*"):
+        if not src.is_file() or should_skip(src.relative_to(dotfiles_dir)):
+            skipped_count += 1
             continue
-        linked += link_path(src, dotted_dest(src, dots, dest)) or 0
-    for src, dst in individual_items:
-        if link_path(src.expanduser(), dst.expanduser()):
-            linked += 1
-        else:
-            skipped += 1
-    for d in dirs:
-        src_dir = dots / d
+        if link_path(src, dotted_destination(src, dotfiles_dir, home_dir)):
+            linked_count += 1
+
+    # # Link individual files
+    # for src, dst in individual_links:
+    #     if link_path(src.expanduser(), dst.expanduser()):
+    #         linked_count += 1
+    #     else:
+    #         skipped_count += 1
+    #
+    # Link specified directories
+    for dir_rel in dirs_to_link:
+        src_dir = dotfiles_dir / dir_rel
         if src_dir.is_dir():
-            linked += link_path(src_dir, dotted_dest(src_dir, dots, dest)) or 0
+            if link_path(src_dir, dotted_destination(src_dir, dotfiles_dir, home_dir)):
+                linked_count += 1
         else:
-            skipped += 1
+            skipped_count += 1
+    for src_dir, dst_dir in individual_dirs:
+        if not src_dir.is_dir():
+            log.warning(f"Directory does not exist, skipping: {src_dir}")
+            skipped_count += 1
+            continue
+        for src_file in src_dir.rglob("*"):
+            if src_file.is_file():
+                rel_path = src_file.relative_to(src_dir)
+                dst_file = dst_dir / rel_path
+                if link_path(src_file, dst_file):
+                    linked_count += 1
+                else:
+                    skipped_count += 1
     if shutil.which("hyprctl"):
         subprocess.run(["hyprctl", "reload"], check=False)
         log.info("Hyprland reloaded")
-    log.info(f"Linked: {linked} | Skipped: {skipped}")
+    log.info(f"Linked: {linked_count} | Skipped: {skipped_count}")
 
 
+# -----------------------------
+# Main
+# -----------------------------
 if __name__ == "__main__":
-    if not DOTS.is_dir():
-        log.error(f"Error: {DOTS} does not exist!")
+    if not DOTFILES_DIR.is_dir():
+        log.error(f"Error: {DOTFILES_DIR} does not exist!")
     else:
-        deploy_all(DOTS, HOME, DIRS, INDIVIDUAL_ITEMS)
+        deploy_dotfiles(DOTFILES_DIR, HOME, DIRECTORIES_TO_LINK, INDIVIDUAL_DIRS)
+
