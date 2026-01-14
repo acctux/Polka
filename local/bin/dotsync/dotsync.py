@@ -2,176 +2,91 @@
 import os
 import shutil
 import subprocess
-from log import get_logger
 from pathlib import Path
-from xdg import BaseDirectory
+from log import get_logger
 
 log = get_logger("Polka")
-dots_name = "Polka"
-dest = Path(BaseDirectory.xdg_config_home)
-skip_patterns = [
-    "git",
-    ".DS_Store",
-    "__pycache__",
-    "*.pyc",
-]
-individual_dirs = [
+HOME = Path.home()
+CONFIG = HOME / ".config"
+DOTS = HOME / "Polka"
+SKIP = ["git", ".DS_Store", "__pycache__", "*.pyc"]
+DIRS = [
     "config/systemd/user",
     "config/nvim",
     "local/bin",
 ]
-sec_dots = "~/Lit/Docs/base"
-sec_t = "~/Lit/Docs/base/task"
-conf = BaseDirectory.xdg_config_home
-task = f"{BaseDirectory.xdg_config_home}/task"
-fnt = f"{BaseDirectory.xdg_data_home}/fonts"
-individual_items = [
-    {"src": f"{sec_t}/taskchampion.sqlite3", "dest": f"{task}/taskchampion.sqlite3"},
-    {"src": f"{sec_dots}/zsh_history", "dest": "~/.config/zsh/.zsh_history"},
-    {"src": f"{sec_dots}/fonts/calibri.ttf", "dest": f"{fnt}/calibri.ttf"},
-    {"src": f"{sec_dots}/fonts/calibrib.ttf", "dest": f"{fnt}/calibrib.ttf"},
-    {"src": f"{sec_dots}/fonts/calibrii.ttf", "dest": f"{fnt}/calibrii.ttf"},
-    {"src": f"{sec_dots}/fonts/calibril.ttf", "dest": f"{fnt}/calibril.ttf"},
-    {"src": f"{sec_dots}/fonts/calibrili.ttf", "dest": f"{fnt}/calibrili.ttf"},
-    {"src": f"{sec_dots}/fonts/calibriz.ttf", "dest": f"{fnt}/calibriz.ttf"},
-    {"src": f"{sec_dots}/fonts/times.ttf", "dest": f"{fnt}/times.ttf"},
-    {"src": f"{sec_dots}/fonts/timesbd.ttf", "dest": f"{fnt}/timesbd.ttf"},
-    {"src": f"{sec_dots}/fonts/timesbi.ttf", "dest": f"{fnt}/timesbi.ttf"},
-    {"src": f"{sec_dots}/fonts/timesi.ttf", "dest": f"{fnt}/timesi.ttf"},
+SEC = HOME / "Lit/Docs/base"
+INDIVIDUAL_ITEMS = [
+    (SEC / "task/taskchampion.sqlite3", CONFIG / "task/taskchampion.sqlite3"),
+    (SEC / "zsh_history", CONFIG / "zsh/.zsh_history"),
+    *[
+        (SEC / "fonts" / f"{name}.ttf", CONFIG / "fonts" / f"{name}.ttf")
+        for name in [
+            "calibri",
+            "calibrib",
+            "calibrii",
+            "calibril",
+            "calibrili",
+            "calibriz",
+            "times",
+            "timesbd",
+            "timesbi",
+            "timesi",
+        ]
+    ],
 ]
 
 
-def safe_rm(path: Path) -> None:
+def safe_remove(path: Path):
     if path.exists():
-        log.info(f"Remove: {path}")
-        if path.is_symlink() or path.is_file():
-            path.unlink(missing_ok=True)
-        else:
+        if path.is_dir() and not path.is_symlink():
             shutil.rmtree(path)
+        else:
+            path.unlink(missing_ok=True)
+        log.info(f"Removed: {path}")
 
 
-def safe_rm_file(path: Path) -> None:
-    if not path.exists():
-        return
-    if path.is_dir():
-        return
-    log.info(f"Remove file: {path}")
-    path.unlink(missing_ok=True)
-
-
-def make_link(src: Path, dst: Path) -> None:
+def link_path(src: Path, dst: Path) -> bool:
     dst.parent.mkdir(parents=True, exist_ok=True)
-    rel = os.path.relpath(src, dst.parent)
-    try:
-        if dst.is_symlink() and dst.readlink() == rel:
-            return
-    except OSError:
-        pass
-    safe_rm(dst)
-    log.info(f"Link: {dst} → {rel}")
-    dst.symlink_to(rel)
+    rel_src = os.path.relpath(src, dst.parent)
+    if dst.is_symlink() and dst.readlink() == Path(rel_src):
+        return False
+    safe_remove(dst)
+    dst.symlink_to(rel_src, target_is_directory=src.is_dir())
+    log.info(f"Linked: {dst} → {rel_src}")
+    return True
 
 
-def valid_src(rel: Path, skip_patterns, individual_dirs) -> bool:
-    rel_str = rel.as_posix()
-    if rel_str == ".git" or rel_str.startswith(".git/"):
-        return True
-    return any(rel.match(pat) for pat in skip_patterns) or any(
-        rel.is_relative_to(Path(d)) for d in individual_dirs
+def should_skip(rel: Path) -> bool:
+    return (
+        rel.as_posix() == ".git"
+        or rel.as_posix().startswith(".git/")
+        or any(rel.match(pat) for pat in SKIP)
+        or any(rel.is_relative_to(Path(d)) for d in DIRS)
     )
 
 
-def deploy_base(src: Path, dots: Path, dest: Path) -> bool:
-    rel = src.relative_to(dots)
-    parts = rel.parts
-    if parts[0] == "config":
-        dst = Path(BaseDirectory.xdg_config_home) / Path(*parts[1:])
-    elif parts[0] == "local":
-        dst = Path.home() / ".local" / Path(*parts[1:])
-    elif parts[0] in ["ssh", "gnupg"]:
-        dst = Path.home() / f".{parts[0]}" / Path(*parts[1:])
-    else:
-        dst = dest / ("." + rel.as_posix())
-    if dst.is_symlink() and dst.resolve(strict=False) == src.resolve():
-        return False
-    safe_rm_file(dst)
-    make_link(src, dst)
-    log.info(f"Linked: {dst} -> {src}")
-    return True
+def dotted_dest(src: Path, dots: Path, dest: Path) -> Path:
+    parts = src.relative_to(dots).parts
+    return dest / Path("." + parts[0], *parts[1:])
 
 
-def deploy_dir(src_dir: Path, dots: Path, dest: Path) -> bool:
-    rel = src_dir.relative_to(dots)
-    parts = rel.parts
-    if parts[0] == "config":
-        dot_path = Path(*parts[1:])
-        dst_dir = Path(BaseDirectory.xdg_config_home) / dot_path
-    elif parts[0] == "local":
-        dot_path = Path(*parts[1:])
-        dst_dir = Path.home() / ".local" / Path(*parts[1:])
-    else:
-        dot_path = Path("." + parts[0], *parts[1:])
-        dst_dir = dest / dot_path
-    dst_dir.parent.mkdir(parents=True, exist_ok=True)
-    if dst_dir.is_symlink() and dst_dir.resolve(strict=False) == src_dir.resolve():
-        return False
-    safe_rm(dst_dir)
-    rel_link = os.path.relpath(src_dir, dst_dir.parent)
-    dst_dir.symlink_to(rel_link)
-    log.info(f"Linked dir: {dst_dir} → {rel_link}")
-    return True
-
-
-def deploy_item(src: Path, dest: Path) -> bool:
-    if not src.exists():
-        log.error(f"Skipping missing source: {src}")
-        return False
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.is_symlink() and dest.resolve(strict=False) == src.resolve():
-        return False
-    if dest.exists() or dest.is_symlink():
-        try:
-            dest.unlink()
-            log.info(f"Removed existing: {dest}")
-        except IsADirectoryError:
-            shutil.rmtree(dest)
-            log.info(f"Removed existing directory: {dest}")
-    rel_src = os.path.relpath(src, dest.parent)
-    dest.symlink_to(rel_src, target_is_directory=src.is_dir())
-    log.info(f"Linked: {dest} → {rel_src}")
-    return True
-
-
-def polka(
-    dots_name: str, dest: Path, skip_patterns: list[str], individual_items
-) -> None:
-    dots = Path.home() / dots_name
-    if not dots.is_dir():
-        log.error(f"Error: {dots} does not exist!")
-        return
-    skipped = 0
-    linked = 0
-    for d in individual_dirs:
-        src = dots / d
-        if src.is_dir():
-            if deploy_dir(src, dots, dest):
-                linked += 1
+def deploy_all(dots: Path, dest: Path, dirs, individual_items):
+    linked = skipped = 0
+    for src in dots.rglob("*"):
+        if not src.is_file() or should_skip(src.relative_to(dots)):
+            skipped += 1
+            continue
+        linked += link_path(src, dotted_dest(src, dots, dest)) or 0
+    for src, dst in individual_items:
+        if link_path(src.expanduser(), dst.expanduser()):
+            linked += 1
         else:
             skipped += 1
-    for src in dots.rglob("*"):
-        if not src.is_file():
-            continue
-        rel = src.relative_to(dots)
-        if valid_src(rel, skip_patterns, individual_dirs):
-            skipped += 1
-            continue
-        if deploy_base(src, dots, dest):
-            linked += 1
-    for item in individual_items:
-        src = Path(item["src"]).expanduser()
-        dest = Path(item["dest"]).expanduser()
-        if deploy_item(src, dest):
-            linked += 1
+    for d in dirs:
+        src_dir = dots / d
+        if src_dir.is_dir():
+            linked += link_path(src_dir, dotted_dest(src_dir, dots, dest)) or 0
         else:
             skipped += 1
     if shutil.which("hyprctl"):
@@ -181,4 +96,8 @@ def polka(
 
 
 if __name__ == "__main__":
-    polka(dots_name, dest, skip_patterns, individual_items)
+    if not DOTS.is_dir():
+        log.error(f"Error: {DOTS} does not exist!")
+    else:
+        deploy_all(DOTS, HOME, DIRS, INDIVIDUAL_ITEMS)
+
