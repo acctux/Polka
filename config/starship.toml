@@ -1,110 +1,54 @@
-format = """\
-${os.symbol}\
-${status}\
-${username}\
-${hostname}\
-${directory}\
-${git_branch}\
-${git_status}\
-${kubernetes}\
-${python}\
-${custom.pythonvenv}\
-${jobs}\
-${custom.story}\
-${character}\
-"""
-
-add_newline = false
 "$schema" = 'https://starship.rs/config-schema.json'
-[character]
-format = "[](bg:black)[$symbol](bold) "
-success_symbol = "[](fg:black black)"
-error_symbol = "[](fg:black black)"
-disabled = false
 
-[username]
-style_root = 'bg:black bold red'
-style_user = 'bg:black yellow'
-format = '[$user]($style)'
-
-[status]
-disabled = false
-style = "bg:black red"
-symbol = "✗"
-format = "[$symbol]($style)"
-
-[hostname]
-ssh_only = true
-style = 'bg:black bold dimmed green'
-format = "[ $hostname ]($style)"
+format = """
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#212736)\
+$nodejs\
+$rust\
+$golang\
+$php\
+[ ](fg:#212736)\
+$character"""
 
 [directory]
-style = "bg:black white"
-format = '[$path]($style)[$read_only]($read_only_style)'
-repo_root_format = '[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style )[$read_only ]($read_only_style)'
-repo_root_style = "bg:black bold white"
-before_repo_root_style = "bg:black blue"
-read_only = "[\uf023]"
-read_only_style = "bg:black red"
-truncate_to_repo = true
-truncation_length = 5
+style = "fg:#e3e5e5 bg:#7799f0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
 
-[time]
-disabled = true
-style = "bg:black bold white"
-format = "[$time]($style) "
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
 
 [git_branch]
-style = "bg:black bold 85"
-symbol = ' '
-format = "[$symbol]($style)[$branch](bg:black 85)"
-truncation_length = 8
-truncation_symbol = "."
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+truncation_symbol = "⋯"
+truncation_length = 11
+ignore_branches = ["main"]
+only_attached = true
 
 [git_status]
-format = '[${ahead}${behind}${modified}${conflicted}${stashed}${deleted}${renamed}${staged}${untracked}]($style)'
-style = "bg:black 85"
-conflicted = "≠"
-ahead = "⇡$count"
-behind = "⇣$count"
-diverged = "⇕"
-untracked = "?"
-stashed = "󰏖"
-modified = '+'
-staged = ""
-renamed = "󱞸"
-deleted = "󱡂"
-up_to_date = "✔"
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+conflicted = "[◪◦](italic bright-magenta)"
+ahead = "[▴│[${count}](bold white)│](italic green)"
+behind = "[▿│[${count}](bold white)│](italic red)"
+diverged = "[◇ ▴┤[${ahead_count}](regular white)│▿┤[${behind_count}](regular white)│](italic bright-magenta)"
+untracked = "[◌◦](italic bright-yellow)"
+stashed = "[◃◈](italic white)"
+modified = "[●◦](italic yellow)"
+staged = "[▪┤[$count](bold white)│](italic bright-cyan)"
+renamed = "[◎◦](italic bright-blue)"
+deleted = "[✕](italic red)"
 
-[cmd_duration]
-disabled = true
-min_time = 2_000
-format = '[took $duration ]($style)'
-style = 'bg:black bold yellow'
-
-[jobs]
-symbol = "▧ "
-style = "bg:black blue"
-format = "[ $number$symbol]($style)"
-
-[python]
-disabled = true
-style = "bg:black yellow"
-format = '[${virtualenv} ]($style)'
-[custom.pythonvenv]
-disabled = false
-when = ''' test -n "$VIRTUAL_ENV" '''
-symbol = ''
-style = "bg:black 75"
-format = '[ ${symbol}]($style)'
-
-[custom.story]
-command = '''rg -oe "[\\d]+" --color=never ~/.jira_story'''
-when = ''' test -f ~/.jira_story '''
-require_repo = true
-style = "bg:black yellow"
-symbol = ""
-format = '[ ${symbol}${output}]($style)'
-os = "Arch"
-[os.symbols]
-Arch = " "
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
