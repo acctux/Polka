@@ -1,21 +1,14 @@
+"$schema" = 'https://starship.rs/config-schema.json'
 format = """\
-${os.symbol}\
 ${status}\
-${username}\
-${hostname}\
 ${directory}\
 ${git_branch}\
 ${git_status}\
-${kubernetes}\
 ${python}\
-${custom.pythonvenv}\
-${jobs}\
-${custom.story}\
 ${character}\
 """
 
 add_newline = false
-"$schema" = 'https://starship.rs/config-schema.json'
 [character]
 format = "[](bg:black)[$symbol](bold) "
 success_symbol = "[](fg:black black)"
@@ -91,20 +84,3 @@ format = "[ $number$symbol]($style)"
 disabled = true
 style = "bg:black yellow"
 format = '[${virtualenv} ]($style)'
-[custom.pythonvenv]
-disabled = false
-when = ''' test -n "$VIRTUAL_ENV" '''
-symbol = ''
-style = "bg:black 75"
-format = '[ ${symbol}]($style)'
-
-[custom.story]
-command = '''rg -oe "[\\d]+" --color=never ~/.jira_story'''
-when = ''' test -f ~/.jira_story '''
-require_repo = true
-style = "bg:black yellow"
-symbol = ""
-format = '[ ${symbol}${output}]($style)'
-os = "Arch"
-[os.symbols]
-Arch = " "
