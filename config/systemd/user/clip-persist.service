@@ -1,0 +1,13 @@
+[Unit]
+Description=wl-clip-persist service
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=wl-clip-persist --clipboard regular
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

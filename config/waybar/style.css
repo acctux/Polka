@@ -1,0 +1,255 @@
+/* === Global Styles === */
+* {
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-family: "FiraMono Nerd Font Medium", monospace;
+  transition: all 0.75s ease;
+  font-feature-settings: '"zero","ss01","ss02","ss03","ss04","ss05","cv31"';
+}
+
+/* === Waybar Window === */
+window#waybar {
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+}
+button {
+  padding: 0 4px;
+  margin: 0;
+  border: none;
+  min-height: 0;
+  box-shadow: none;
+}
+
+/* === Tooltip === */
+tooltip {
+  background: rgba(16,16,19,0.7);
+  padding: 0;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid rgba(51, 204, 255, 0.7);
+}
+tooltip label {
+  font-size: 14px;
+  background: transparent;
+  font-weight: 400;
+}
+
+/* === Module Containers === */
+.modules-left,
+.modules-right {
+  border: 1px solid rgba(30,58,138,0.7);
+  background-color: rgba(16,16,19,0.7);
+  border-radius: 4px;
+}
+
+/* === Shared Spacing === */
+#workspaces button {
+  padding: 0 2px;
+  border-radius: 5px;
+}
+
+/* === Shared Borders === */
+#custom-kb-switch,
+#battery,
+#custom-logo,
+#custom-taskwarrior,
+#custom-timer,
+#temperature,
+#custom-updates {
+  border-right: 1px solid #33ccff;
+}
+#custom-notification,
+#clock {
+  border-left: 1px solid #33ccff;
+}
+
+/* === Shared Font Sizes === */
+#custom-volume,
+#custom-notification,
+#custom-steam,
+#backlight,
+#custom-kdeconnect,
+#custom-nemo,
+#bluetooth,
+#custom-wifi,
+#custom-tlp,
+#custom-nemo,
+#custom-telegram,
+#custom-kb-switch,
+#custom-taskwarrior,
+#custom-logo {
+  font-size: 16px;
+}
+#custom-kdeconnect,
+#custom-telegram {
+  font-size: 15px;
+}
+/* === Border Radius === */
+#custom-wifi,
+#custom-nemo,
+#custom-tlp,
+#custom-deluge,
+#custom-nemo,
+#custom-volume,
+#custom-steam,
+#custom-telegram,
+#backlight,
+#bluetooth,
+#custom-kdeconnect {
+  border-radius: 5px;
+}
+
+/* === Colors === */
+#custom-logo,
+#custom-wifi.vpn,
+#custom-telegram,
+#battery {
+  color: #33ccff;
+}
+#custom-tlp.active,
+#custom-updates,
+#bluetooth.connected,
+#custom-deluge.downloading,
+#custom-kdeconnect.mounted,
+#custom-volume.playing,
+#battery.charging {
+  color: #00ff99;
+}
+#custom-notification.notification,
+#custom-updates.yellow,
+#custom-taskwarrior.todo,
+#battery.warning {
+  color: #ffee33;
+}
+#custom-taskwarrior.critical,
+#custom-updates.red,
+#custom-notification,
+#temperature.critical,
+#custom-wifi,
+#battery.critical {
+  color: #ff3232;
+}
+
+/* === Individual === */
+#battery {
+  padding-right: 4px;
+  padding-left: 4px;
+}
+#temperature {
+  padding-right: 4px;
+  padding-left: 2px;
+}
+#custom-updates {
+  padding-right: 9px;
+  padding-left: 5px;
+}
+#custom-notification {
+  padding-right: 8px;
+  padding-left: 5px;
+}
+#custom-deluge {
+  padding-right: 9px;
+  padding-left: 5px;
+}
+#custom-wifi {
+  padding-right: 9px;
+  padding-left: 3px;
+}
+#clock {
+  padding: 0 4px;
+}
+#custom-telegram {
+  padding-right: 9px;
+  padding-left: 3px;
+}
+ #custom-kb-switch {
+  padding: 0 5px;
+}
+#custom-volume {
+  padding-right: 7px;
+  padding-left: 5px;
+}
+#custom-volume.playing {
+ font-weight: 500;
+  padding-right: 5px;
+}
+
+#custom-steam,
+#bluetooth {
+  padding-right: 7px;
+  padding-left: 5px;
+}
+#custom-tlp {
+  padding-right: 7px;
+  padding-left: 5px;
+}
+#custom-nemo {
+  padding-right: 8px;
+  padding-left: 4px;
+}
+#backlight {
+  padding: 0 8px 0 5px;
+}
+#custom-kdeconnect {
+  padding: 0 11px 0 3px;
+}
+#custom-logo {
+  padding-right: 9px;
+  padding-left: 4px;
+}
+#custom-empty {
+  font-size: 5px;
+}
+#custom-taskwarrior {
+  padding-right: 4px;
+  padding-left: 6px;
+}
+
+/* === Hover Effects === */
+button:hover,
+#custom-kdeconnect:hover,
+#custom-timer:hover,
+#custom-steam:hover,
+#custom-nemo:hover,
+#backlight:hover,
+#custom-tlp:hover,
+#custom-deluge:hover,
+#custom-telegram:hover,
+#bluetooth:hover,
+#custom-wifi:hover,
+#custom-volume:hover {
+  box-shadow: inset 0 0 0 1px #00ff99;
+  background-color: rgba(16,16,19,0.3);
+  color: #33ccff;
+}
+#workspaces button.active {
+  padding-right: 4px;
+  padding-left: 2px;
+}
+#custom-timer:hover {
+  border-radius: 5px;
+}
+#workspaces button.active,
+#workspaces button:hover {
+  background: inherit;
+  border-radius: 5px;
+  color: #00ff99;
+}
+#custom-logo:hover,
+#custom-updates:hover,
+#custom-kb-switch:hover,
+#clock:hover,
+#custom-updates:hover,
+#custom-taskwarrior:hover,
+#temperature:hover {
+  background-color: rgba(16,16,19,0.3);
+  color: #33ccff;
+}
+#battery:hover,
+#custom-notification:hover {
+  color: #33ccff;
+}
+#custom-logo:hover {
+  color: #00ff99;
+}

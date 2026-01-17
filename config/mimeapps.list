@@ -1,0 +1,120 @@
+[Default Applications]
+# Image MIME Types
+image/jpeg=imv.desktop
+image/png=imv.desktop
+image/gif=imv.desktop
+image/svg+xml=featherpad.desktop
+image/bmp=imv.desktop
+image/tiff=imv.desktop
+image/webp=imv.desktop
+image/heif=imv.desktop
+image/x-raw=imv.desktop
+# Document MIME Types
+application/pdf=evince.desktop
+application/epub=evince.desktop
+application/json=featherpad.desktop
+text/plain=featherpad.desktop
+text/html=featherpad.desktop
+application/msword=onlyoffice.desktop
+application/vnd.ms-excel=onlyoffice.desktop
+application/vnd.ms-powerpoint=onlyoffice.desktop
+application/vnd.oasis.opendocument.text=onlyoffice.desktop
+application/vnd.oasis.opendocument.spreadsheet=onlyoffice.desktop
+application/vnd.oasis.opendocument.presentation=onlyoffice.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=onlyoffice.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=onlyoffice.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=onlyoffice.desktop
+# Audio MIME Types
+audio/mpeg=rmpc.desktop
+audio/wav=rmpc.desktop
+audio/ogg=rmpc.desktop
+audio/flac=rmpc.desktop
+audio/aac=rmpc.desktop
+audio/x-flac=rmpc.desktop
+audio/x-wav=rmpc.desktop
+# Video MIME Types
+video/mp4=mpv.desktop
+video/x-matroska=mpv.desktop
+video/x-mpegurl=mpv.desktop
+video/webm=mpv.desktop
+video/avi=mpv.desktop
+video/x-flv=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-msvideo=mpv.desktop
+# Font MIME Types
+application/x-font-ttf=font-manager.desktop
+application/x-font-otf=font-manager.desktop
+font/otf=font-manager.desktop
+# Compression MIME Types
+application/zip=file-roller.desktop
+application/x-tar=file-roller.desktop
+application/gzip=file-roller.desktop
+application/x-7z-compressed=file-roller.desktop
+application/x-rar-compressed=file-roller.desktop
+# Miscellaneous MIME Types
+inode/directory=nemo.desktop
+x-scheme-handler/http=firedragon.desktop
+x-scheme-handler/https=firedragon.desktop
+x-scheme-handler/mailto=firebird.desktop
+x-scheme-handler/magnet=deluge.desktop
+
+[Added Associations]
+# Image MIME Types
+image/jpeg=imv.desktop;
+image/png=imv.desktop;
+image/gif=imv.desktop;
+image/svg+xml=featherpad.desktop;imv.desktop
+image/bmp=imv.desktop;
+image/tiff=imv.desktop;
+image/webp=imv.desktop;
+image/heif=imv.desktop;
+image/x-raw=imv.desktop;
+# Document MIME Types
+application/pdf=evince.desktop;
+application/epub=evince.desktop;
+application/json=featherpad.desktop;
+text/plain=featherpad.desktop;
+text/html=featherpad.desktop;
+application/msword=onlyoffice.desktop;
+application/vnd.ms-excel=onlyoffice.desktop;
+application/vnd.ms-powerpoint=onlyoffice.desktop;
+application/vnd.oasis.opendocument.text=onlyoffice.desktop;
+application/vnd.oasis.opendocument.spreadsheet=onlyoffice.desktop;
+application/vnd.oasis.opendocument.presentation=onlyoffice.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=onlyoffice.desktop;
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=onlyoffice.desktop;
+application/vnd.openxmlformats-officedocument.presentationml.presentation=onlyoffice.desktop;
+# Audio MIME Types
+audio/mpeg=rmpc.desktop;
+audio/wav=rmpc.desktop;
+audio/ogg=rmpc.desktop;
+audio/flac=rmpc.desktop;
+audio/aac=rmpc.desktop;
+audio/x-flac=rmpc.desktop;
+audio/x-wav=rmpc.desktop;
+# Video MIME Types
+video/mp4=mpv.desktop;
+video/x-matroska=mpv.desktop;
+video/x-mpegurl=mpv.desktop;
+video/webm=mpv.desktop;
+video/avi=mpv.desktop;
+video/x-flv=mpv.desktop;
+video/quicktime=mpv.desktop;
+video/x-msvideo=mpv.desktop;
+# Font MIME Types
+application/x-font-ttf=font-manager.desktop;
+application/x-font-otf=font-manager.desktop;
+font/otf=font-manager.desktop;
+# Compression MIME Types
+application/zip=file-roller.desktop;
+application/x-tar=file-roller.desktop;
+application/gzip=file-roller.desktop;
+application/x-7z-compressed=file-roller.desktop;
+application/x-rar-compressed=file-roller.desktop;
+# Miscellaneous MIME Types
+inode/directory=nemo.desktop;
+application/octet-stream=featherpad.desktop;
+x-scheme-handler/http=firedragon.desktop
+x-scheme-handler/https=firedragon.desktop
+x-scheme-handler/mailto=firebird.desktop;
+x-scheme-handler/magnet=deluge.desktop;

@@ -1,0 +1,15 @@
+[Unit]
+Description=Polkit GNOME Authentication Agent
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+Restart=on-failure
+Slice=session.slice
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

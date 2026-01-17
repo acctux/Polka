@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=GuvcView
+GenericName=Webcam Viewer
+Comment=Simple GTK interface for capturing and viewing video from webcams
+Exec=guvcview
+Icon=guvcview
+Terminal=false
+Type=Application
+Categories=Video;AudioVideo;
+StartupNotify=true

@@ -1,0 +1,19 @@
+[Desktop Entry]
+Version=1.0
+Name=Deluge
+GenericName=BitTorrent Client
+X-GNOME-FullName=Deluge BitTorrent Client
+Comment=Download and share files over BitTorrent
+Keywords=bittorrent;torrent;magnet;download;p2p;torrents;downloading;uploading;share;sharing;
+Keywords[en_GB]=bittorrent;torrent;magnet;download;p2p;torrents;downloading;uploading;share;sharing;
+Keywords[ru]=bittorrent;torrent;magnet;download;p2p;torrents;downloading;uploading;share;sharing;битторрент;торрент;скачать;загрузить;раздача;поделиться;
+TryExec=$HOME/Polka/local/bin/deluged/deluge_launch.sh
+Exec=$HOME/Polka/local/bin/deluged/deluge_launch.sh %U
+Icon=transmission
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;P2P;GTK;
+StartupWMClass=deluge
+StartupNotify=true
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+X-GNOME-UsesNotifications=true

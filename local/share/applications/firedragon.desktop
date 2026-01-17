@@ -1,0 +1,26 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=FireDragon
+GenericName=Web Browser
+Comment=Browse the World Wide Web
+Keywords=Internet;WWW;Browser;Web;Explorer
+Keywords[ar]=انترنت;إنترنت;متصفح;ويب;وب
+Exec=/usr/lib/firedragon/firedragon %u
+Icon=firefox-aurora
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
+StartupNotify=true
+StartupWMClass=FireDragon
+Categories=Network;WebBrowser;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=/usr/lib/firedragon/firedragon --new-window %u
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Exec=/usr/lib/firedragon/firedragon --private-window %u

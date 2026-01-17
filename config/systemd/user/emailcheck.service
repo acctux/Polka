@@ -1,0 +1,8 @@
+[Unit]
+Description=Check ProtonMail via Bridge and send notifications
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/emailcheck/emailcheck.py
+WorkingDirectory=%h
+Environment=PYTHONUNBUFFERED=1

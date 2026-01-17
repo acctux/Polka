@@ -1,0 +1,10 @@
+[Unit]
+Description=snixembed tray
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/snixembed
+
+[Install]
+WantedBy=graphical-session.target

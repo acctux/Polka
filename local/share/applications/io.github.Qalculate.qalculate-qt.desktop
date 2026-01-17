@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Qalculate!
+GenericName=Calculator
+Comment=Powerful and easy to use calculator
+TryExec=qalculate-qt
+Exec=qalculate-qt
+Icon=qalculate-qt
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=qalculate-qt
+Categories=Qt;Utility;Calculator;Education;Science;Math;
+Keywords=calculation;arithmetic;scientific;financial;
+

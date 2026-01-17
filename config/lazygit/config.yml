@@ -1,0 +1,5 @@
+gui:
+  nerdFontsVersion: "3"
+  sidePanelWidth: 0.25
+git:
+  autoRefresh: false

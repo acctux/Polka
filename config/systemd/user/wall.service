@@ -1,0 +1,8 @@
+[Unit]
+Description=Run Wall Script
+Requires=swww-daemon.service
+After=swww-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/Polka/local/bin/wall/wall.py

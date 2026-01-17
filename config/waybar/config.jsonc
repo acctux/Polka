@@ -1,0 +1,254 @@
+{
+  "layer": "top",
+  "position": "top",
+  "icon-theme": "WhiteSur-dark",
+  "modules-left": [
+    "custom/logo",
+    "battery",
+    "custom/updates",
+    "custom/tlp",
+    "temperature",
+    "custom/kb-switch",
+    "custom/taskwarrior",
+    "custom/empty",
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "custom/empty",
+    "custom/timer",
+    "custom/steam",
+    "custom/nemo",
+    "custom/kdeconnect",
+    "custom/deluge",
+    "custom/telegram",
+    "bluetooth",
+    "custom/wifi",
+    "backlight",
+    "custom/volume",
+    "custom/empty",
+    "clock",
+    "custom/notification"
+  ],
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "active-only": false,
+    "format-icons": {
+      "active": ""
+    },
+    "on-scroll-up": "hyprctl dispatch workspace r+1",
+    "on-scroll-down": "hyprctl dispatch workspace r-1",
+    "on-click": "activate"
+  },
+  "bluetooth": {
+    "format": "",
+    "on-click": "alacritty -e bluetui & disown",
+    "on-click-right": "solaar & disown",
+    "format-disabled": "",
+    "format-connected": "󰂱",
+    "tooltip-format": "Connected:{num_connections}",
+    "tooltip-format-connected": "Connected:{num_connections}\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%\t",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_battery_percentage}%\t",
+    "format-off": "󰂲",
+    "interval": 30,
+    "format-no-controller": ""
+  },
+  "temperature": {
+    "critical-threshold": 80,
+    "format-critical": "{temperatureC}°",
+    "format": "{temperatureC}°",
+    "tooltip": false,
+    "on-click": "alacritty -e btop & disown",
+    "on-click-right": "qjournalctl & disown",
+    "on-click-middle": "alacritty -e nvtop & disown"
+  },
+  "backlight": {
+    "format": "{icon}",
+    "tooltip-format": "{percent}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "scroll-step": 10,
+    "on-click": "~/Polka/local/bin/hyprsunset/toggle-sunset.py"
+  },
+  "battery": {
+    "interval": 60,
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon}{capacity}%",
+    "format-charging": "󱐋{capacity}%",
+    "format-plugged": "{capacity}%",
+    "format-alt": "{icon} {time}",
+    "format-full": "",
+    "format-icons": [
+      " ",
+      " ",
+      " ",
+      " ",
+      " "
+    ]
+  },
+  "clock": {
+    "tooltip-format": "{:%A, %B %d}",
+    "format": "{:%H:%M}",
+    "interval": 60,
+    "on-click": "gsimplecal",
+    "on-click-right": "~/Polka/local/bin/fuzzel/time_menu.sh"
+  },
+  "custom/empty": {
+    "tooltip": false,
+    "format": "<span size='2pt'> </span>"
+  },
+  "custom/notification": {
+    "format": "<span size='8pt'>{icon}</span>",
+    "format-icons": {
+      "notification": "",
+      "none": "",
+      "dnd-notification": "󱙍 ",
+      "dnd-none": "󱙍 ",
+      "inhibited-notification": "󰍢 ",
+      "inhibited-none": "󰍢 ",
+      "dnd-inhibited-notification": "󱙍 ",
+      "dnd-inhibited-none": "󱙍  "
+    },
+    "return-type": "json",
+    "tooltip": false,
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw"
+  },
+  "custom/kb-switch": {
+    "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
+    "signal": 6,
+    "format": "{}",
+    "tooltip": false,
+    "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next",
+    "on-click-right": "rofimoji & disown"
+  },
+  "custom/wifi": {
+    "format": "{}",
+    "exec": "~/Polka/local/bin/waybar/network.py",
+    "interval": 2,
+    "return-type": "json",
+    "on-click-right": "~/.local/bin/fuzzel/vpnmenu.sh & disown",
+    "on-click-middle": "firewall-config",
+    "on-click": "alacritty -e impala & disown"
+  },
+  "custom/volume": {
+    "exec": "~/Polka/local/bin/mpd/mypulseaudio.py",
+    "return-type": "json",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "pavucontrol &",
+    "on-click-middle": "playerctl play-pause",
+    "on-click-right": "alacritty -e ~/Polka/local/bin/mpd/rmpclaunch.sh & disown"
+  },
+  "custom/deluge": {
+    "format": "{}",
+    "exec": "~/Polka/local/bin/deluged/deluge_way.py",
+    "return-type": "json",
+    "hide-empty-text": true,
+    "interval": 10,
+    "tooltip": true,
+    "on-click": "deluge-gtk & disown",
+    "on-click-right": "systemctl --user stop deluged.service"
+  },
+  "custom/tlp": {
+    "exec": "~/Polka/local/bin/power/tlp_waybar.py",
+    "return-type": "json",
+    "interval": 1,
+    "on-click": "~/Polka/local/bin/power/tlp_waybar.py exec",
+    "on-click-right": "~/Polka/local/bin/power/tlp_waybar.py up",
+    "on-scroll-up": "~/Polka/local/bin/power/tlp_waybar.py up",
+    "on-scroll-down": "~/Polka/local/bin/power/tlp_waybar.py down"
+  },
+  "custom/nemo": {
+    "exec": "~/Polka/local/bin/folders/nemo_scroll.py",
+    "return-type": "json",
+    "interval": 1,
+    "on-click": "~/Polka//local/bin/folders/nemo_scroll.py exec",
+    "on-click-right": "~/Polka/local/bin/power/tlp_waybar.py exec",
+    "on-scroll-up": "~/Polka//local/bin/folders/nemo_scroll.py up",
+    "on-scroll-down": "~/Polka/local/bin/folders/nemo_scroll.py down"
+  },
+  "custom/timer": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "~/Polka/local/bin/timer/timer_waybar.py",
+    "on-click": "~/Polka/local/bin/timer/set_timer.py --toggle",
+    "on-click-right": "~/Polka/local/bin/timer/set_timer.py --unit",
+    "on-click-middle": "~/Polka/local/bin/timer/set_timer.py --stop",
+    "on-scroll-up": "~/Polka/local/bin/timer/set_timer.py --up",
+    "on-scroll-down": "~/Polka/local/bin/timer/set_timer.py --down"
+  },
+  "custom/taskwarrior": {
+    "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
+    "hide-empty-text": false,
+    "return-type": "json",
+    "format": "<span size='9pt'> </span>{}",
+    "interval": 300,
+    "signal": 8,
+    "on-click": "alacritty -e taskwarrior-tui"
+  },
+  "custom/updates": {
+    "format": "{}<span size='4pt'> </span>",
+    "return-type": "json",
+    "exec": "~/Polka/local/bin/waybar/updates.py",
+    "interval": 1800,
+    "hide-empty-text": true,
+    "signal": 10,
+    "on-click": "alacritty -e paru && kill -SIGRTMIN+10 $(pidof waybar)"
+  },
+  "custom/kdeconnect": {
+    "format": "{}",
+    "escape": true,
+    "return-type": "json",
+    "exec": "~/Polka/local/bin/kdeconnect/kdewaybar.py",
+    "interval": 30,
+    "hide-empty-text": true,
+    "on-click": "~/Polka/local/bin/kdeconnect/mountkde.py",
+    "on-click-middle": "kdeconnect-app",
+    "on-click-right": "kdeconnect-sms"
+  },
+  "custom/steam": {
+    "format": "{}",
+    "escape": true,
+    "return-type": "json",
+    "exec": "~/Polka/local/bin/steam/steam.py",
+    "interval": 10,
+    "hide-empty-text": true,
+    "on-click": "steam"
+  },
+  "custom/telegram": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "AyuGram & disown",
+    "class": "telegram"
+  },
+  "custom/logo": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "fuzzel --config=$HOME/.config/fuzzel/left-menu.ini",
+    "on-click-middle": "~/Polka/local/bin/wall/wall.py & disown"
+  }
+}

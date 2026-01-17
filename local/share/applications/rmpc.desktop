@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Rmpc
+Comment=Run rmpc with cava inside tmux
+Exec=kitty --title "Rmpc" tmux attach -t rmpc %F
+Terminal=false
+Type=Application
+MimeType=audio/mpeg;audio/mp3;audio/x-mp3;
+Categories=AudioVideo;ConsoleOnly;
+Icon=appimagekit-youtube-music-desktop-app
+
