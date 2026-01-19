@@ -65,7 +65,9 @@ tooltip label {
 }
 
 /* === Shared Font Sizes === */
+#custom-telegram,
 #custom-volume,
+#custom-kdeconnect,
 #custom-notification,
 #custom-steam,
 #backlight,
@@ -80,10 +82,6 @@ tooltip label {
 #custom-taskwarrior,
 #custom-logo {
   font-size: 16px;
-}
-#custom-kdeconnect,
-#custom-telegram {
-  font-size: 15px;
 }
 /* === Border Radius === */
 #custom-wifi,
@@ -103,7 +101,6 @@ tooltip label {
 /* === Colors === */
 #custom-logo,
 #custom-wifi.vpn,
-#custom-telegram,
 #battery {
   color: #33ccff;
 }
@@ -160,7 +157,7 @@ tooltip label {
   padding: 0 4px;
 }
 #custom-telegram {
-  padding-right: 9px;
+  padding-right: 10px;
   padding-left: 3px;
 }
  #custom-kb-switch {
@@ -172,6 +169,7 @@ tooltip label {
 }
 #custom-volume.playing {
  font-weight: 500;
+  padding-left: 3px;
   padding-right: 5px;
 }
 
@@ -189,10 +187,10 @@ tooltip label {
   padding-left: 4px;
 }
 #backlight {
-  padding: 0 8px 0 5px;
+  padding: 0 7px 0 5px;
 }
 #custom-kdeconnect {
-  padding: 0 11px 0 3px;
+  padding: 0 10px 0 2px;
 }
 #custom-logo {
   padding-right: 9px;

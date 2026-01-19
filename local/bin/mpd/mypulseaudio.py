@@ -116,7 +116,7 @@ def main():
             pos, display = scroll_text(track, saved_pos, now - saved_ts)
         save_state(track, pos)
         safe_display = html.escape(display)
-        text = f"{volume_icon(volume)}<span size='9pt'> {safe_display}</span>"
+        text = f"{volume_icon(volume)}<span size='4pt'> </span><span size='9pt'>{safe_display}</span>"
         safe_track = html.escape(track)
         tooltip = f"{volume}%\n{safe_track}"
         print(

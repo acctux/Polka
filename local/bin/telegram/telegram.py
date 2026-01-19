@@ -2,19 +2,19 @@
 import json
 import psutil
 
-ICON = ""
-TOOLTIP = "Steam is running"
+ICON = ""
+TOOLTIP = "AyuGram is running"
 
 
-def steam_running():
+def ayugram_running():
     for proc in psutil.process_iter(attrs=["name"]):
-        if proc.info["name"] and "steam" in proc.info["name"].lower():
+        if proc.info["name"] and "ayugram" in proc.info["name"].lower():
             return True
     return False
 
 
 def main():
-    if not steam_running():
+    if not ayugram_running():
         return
     output = {
         "text": ICON,

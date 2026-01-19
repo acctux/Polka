@@ -112,7 +112,7 @@ class NemoScroller:
             elif arg == "exec":
                 cls.exec_current()
                 return
-            elif arg == "--toggle":
+            elif arg == "toggle":
                 cls.toggle_hide()
                 return
         cls.output_waybar()

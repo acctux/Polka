@@ -14,7 +14,6 @@
     "hyprland/workspaces"
   ],
   "modules-right": [
-    "custom/empty",
     "custom/timer",
     "custom/steam",
     "custom/nemo",
@@ -46,7 +45,7 @@
     "format-disabled": "",
     "format-connected": "󰂱",
     "tooltip-format": "Connected:{num_connections}",
-    "tooltip-format-connected": "Connected:{num_connections}\n\n{device_enumerate}",
+    "tooltip-format-connected": "{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%\t",
     "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_battery_percentage}%\t",
     "format-off": "󰂲",
@@ -83,7 +82,7 @@
       ""
     ],
     "scroll-step": 10,
-    "on-click": "~/Polka/local/bin/hyprsunset/toggle-sunset.py"
+    "on-click": "~/.local/bin/hyprsunset/toggle-sunset.py"
   },
   "battery": {
     "interval": 60,
@@ -110,7 +109,7 @@
     "format": "{:%H:%M}",
     "interval": 60,
     "on-click": "gsimplecal",
-    "on-click-right": "~/Polka/local/bin/fuzzel/time_menu.sh"
+    "on-click-right": "~/.local/bin/fuzzel/time_menu.sh"
   },
   "custom/empty": {
     "tooltip": false,
@@ -136,7 +135,7 @@
     "on-click-right": "swaync-client -d -sw"
   },
   "custom/kb-switch": {
-    "exec": "~/Polka/local/bin/keyboard/kb-current.sh",
+    "exec": "~/.local/bin/keyboard/kb-current.sh",
     "signal": 6,
     "format": "{}",
     "tooltip": false,
@@ -145,7 +144,7 @@
   },
   "custom/wifi": {
     "format": "{}",
-    "exec": "~/Polka/local/bin/waybar/network.py",
+    "exec": "~/.local/bin/waybar/network.py",
     "interval": 2,
     "return-type": "json",
     "on-click-right": "~/.local/bin/fuzzel/vpnmenu.sh & disown",
@@ -153,7 +152,7 @@
     "on-click": "alacritty -e impala & disown"
   },
   "custom/volume": {
-    "exec": "~/Polka/local/bin/mpd/mypulseaudio.py",
+    "exec": "~/.local/bin/mpd/mypulseaudio.py",
     "return-type": "json",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
     "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
@@ -161,11 +160,11 @@
     "tooltip": true,
     "on-click": "pavucontrol &",
     "on-click-middle": "playerctl play-pause",
-    "on-click-right": "alacritty -e ~/Polka/local/bin/mpd/rmpclaunch.sh & disown"
+    "on-click-right": "alacritty -e ~/.local/bin/mpd/rmpclaunch.sh & disown"
   },
   "custom/deluge": {
     "format": "{}",
-    "exec": "~/Polka/local/bin/deluged/deluge_way.py",
+    "exec": "~/.local/bin/deluged/deluge_way.py",
     "return-type": "json",
     "hide-empty-text": true,
     "interval": 10,
@@ -174,35 +173,35 @@
     "on-click-right": "systemctl --user stop deluged.service"
   },
   "custom/tlp": {
-    "exec": "~/Polka/local/bin/power/tlp_waybar.py",
+    "exec": "~/.local/bin/power/tlp_waybar.py",
     "return-type": "json",
     "interval": 1,
-    "on-click": "~/Polka/local/bin/power/tlp_waybar.py exec",
-    "on-click-right": "~/Polka/local/bin/power/tlp_waybar.py up",
-    "on-scroll-up": "~/Polka/local/bin/power/tlp_waybar.py up",
-    "on-scroll-down": "~/Polka/local/bin/power/tlp_waybar.py down"
+    "on-click": "~/.local/bin/power/tlp_waybar.py exec",
+    "on-click-right": "~/.local/bin/power/tlp_waybar.py up",
+    "on-scroll-up": "~/.local/bin/power/tlp_waybar.py up",
+    "on-scroll-down": "~/.local/bin/power/tlp_waybar.py down"
   },
   "custom/nemo": {
-    "exec": "~/Polka/local/bin/folders/nemo_scroll.py",
+    "exec": "~/.local/bin/folders/nemo_scroll.py",
     "return-type": "json",
     "interval": 1,
-    "on-click": "~/Polka//local/bin/folders/nemo_scroll.py exec",
-    "on-click-right": "~/Polka/local/bin/power/tlp_waybar.py exec",
-    "on-scroll-up": "~/Polka//local/bin/folders/nemo_scroll.py up",
-    "on-scroll-down": "~/Polka/local/bin/folders/nemo_scroll.py down"
+    "on-click": "~/.local/bin/folders/nemo_scroll.py exec",
+    "on-click-right": "~/.local/bin/folders/nemo_scroll.py toggle",
+    "on-scroll-up": "~/.local/bin/folders/nemo_scroll.py up",
+    "on-scroll-down": "~/.local/bin/folders/nemo_scroll.py down"
   },
   "custom/timer": {
     "format": "{}",
     "return-type": "json",
-    "exec": "~/Polka/local/bin/timer/timer_waybar.py",
-    "on-click": "~/Polka/local/bin/timer/set_timer.py --toggle",
-    "on-click-right": "~/Polka/local/bin/timer/set_timer.py --unit",
-    "on-click-middle": "~/Polka/local/bin/timer/set_timer.py --stop",
-    "on-scroll-up": "~/Polka/local/bin/timer/set_timer.py --up",
-    "on-scroll-down": "~/Polka/local/bin/timer/set_timer.py --down"
+    "exec": "~/.local/bin/timer/timer_waybar.py",
+    "on-click": "~/.local/bin/timer/set_timer.py --toggle",
+    "on-click-right": "~/.local/bin/timer/set_timer.py --unit",
+    "on-click-middle": "~/.local/bin/timer/set_timer.py --stop",
+    "on-scroll-up": "~/.local/bin/timer/set_timer.py --up",
+    "on-scroll-down": "~/.local/bin/timer/set_timer.py --down"
   },
   "custom/taskwarrior": {
-    "exec": "~/Polka/local/bin/taskwarrior/tw_count.py",
+    "exec": "~/.local/bin/taskwarrior/tw_count.py",
     "hide-empty-text": false,
     "return-type": "json",
     "format": "<span size='9pt'> </span>{}",
@@ -213,7 +212,7 @@
   "custom/updates": {
     "format": "{}<span size='4pt'> </span>",
     "return-type": "json",
-    "exec": "~/Polka/local/bin/waybar/updates.py",
+    "exec": "~/.local/bin/waybar/updates.py",
     "interval": 1800,
     "hide-empty-text": true,
     "signal": 10,
@@ -223,10 +222,10 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/Polka/local/bin/kdeconnect/kdewaybar.py",
+    "exec": "~/.local/bin/kdeconnect/kdewaybar.py",
     "interval": 30,
     "hide-empty-text": true,
-    "on-click": "~/Polka/local/bin/kdeconnect/mountkde.py",
+    "on-click": "~/.local/bin/kdeconnect/mountkde.py",
     "on-click-middle": "kdeconnect-app",
     "on-click-right": "kdeconnect-sms"
   },
@@ -234,21 +233,23 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/Polka/local/bin/steam/steam.py",
-    "interval": 10,
+    "exec": "~/.local/bin/steam/steam.py",
+    "interval": 20,
     "hide-empty-text": true,
     "on-click": "steam"
   },
   "custom/telegram": {
-    "format": "",
-    "tooltip": false,
-    "on-click": "AyuGram & disown",
-    "class": "telegram"
+    "format": "{}",
+    "escape": true,
+    "return-type": "json",
+    "exec": "~/.local/bin/telegram/telegram.py",
+    "interval": 30,
+    "on-click": "AyuGram & disown"
   },
   "custom/logo": {
     "format": "",
     "tooltip": false,
     "on-click": "fuzzel --config=$HOME/.config/fuzzel/left-menu.ini",
-    "on-click-middle": "~/Polka/local/bin/wall/wall.py & disown"
+    "on-click-middle": "~/.local/bin/wall/wall.py & disown"
   }
 }

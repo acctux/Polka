@@ -111,7 +111,7 @@
         },
         {
           "label": "󰍁",
-          "command": "__NV_PRIME_RENDER_OFFLOAD=0 __GLX_VENDOR_LIBRARY_NAME=mesa pidof hyprlock || __NV_PRIME_RENDER_OFFLOAD=0 __GLX_VENDOR_LIBRARY_NAME=mesa hyprlock"
+          "command": "pidof hyprlock || hyprlock"
         }
       ]
     }

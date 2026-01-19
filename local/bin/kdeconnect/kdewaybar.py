@@ -3,19 +3,15 @@ from pathlib import Path
 import json
 import subprocess
 
-# ── Config ─────────────────────────────────────
-ICON = ""
+ICON = ""
 ANDROID_MOUNT = Path.home() / "Phone" / "Internal"
-
+DISCONNECTED = {
+    "text": "",
+}
 CONNECTED = {
     "text": ICON,
     "tooltip": "Phone connected",
     "class": "connected",
-}
-DISCONNECTED = {
-    "text": "",
-    "tooltip": "Phone disconnected",
-    "class": "disconnected",
 }
 MOUNTED = {
     "text": ICON,
