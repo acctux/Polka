@@ -1,6 +1,7 @@
 [Unit]
 Description=AyuGram
 After=graphical-session.target snixembed.service
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=simple
