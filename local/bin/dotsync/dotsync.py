@@ -43,16 +43,23 @@ def dotted_destination(src: Path, source_root: Path, target_root: Path) -> Path:
     return target_root / Path("." + parts[0], *parts[1:])
 
 
-def deploy_dotfiles(dotfiles_dir, home_dir, dirs_to_link, individual_dirs):
+def deploy_dotfiles(
+    dotfiles_dir: Path,
+    home_dir: Path,
+    dirs_to_link: list[str],
+    individual_dirs: list[tuple[Path, Path]],
+):
     linked = 0
     if not dotfiles_dir.is_dir():
-        log.error(f"Dotfiles directory does not exist: {dotfiles_dir}")
-        return
+        dotfiles_dir = HOME / "Folka"
+        if not dotfiles_dir.is_dir():
+            log.error(f"Dotfiles directory does not exist: {dotfiles_dir}")
+            return
     for src in dotfiles_dir.rglob("*"):
         if not src.is_file():
             continue
         if src.relative_to(dotfiles_dir).as_posix().startswith(".git") or any(
-            src.relative_to(dotfiles_dir).is_relative_to(Path(d)) for d in dirs_to_link
+            src.relative_to(dotfiles_dir).is_relative_to(d) for d in dirs_to_link
         ):
             continue
         dst = dotted_destination(src, dotfiles_dir, home_dir)
