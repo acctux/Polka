@@ -40,7 +40,7 @@
   },
   "bluetooth": {
     "format": "",
-    "on-click": "alacritty -e bluetui & disown",
+    "on-click": "kitty bluetui & disown",
     "on-click-right": "solaar & disown",
     "format-disabled": "",
     "format-connected": "󰂱",
@@ -57,9 +57,9 @@
     "format-critical": "{temperatureC}°",
     "format": "{temperatureC}°",
     "tooltip": false,
-    "on-click": "alacritty -e btop & disown",
+    "on-click": "kitty btop & disown",
     "on-click-right": "qjournalctl & disown",
-    "on-click-middle": "alacritty -e nvtop & disown"
+    "on-click-middle": "kitty nvtop & disown"
   },
   "backlight": {
     "format": "{icon}",
@@ -149,7 +149,7 @@
     "return-type": "json",
     "on-click-right": "~/.local/bin/fuzzel/vpnmenu.sh & disown",
     "on-click-middle": "firewall-config",
-    "on-click": "alacritty -e impala & disown"
+    "on-click": "kitty impala & disown"
   },
   "custom/volume": {
     "exec": "~/.local/bin/mpd/mypulseaudio.py",
@@ -159,8 +159,8 @@
     "format": "{text}",
     "tooltip": true,
     "on-click": "pavucontrol &",
-    "on-click-middle": "playerctl play-pause",
-    "on-click-right": "kitty rmpc & disown"
+    "on-click-middle": "kitty rmpc & disown",
+    "on-click-right": "playerctl play-pause"
   },
   "custom/deluge": {
     "format": "{}",
@@ -207,7 +207,7 @@
     "format": "<span size='9pt'> </span>{}",
     "interval": 300,
     "signal": 8,
-    "on-click": "alacritty -e taskwarrior-tui"
+    "on-click": "kitty taskwarrior-tui"
   },
   "custom/updates": {
     "format": "{}<span size='4pt'> </span>",
@@ -216,7 +216,7 @@
     "interval": 1800,
     "hide-empty-text": true,
     "signal": 10,
-    "on-click": "alacritty -e paru && kill -SIGRTMIN+10 $(pidof waybar)"
+    "on-click": "kitty paru && kill -SIGRTMIN+10 $(pidof waybar)"
   },
   "custom/kdeconnect": {
     "format": "{}",

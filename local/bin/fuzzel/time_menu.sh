@@ -18,7 +18,7 @@ case "$CHOICE" in
   TZONE=$(timedatectl list-timezones | sort -u |
     fuzzel --dmenu --prompt="Timezone ($CURRENT_TZ): ")
   if [ -n "$TZONE" ]; then
-    alacritty -e sudo timedatectl set-timezone "$TZONE"
+    kitty sudo timedatectl set-timezone "$TZONE"
     pkill -SIGRTMIN+4 waybar
   fi
   ;;

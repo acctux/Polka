@@ -9,4 +9,4 @@ choice="$(
       'Select config:'
 )"
 [ -z "$choice" ] && exit 1
-alacritty -e sudo python "$HOME/Polka/local/bin/protonvpn/protonconnect.py" "$choice"
+kitty sudo python "$HOME/Polka/local/bin/protonvpn/protonconnect.py" "$choice"

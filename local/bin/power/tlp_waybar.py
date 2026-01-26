@@ -64,7 +64,7 @@ class TLPScroller:
     def exec_current(cls) -> None:
         index = cls.load_index()
         _, command = cls.COMMANDS[index]
-        subprocess.Popen(f"alacritty -e bash -c '{command}'", shell=True)
+        subprocess.Popen(f"kitty bash -c '{command}'", shell=True)
         cls.save_state(index)
 
     @classmethod
