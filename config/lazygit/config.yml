@@ -3,3 +3,4 @@ gui:
   sidePanelWidth: 0.25
 git:
   autoRefresh: false
+notARepository: skip

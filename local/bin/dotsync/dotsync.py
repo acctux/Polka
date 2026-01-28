@@ -2,13 +2,13 @@
 import shutil
 import subprocess
 from pathlib import Path
-from log import get_logger
+from my_log import get_logger
 
 log = get_logger("Polka")
 HOME = Path.home()
 CONFIG_DIR = HOME / ".config"
 SHARE_DIR = HOME / ".local" / "share"
-dots_dir = HOME / "Polka"
+dots_dir = HOME / "Lit" / "polka"
 dirs_to_link = ["config/systemd/user", "config/nvim", "local/bin"]
 base = HOME / "Lit/Docs/base"
 ind_dirs = [

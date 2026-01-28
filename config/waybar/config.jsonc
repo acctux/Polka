@@ -242,7 +242,7 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/.local/bin/telegram/telegram.py",
+    "exec": "~/.local/bin/telegram/ayugram.sh",
     "interval": 30,
     "on-click": "AyuGram & disown"
   },

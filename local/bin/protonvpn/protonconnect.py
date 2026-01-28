@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 import sys
 import subprocess
-from typing import List
 
 
-def run_cmd(cmd: List[str], check: bool = False) -> subprocess.CompletedProcess:
+def run_cmd(cmd: list[str], check: bool = False) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=True, text=True, check=check)
 
 
-def get_active_interfaces() -> List[str]:
+def get_active_interfaces() -> list[str]:
     result = run_cmd(["wg", "show"])
     if result.returncode != 0:
         return []
