@@ -3,7 +3,6 @@
 import random
 import subprocess
 from pathlib import Path
-import time
 from wand.image import Image as WandImage
 from wand.drawing import Drawing
 from wand.color import Color
@@ -26,6 +25,7 @@ SIDE_PADDING = 200
 TRANSITION_DURATION = 4
 screen_w = 1920
 screen_h = 1080
+transition_type=[]
 
 
 # ====================== Functions ======================
@@ -44,7 +44,6 @@ def random_wallpaper(image_dir: Path, last_wall_file: Path) -> Path | None:
     selected = random.choice(candidates)
     last_wall_file.parent.mkdir(parents=True, exist_ok=True)
     last_wall_file.write_text(str(selected))
-    time.sleep(2)
     return selected
 
 
@@ -59,7 +58,6 @@ def resize_to_screen(image_path: Path, screen_w=1920, screen_h=1080) -> Path:
         )
         TEMP_RESIZED.parent.mkdir(parents=True, exist_ok=True)
         img.save(filename=str(TEMP_RESIZED))
-        time.sleep(10)
     return TEMP_RESIZED
 
 
@@ -104,12 +102,10 @@ def add_quote_with_wand(
                     quote,
                 )
                 shadow_draw(shadow_img)
-                time.sleep(2)
             # Blur the shadow
             shadow_img.gaussian_blur(radius=0, sigma=1.5)
             # Composite shadow onto main image
             img.composite(shadow_img, 0, 0)
-            time.sleep(2)
         # ---------------- Main text ----------------
         with Drawing() as draw:
             draw.font = font_path
