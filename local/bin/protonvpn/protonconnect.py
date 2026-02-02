@@ -20,14 +20,21 @@ def get_active_interfaces() -> list[str]:
     return interfaces
 
 
-def main() -> None:
+def disconnect_current_interface() -> None:
     current = [name for name in get_active_interfaces()]
     if current:
         for iface in current:
             run_cmd(["wg-quick", "down", iface])
             print(f"\nDisconnected successfully from {iface}")
+    else:
+        print("No active interfaces found to disconnect.")
+
+
+def main() -> None:
     if len(sys.argv) != 2:
+        disconnect_current_interface()
         return
+    disconnect_current_interface()
     config = sys.argv[1]
     result = run_cmd(["wg-quick", "up", config])
     if result.returncode != 0:
@@ -37,3 +44,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

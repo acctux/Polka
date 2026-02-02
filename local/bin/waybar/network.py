@@ -24,10 +24,6 @@ def find_wifi_interface():
     return None
 
 
-def get_station_info(iface):
-    return run(["iw", "dev", iface, "station", "dump"])
-
-
 def parse_wifi_info(station_info):
     rssi = rx = tx = None
     rssi_match = re.search(r"signal avg:\s+(-?\d+)", station_info)
@@ -84,7 +80,7 @@ def get_firewalld_zone():
 
 def build_tooltip(iface, strength, rssi, upload, download, vpn, zone_name):
     lines = [
-        f"{iface}\t\n·{strength}%\n·{rssi}dBm\n↑{upload / 1_048_576:.1f}M\n↓{download / 1_048_576:.1f}M\n{zone_name} 󱨑"
+        f"{iface}\t\n·{strength}%\t\n·{rssi}dBm\t\n↑{upload / 1_048_576:.1f}M\t\n↓{download / 1_048_576:.1f}M\t\n{zone_name} 󱨑\t"
     ]
     if vpn:
         lines.insert(0, f"{vpn}")
@@ -107,7 +103,7 @@ def output_json(icon, tooltip, vpn_active):
 def main():
     vpn = run(["wg", "show", "interfaces"])
     iface = find_wifi_interface() or "wlan0"
-    station_info = get_station_info(iface)
+    station_info = run(["iw", "dev", iface, "station", "dump"])
     rssi, rx_bytes, tx_bytes = parse_wifi_info(station_info)
     if rssi is None or rx_bytes is None or tx_bytes is None:
         output_json("󰤫", f"No WiFi link\n{get_firewalld_zone()}", False)

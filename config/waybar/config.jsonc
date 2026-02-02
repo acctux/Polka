@@ -7,7 +7,6 @@
     "battery",
     "custom/updates",
     "custom/tlp",
-    "custom/weather",
     "temperature",
     "custom/kb-switch",
     "custom/taskwarrior",
@@ -27,6 +26,8 @@
     "custom/volume",
     "custom/empty",
     "clock",
+    "custom/weather",
+    "custom/empty",
     "custom/notification"
   ],
   "hyprland/workspaces": {
@@ -176,8 +177,7 @@
   "custom/weather": {
     "format": "{}",
     "tooltip": true,
-    "markup": "pango",
-    "interval": 3600,
+    "interval": 1800,
     "exec": "/home/nick/.local/bin/weather/.venv/bin/python ~/Lit/polka/local/bin/weather/main.py",
     "return-type": "json"
   },

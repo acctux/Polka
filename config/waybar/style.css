@@ -6,7 +6,6 @@
   transition: all 0.75s ease;
   font-feature-settings: '"zero","ss01","ss02","ss03","ss04","ss05","cv31"';
 }
-
 /* === Waybar Window === */
 window#waybar {
   background-color: transparent;
@@ -20,7 +19,6 @@ button {
   min-height: 0;
   box-shadow: none;
 }
-
 /* === Tooltip === */
 tooltip {
   background: rgba(16,16,19,0.7);
@@ -34,7 +32,6 @@ tooltip label {
   background: transparent;
   font-weight: 400;
 }
-
 /* === Module Containers === */
 .modules-left,
 .modules-right {
@@ -42,13 +39,11 @@ tooltip label {
   background-color: rgba(16,16,19,0.7);
   border-radius: 4px;
 }
-
 /* === Shared Spacing === */
 #workspaces button {
   padding: 0 2px;
   border-radius: 5px;
 }
-
 /* === Shared Borders === */
 #custom-kb-switch,
 #battery,
@@ -63,7 +58,6 @@ tooltip label {
 #clock {
   border-left: 1px solid #33ccff;
 }
-
 /* === Shared Font Sizes === */
 #custom-telegram,
 #custom-volume,
@@ -89,6 +83,7 @@ tooltip label {
 #custom-nemo,
 #custom-tlp,
 #custom-deluge,
+#custom-weather,
 #custom-nemo,
 #custom-volume,
 #custom-steam,
@@ -98,7 +93,6 @@ tooltip label {
 #custom-kdeconnect {
   border-radius: 5px;
 }
-
 /* === Colors === */
 #custom-logo,
 #custom-wifi.vpn,
@@ -116,6 +110,8 @@ tooltip label {
 }
 #custom-notification.notification,
 #custom-updates.yellow,
+#custom-weather.clear,
+#custom-weather.thunder,
 #custom-taskwarrior.todo,
 #battery.warning {
   color: #ffee33;
@@ -128,7 +124,6 @@ tooltip label {
 #battery.critical {
   color: #ff3232;
 }
-
 /* === Individual === */
 #battery {
   padding-right: 4px;
@@ -144,10 +139,6 @@ tooltip label {
 }
 #custom-notification {
   padding-right: 8px;
-  padding-left: 5px;
-}
-#custom-weather {
-  padding-right: 9px;
   padding-left: 5px;
 }
 #custom-deluge {
@@ -177,7 +168,14 @@ tooltip label {
   padding-left: 3px;
   padding-right: 5px;
 }
-
+#custom-weather {
+  padding-right: 9px;
+  padding-left: 4px;
+}
+#custom-weather.clear {
+  padding-right: 7px;
+  padding-left: 5px;
+}
 #custom-steam,
 #bluetooth {
   padding-right: 7px;
@@ -208,7 +206,6 @@ tooltip label {
   padding-right: 4px;
   padding-left: 6px;
 }
-
 /* === Hover Effects === */
 button:hover,
 #custom-kdeconnect:hover,
@@ -239,6 +236,7 @@ button:hover,
   border-radius: 5px;
   color: #00ff99;
 }
+#custom-weather:hover,
 #custom-logo:hover,
 #custom-updates:hover,
 #custom-kb-switch:hover,

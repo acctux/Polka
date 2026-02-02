@@ -117,7 +117,6 @@ class NetworkManager:
         if num_lines:
             args.insert(2, f"--lines={num_lines}")
         args = [arg for arg in args if arg]  # Remove empty strings
-
         try:
             result = subprocess.run(
                 args, input=options_str, text=True, capture_output=True
@@ -140,7 +139,6 @@ class NetworkManager:
         network_with_icons = [
             f"{network[0]} {self.assign_icons(network[1])}" for network in networks
         ]
-
         options_str = "\n".join(network_with_icons).strip() + "\nRescan"
         selected_network = self.run_fuzzel(
             options_str,
@@ -166,4 +164,3 @@ if __name__ == "__main__":
         else:
             print("No network selected.")
             break
-
