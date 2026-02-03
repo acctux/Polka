@@ -1,412 +1,274 @@
+#!/usr/bin/env python3
 import json
+from lib.weatherdataframe import open_meteo
 import pandas as pd
-import openmeteo_requests
-import requests_cache
-from retry_requests import retry
 from pydantic.dataclasses import dataclass
+from zoneinfo import ZoneInfo
+
 
 LATITUDE = 34.1751
 LONGITUDE = -82.024
+HOURLY_STEP = 1
+TIMEZONE = "America/New_York"
+WEATHER_ICONS = {
+    0: ("clear", "", ""),
+    1: ("Clouds dissolving", "", "󰼱"),
+    2: ("Sky unchanged", "󰖕", "󰼱"),
+    3: ("Clouds forming", "󰖐", "󰖐"),
+    4: ("Smoke", "", ""),
+    5: ("Haze", "", ""),
+    6: ("Dust", "", ""),
+    10: ("Mist", "", ""),
+    11: ("Patches", "", ""),
+    13: ("Lightning, no thunder", "󰼲", ""),
+    14: ("Precipitation in sight", "", ""),
+    20: ("Drizzel", "", ""),
+    21: ("Rain not freezing", "", ""),
+    22: ("Snow", "󰼶", ""),
+    23: ("Rain,or snow, or ice pellets", "󰙿", "󰙿"),
+    25: ("Showers of rain", "󰖗", "󰖗"),
+    26: ("Shower(s) of snow, or of rain and snow", "󰙿", "󰙿"),
+    28: ("fog", "󰖑", "󰖑"),
+    29: ("Thunderstorm", "", ""),
+    30: ("Dust/sandstorms", "", ""),
+    33: ("Severe dust/sandstorms", "", ""),
+    36: ("Slight or moderate blowing snow", "", ""),
+    37: ("Heavy drifting snow", "", ""),
+    38: ("Slight or moderate blowing snow(above eye level)", "", ""),
+    39: ("Heavy drifting snow(above eye level)", "", ""),
+    40: ("fog", "", ""),
+    50: ("Drizzle, not freezing, intermittent)", "", ""),
+    51: ("Drizzle, not freezing, continuous", "", ""),
+    52: ("Drizzle, not freezing, intermittent)", "", ""),
+    53: ("Drizzle, not freezing, continuous", "", ""),
+    54: ("Drizzle, not freezing, intermittent (heavy)", "", ""),
+    55: ("Drizzle, not freezing, continuous", "", ""),
+    56: ("Drizzle, freezing, slight", "", ""),
+    57: ("Drizzle, freezing, moderate or heavy (dense)", "", ""),
+    58: ("Drizzle and rain, slight", "", ""),
+    59: ("Drizzle and rain, moderate or heavy", "", ""),
+    60: ("Rain, not freezing, intermittent (slight)", "󰖗", ""),
+    61: ("Rain, not freezing, continuous", "󰖗", ""),
+    62: ("Rain, not freezing, intermittent (moderate)", "󰖗", ""),
+    63: ("Rain, not freezing, continuous", "󰖗", ""),
+    64: ("Rain, not freezing, intermittent (heavy)", "󰖗", ""),
+    65: ("Rain, not freezing, continuous", "󰖗", ""),
+    66: ("Rain, freezing, slight", "󰖗", ""),
+    67: ("Rain, freezing, moderate or heavy (dense)", "󰖗", ""),
+    68: ("Rain or drizzle and snow, slight", "󰖗", ""),
+    69: ("Rain or drizzle and snow, moderate or heavy", "󰖗", ""),
+    70: ("Intermittent fall of snowflakes (slight)", "󰖗", ""),
+    71: ("Continuous fall of snowflakes", "󰖗", ""),
+    72: ("Intermittent fall of snowflakes (moderate)", "󰖗", ""),
+    73: ("Continuous fall of snowflakes", "󰖗", ""),
+    74: ("Intermittent fall of snowflakes (heavy)", "󰖗", ""),
+    75: ("Continuous fall of snowflakes", "󰖗", ""),
+    76: ("Diamond dust (with or without fog)", "󰖗", ""),
+    77: ("Snow grains (with or without fog)", "󰖗", ""),
+    78: ("Isolated snow crystals (with/without fog)", "󰖗", ""),
+    79: ("Ice pellets", "󰖗", ""),
+    80: ("rain_showers", "󰖖", ""),
+    81: ("rain_showers", "󰖖", ""),
+    82: ("rain_showers", "󰖖", ""),
+    85: ("snow_showers", "󰖘", ""),
+    86: ("snow_showers", "󰖘", ""),
+    87: ("rain_showers", "󰖖", ""),
+    95: ("thunderstorm", "󰖓", ""),
+    96: ("thunderstorm_hail", "", ""),
+    99: ("thunderstorm_hail", "󰖒", ""),
+}
+FALLBACK_ICON = ("unknown", "", "")
 
 
-def fetch_weather(lat, lon):
-    def create_retry_session():
-        cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
-        retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
-        return retry_session
+def map_icons(
+    df: pd.DataFrame,
+    is_hourly: bool = False,
+    weather_icons=WEATHER_ICONS,
+    fallback_icon=FALLBACK_ICON,
+) -> pd.DataFrame:
+    def pick_icon_and_description(row):
+        weather_code = int(row["weather_code"])
+        _, day_icon, night_icon = weather_icons.get(weather_code, fallback_icon)
+        description = weather_icons.get(weather_code, fallback_icon)[0]
+        if is_hourly and not row.get("is_day", True):
+            return day_icon, description
+        return night_icon, description
 
-    session = create_retry_session()
-    openmeteo = openmeteo_requests.Client(session)
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "daily": [
-            "weather_code",
-            "precipitation_sum",
-            "sunrise",
-            "sunset",
-            "temperature_2m_max",
-            "temperature_2m_min",
-            "precipitation_probability_max",
-        ],
-        "hourly": [
-            "temperature_2m",
-            "precipitation_probability",
-            "precipitation",
-            "weather_code",
-        ],
-        "timezone": "America/New_York",
-        "wind_speed_unit": "mph",
-        "temperature_unit": "fahrenheit",
-        "precipitation_unit": "inch",
-    }
-    response = openmeteo.weather_api(
-        "https://api.open-meteo.com/v1/forecast", params=params
-    )[0]
-    daily = response.Daily()
-    daily_weather_code = daily.Variables(0).ValuesAsNumpy()
-    daily_precipitation_sum = daily.Variables(1).ValuesAsNumpy()
-    daily_sunrise = daily.Variables(2).ValuesInt64AsNumpy()
-    daily_sunset = daily.Variables(3).ValuesInt64AsNumpy()
-    daily_temperature_2m_max = daily.Variables(4).ValuesAsNumpy()
-    daily_temperature_2m_min = daily.Variables(5).ValuesAsNumpy()
-    daily_precipitation_probability_max = daily.Variables(6).ValuesAsNumpy()
-    daily_data = {
-        "date": pd.date_range(
-            start=pd.to_datetime(
-                daily.Time() + response.UtcOffsetSeconds(), unit="s", utc=True
-            ),
-            end=pd.to_datetime(
-                daily.TimeEnd() + response.UtcOffsetSeconds(), unit="s", utc=True
-            ),
-            freq=pd.Timedelta(seconds=daily.Interval()),
-            inclusive="left",
-        )
-    }
-    daily_data["weather_code"] = daily_weather_code
-    daily_data["precipitation_sum"] = daily_precipitation_sum
-    daily_data["sunrise"] = daily_sunrise
-    daily_data["sunset"] = daily_sunset
-    daily_data["temperature_2m_max"] = daily_temperature_2m_max
-    daily_data["temperature_2m_min"] = daily_temperature_2m_min
-    daily_data["precipitation_probability_max"] = daily_precipitation_probability_max
-    daily_dataframe = pd.DataFrame(data=daily_data)
-    hourly = response.Hourly()
-    hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
-    hourly_precipitation_probability = hourly.Variables(1).ValuesAsNumpy()
-    hourly_precipitation = hourly.Variables(2).ValuesAsNumpy()
-    hourly_weather_code = hourly.Variables(3).ValuesAsNumpy()
-    hourly_data = {
-        "date": pd.date_range(
-            start=pd.to_datetime(
-                hourly.Time() + response.UtcOffsetSeconds(), unit="s", utc=True
-            ),
-            end=pd.to_datetime(
-                hourly.TimeEnd() + response.UtcOffsetSeconds(), unit="s", utc=True
-            ),
-            freq=pd.Timedelta(seconds=hourly.Interval()),
-            inclusive="left",
-        )
-    }
-    hourly_data["temperature_2m"] = hourly_temperature_2m
-    hourly_data["precipitation_probability"] = hourly_precipitation_probability
-    hourly_data["precipitation"] = hourly_precipitation
-    hourly_data["weather_code"] = hourly_weather_code
-    hourly_dataframe = pd.DataFrame(data=hourly_data)
-    return daily_dataframe, hourly_dataframe
-
-
-class WeatherIconMapper:
-    def __init__(self):
-        self.weather_icons = {
-            "clear_sky": {
-                "day_icon": "󰖙",
-                "night_icon": "",
-                "wmo_codes": [0],
-            },
-            "mainly_clear": {
-                "day_icon": "󰖕",
-                "night_icon": "",
-                "wmo_codes": [1, 2, 3],
-            },
-            "fog": {
-                "day_icon": "󰖑",
-                "night_icon": "",
-                "wmo_codes": [45, 48],
-            },
-            "drizzle_light": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [51],
-            },
-            "drizzle_moderate": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [53],
-            },
-            "drizzle_dense": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [55],
-            },
-            "freezing_drizzle_light": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [56],
-            },
-            "freezing_drizzle_dense": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [57],
-            },
-            "rain_slight": {
-                "day_icon": "󰖗",
-                "night_icon": "",
-                "wmo_codes": [61],
-            },
-            "rain_moderate": {
-                "day_icon": "󰖗",
-                "night_icon": "",
-                "wmo_codes": [63],
-            },
-            "rain_heavy": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [65],
-            },
-            "freezing_rain_light": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [66],
-            },
-            "freezing_rain_heavy": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [67],
-            },
-            "snowfall_slight": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [71],
-            },
-            "snowfall_moderate": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [73],
-            },
-            "snowfall_heavy": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [75],
-            },
-            "snow_grains": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [77],
-            },
-            "rain_showers_slight": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [80],
-            },
-            "rain_showers_moderate": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [81],
-            },
-            "rain_showers_violent": {
-                "day_icon": "󰖖",
-                "night_icon": "",
-                "wmo_codes": [82],
-            },
-            "snow_showers_slight": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [85],
-            },
-            "snow_showers_heavy": {
-                "day_icon": "󰖘",
-                "night_icon": "",
-                "wmo_codes": [86],
-            },
-            "thunderstorm_slight": {
-                "day_icon": "󰖓",
-                "night_icon": "",
-                "wmo_codes": [95],
-            },
-            "thunderstorm_moderate": {
-                "day_icon": "󰖓",
-                "night_icon": "",
-                "wmo_codes": [95],
-            },
-            "thunderstorm_hail_slight": {
-                "day_icon": "󰖓",
-                "night_icon": "",
-                "wmo_codes": [96],
-            },
-            "thunderstorm_hail_heavy": {
-                "day_icon": "󰖓",
-                "night_icon": "",
-                "wmo_codes": [99],
-            },
-        }
-
-    def get_weather_description(self, wmo_code):
-        for condition, data in self.weather_icons.items():
-            if wmo_code in data["wmo_codes"]:
-                return condition
-        return None
-
-    def get_icon(self, code, is_night=False):
-        for weather, icon_data in self.weather_icons.items():
-            if code in icon_data["wmo_codes"]:
-                return icon_data["night_icon"] if is_night else icon_data["day_icon"]
-        return self.weather_icons["clear_sky"]["day_icon"]
-
-
-@dataclass
-class WeatherLine:
-    time_or_day: str
-    icon: str
-    temperature_2m_max: float
-    temperature_min: float | None
-    precip_probability: float
-    precipitation: float
-
-    def fahrenheit_to_celsius(self, fahrenheit: float) -> float:
-        return (fahrenheit - 32) * 5 / 9
-
-    def format_temperature(self, temperature: float, celsius: bool) -> str:
-        if celsius:
-            return f"{self.fahrenheit_to_celsius(temperature):.0f}"
-        return f"{temperature:.0f}"
-
-    def format_precipitation(self, celsius: bool) -> str:
-        precip = ""
-        if self.precipitation:
-            if self.precipitation >= 0.1:
-                precip = f"{self.precipitation:.1f}"
-            else:
-                precip_format = f"{self.precipitation:.2f}".lstrip("0")
-                if celsius:
-                    precip = f"{precip_format}<span size='10pt'> </span>(cm)"
-                else:
-                    precip = f"{precip_format} in"
-        return precip
-
-    def __str__(self, celsius: bool = False):
-        precip_icon = "󰖌".rjust(3) if self.precip_probability else ""
-        prob = f"{self.precip_probability:.0f}%" if self.precip_probability else ""
-        temp_max = self.format_temperature(self.temperature_2m_max, celsius)
-        temp_min = (
-            self.format_temperature(self.temperature_min, celsius)
-            if self.temperature_min is not None
-            else ""
-        )
-        precip = self.format_precipitation(celsius)
-
-        if ":" in self.time_or_day:
-            return (
-                f"{self.time_or_day}"
-                f"<span size='20pt'>{self.icon.rjust(4)}</span>"
-                f"{temp_max.rjust(6)}"
-                f"<span size='16pt'></span>"
-                f"<span size='14pt'>{precip_icon}</span>"
-                f"{prob.rjust(4)}   "
-                f"{precip.rjust(3)}"
-            )
-        else:
-            return (
-                f"{self.time_or_day}"
-                f"<span size='20pt'>{self.icon.rjust(4)}</span>"
-                f"{temp_max.rjust(6)}"
-                f"<span size='16pt'></span>/"
-                f"{temp_min.rjust(3)}"
-                f"<span size='16pt'></span>"
-                f" <span size='14pt'>{precip_icon}</span>"
-                f"{prob.rjust(4)}"
-                f"  {precip.ljust(3)}"
-            )
-
-
-def is_night(daily_df, hourly_df):
-    mapping = daily_df.set_index(daily_df["date"].dt.date)[["sunrise", "sunset"]]
-    hourly_df = hourly_df.assign(
-        sunrise=pd.to_datetime(
-            hourly_df["date"].dt.date.map(mapping["sunrise"]), unit="s", utc=True
-        ),
-        sunset=pd.to_datetime(
-            hourly_df["date"].dt.date.map(mapping["sunset"]), unit="s", utc=True
-        ),
-        date=pd.to_datetime(hourly_df["date"], utc=True),
+    df[["icon", "description"]] = df.apply(
+        pick_icon_and_description, axis=1, result_type="expand"
     )
-    hourly_df["Day"] = hourly_df["date"].between(
-        hourly_df["sunrise"], hourly_df["sunset"]
+    return df
+
+
+def convert_temperature(fahrenheit: float, celsius: bool) -> int:
+    if celsius:
+        return round((fahrenheit - 32) * 5 / 9)
+    return round(fahrenheit)
+
+
+def format_precipitation(precipitation: float, celsius: bool) -> str:
+    if precipitation < 0.01:
+        return ""
+    unit = "cm" if celsius else "in"
+    return (
+        f"{precipitation:.1f}{unit}"
+        if precipitation >= 0.1
+        else f"{precipitation:.2f}{unit}".lstrip("0")
     )
+
+
+def is_daytime(
+    hourly_df: pd.DataFrame, daily_df: pd.DataFrame, timezone: str
+) -> pd.DataFrame:
+    daily_df["sunrise"] = pd.to_datetime(
+        daily_df["sunrise"], unit="s", utc=True
+    ).dt.tz_convert(ZoneInfo(timezone))
+    daily_df["sunset"] = pd.to_datetime(
+        daily_df["sunset"], unit="s", utc=True
+    ).dt.tz_convert(ZoneInfo(timezone))
+    hourly_df["local_date"] = hourly_df["date"].dt.tz_convert(timezone).dt.date
+    sun_times = daily_df.set_index(daily_df["date"].dt.date)[["sunrise", "sunset"]]
+    hourly_df = hourly_df.merge(
+        sun_times, left_on="local_date", right_index=True, how="left"
+    )
+    hourly_df["date"] = pd.to_datetime(hourly_df["date"])
+    hourly_df["is_day"] = hourly_df["date"].between(
+        hourly_df["sunrise"], hourly_df["sunset"], inclusive="left"
+    )
+    hourly_df["status_change"] = None
+    for idx in range(1, len(hourly_df)):
+        if hourly_df["is_day"].iloc[idx] != hourly_df["is_day"].iloc[idx - 1]:
+            hourly_df.at[idx - 1, "status_change"] = "󰖜"
     return hourly_df
 
 
-def generate_weather_lines(df, is_hourly=True, hour_step=2):
-    weather_lines = []
-    for i, r in df.iterrows():
-        if is_hourly and i % hour_step != 0:
-            continue
-        weather_lines.append(
-            WeatherLine(
-                r["date"].strftime("%H:%M" if is_hourly else "%m-%d"),
-                r["icon"],
-                r["temperature_2m"] if is_hourly else r["temperature_2m_max"],
-                None if is_hourly else r["temperature_2m_min"],
-                int(r["precipitation_probability"])
-                if is_hourly
-                else int(r["precipitation_probability_max"]),
-                r["precipitation"] if is_hourly else r["precipitation_sum"],
-            )
+def today_formatted() -> str:
+    today = pd.to_datetime("today")
+
+    def add_day_suffix(day: int) -> str:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+        if 10 <= day % 100 <= 20:
+            suffix = "th"
+        return f"{day}{suffix}"
+
+    day_with_suffix = add_day_suffix(today.day)
+    formatted_date = today.strftime(f"%a, %b. {day_with_suffix}, %Y")
+
+    return formatted_date
+
+
+@dataclass
+class WeatherEntry:
+    label: str
+    icon: str
+    temp_high: float
+    temp_low: float | None = None
+    precip_prob: int = 0
+    precipitation: float = 0.0
+    sun: str | None = None
+
+    def temp_str(self, high, low: float | None = None, celsius: bool = False) -> str:
+        def conv(f: float) -> int:
+            return round((f - 32) * 5 / 9) if celsius else round(f)
+
+        high = conv(self.temp_high)
+        low = conv(self.temp_low) if self.temp_low is not None else None
+        if low:
+            return f"{high}/{low}<span size='16pt'></span>{'C' if celsius else 'F'}"
+        return f"{high}<span size='16pt'></span>{'C' if celsius else 'F'}"
+
+    def precip_str(self, celsius: bool = False) -> str:
+        if self.precipitation < 0.01:
+            return ""
+        unit = "cm" if celsius else "in"
+        return (
+            f"{self.precipitation:.1f}{unit}"
+            if self.precipitation >= 0.1
+            else f"{self.precipitation:.2f}{unit}".lstrip("0")
         )
-    return weather_lines
+
+    def format(self, celsius: bool = False) -> str:
+        t = self.temp_str(celsius)
+        p_prob = f"{self.precip_prob}%" if self.precip_prob > 0 else ""
+        p_sum = self.precip_str(celsius)
+        precip_icon = "󰖌" if self.precip_prob > 0 or self.precipitation > 0 else ""
+        is_hourly = ":" in self.label
+        if is_hourly:
+            return (
+                f"{self.label}"
+                f"<span size='18pt'>{self.icon.rjust(3)}</span>"
+                f"{t.rjust(7)}"
+                f"{precip_icon.rjust(2)}"
+                f"{p_prob.rjust(4)} {p_sum.rjust(5)}"
+                f"{p_prob.rjust(4)} {p_sum.rjust(5)}"
+            )
+        else:
+            return (
+                f"{self.label}"
+                f"<span size='18pt'>{self.icon.rjust(3)}</span>"
+                f"{t.rjust(7)}"
+                f"{precip_icon.rjust(2)}"
+                f"{p_prob.rjust(4)} {p_sum.rjust(5)}"
+            )
 
 
-def generate_tooltip(daily_df, hourly_df, hour_step=2):
+def build_tooltip(
+    daily_df: pd.DataFrame,
+    hourly_df: pd.DataFrame,
+    hourly_step: int = 2,
+    celsius: bool = False,
+) -> str:
+    daily_entries = [
+        WeatherEntry(
+            label=row["date"].strftime("%m-%d"),
+            icon=row["icon"],
+            temp_high=row["temperature_2m_max"],
+            temp_low=row["temperature_2m_min"],
+            precip_prob=int(row["precipitation_probability_max"]),
+            precipitation=row["precipitation_sum"],
+        )
+        for _, row in daily_df.iterrows()
+    ]
+    hourly_entries = [
+        WeatherEntry(
+            label=row["date"].strftime("%H:%M"),
+            icon=row["icon"],
+            temp_high=row["temperature_2m"],
+            precip_prob=int(row["precipitation_probability"]),
+            precipitation=row["precipitation"],
+            sun=row["status_change"],
+        )
+        for idx, (_, row) in enumerate(hourly_df.head(24).iterrows())
+        if idx % int(hourly_step) == 0
+    ]
     icon_size = 17
-    sun_size = 19
-    hourly_lines = generate_weather_lines(
-        hourly_df, is_hourly=True, hour_step=hour_step
+    hourly_text = "\n".join(e.format(celsius) for e in hourly_entries)
+    daily_text = "\n".join(e.format(celsius) for e in daily_entries)
+    return (
+        f"<span size='{icon_size}pt'></span>    <span size='14pt'>{today_formatted()}</span>\n"
+        "───────────────────────────────────\n"
+        f"{hourly_text}"
+        f"\n\n<span size='{icon_size}pt'>󰨳</span>\n"
+        "───────────────────────────────────\n"
+        f"{daily_text}\n"
     )
-    daily_lines = generate_weather_lines(daily_df, is_hourly=False)
-    hourly_str = "\n ".join(str(line) for line in hourly_lines)
-    daily_str = "\n ".join(str(line) for line in daily_lines)
-    tooltip = (
-        f" <span size='{icon_size}pt'></span><span size='{icon_size}pt'>󰔏</span>\n"
-        "_____________________________________________\n "
-        + hourly_str
-        + f"<span size='{sun_size}pt'>󱣖</span><span size='20pt'></span>"
-        f"<span size='{sun_size}pt'>󱩱</span><span size='{sun_size}pt'>󰙿</span>  "
-        f"<span size='{icon_size}pt'>󰏰</span>\<span size='{icon_size}pt'>󰑭</span>\n"
-        "_____________________________________________\n " + daily_str
-    )
-    return tooltip
 
 
-def apply_icons_to_dataframes(hourly_df, daily_df, icon_mapper):
-    def get_hourly_info(row):
-        code = row["weather_code"]
-        icon = icon_mapper.get_icon(code, is_night=not row["Day"])
-        weather_class = icon_mapper.get_weather_description(code)
-        return pd.Series([icon, weather_class])
-
-    def get_daily_info(row):
-        code = row["weather_code"]
-        icon = icon_mapper.get_icon(code, is_night=False)
-        weather_class = icon_mapper.get_weather_description(code)
-        return pd.Series([icon, weather_class])
-
-    hourly_df[["icon", "weather_class"]] = hourly_df.apply(get_hourly_info, axis=1)
-    daily_df[["icon", "weather_class"]] = daily_df.apply(get_daily_info, axis=1)
-    return hourly_df, daily_df
-
-
-def main(latitude: float = LATITUDE, longitude: float = LONGITUDE):
-    daily_df, hourly_df = fetch_weather(LATITUDE, LONGITUDE)
-    icon_mapper = WeatherIconMapper()
-    hourly_df = is_night(daily_df, hourly_df)
-    hourly_df, daily_df = apply_icons_to_dataframes(hourly_df, daily_df, icon_mapper)
-    tz = "America/New_York"
-    for index, row in hourly_df.iterrows():
-        sunrise = row["sunrise"].tz_convert(tz)
-        sunset = row["sunset"].tz_convert(tz)
-        hourly_df.loc[index, "sunrise_local"] = sunrise
-        hourly_df.loc[index, "sunset_local"] = sunset
-        date_local = row["date"]
-        hourly_df.loc[index, "date_local"] = date_local
-    toolbar = generate_tooltip(daily_df, hourly_df)
-    waybar_json = {
-        "text": hourly_df.at[0, "icon"],
-        "class": hourly_df.at[0, "weather_class"],
-        "tooltip": toolbar,
+def main():
+    daily_df, hourly_df = open_meteo(LATITUDE, LONGITUDE)
+    hourly_df = is_daytime(hourly_df, daily_df, TIMEZONE)
+    hourly_df = map_icons(hourly_df, is_hourly=True)
+    daily_df = map_icons(daily_df, is_hourly=False)
+    # print(f"{hourly_df['status_change'].head(20)}")
+    tooltip = build_tooltip(daily_df, hourly_df, HOURLY_STEP)
+    current_row = hourly_df.iloc[0]
+    output = {
+        "text": current_row.icon,
+        "tooltip": tooltip,
+        "class": current_row.description,
     }
-    print(json.dumps(waybar_json, ensure_ascii=False))
+    print(json.dumps(output, ensure_ascii=False))
 
 
 if __name__ == "__main__":
     main()
-#     print(daily_df[["date", "sunrise_local", "sunset_local"]])

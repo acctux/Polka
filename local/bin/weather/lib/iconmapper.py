@@ -88,26 +88,3 @@ def map_icons(
         pick_icon_and_description, axis=1, result_type="expand"
     )
     return df
-
-
-def add_day_night_flag(
-    hourly_df: pd.DataFrame, daily_df: pd.DataFrame, timezone
-) -> pd.DataFrame:
-    sun_times = daily_df.set_index(daily_df["date"].dt.date)[["sunrise", "sunset"]]
-    hourly_df = hourly_df.assign(
-        local_date=hourly_df["date"].dt.tz_convert(timezone).dt.date
-    )
-    sun_times.index = (
-        pd.to_datetime(sun_times.index).tz_localize("UTC").tz_convert(timezone).date
-    )
-    hourly_df = hourly_df.merge(
-        sun_times, left_on="local_date", right_index=True, how="left"
-    )
-    hourly_df["sunrise"] = pd.to_datetime(hourly_df["sunrise"], unit="s", utc=True)
-    hourly_df["sunset"] = pd.to_datetime(hourly_df["sunset"], unit="s", utc=True)
-    hourly_df["is_day"] = hourly_df["date"].between(
-        hourly_df["sunrise"],
-        hourly_df["sunset"],
-        inclusive="left",
-    )
-    return hourly_df.drop(columns=["local_date"])
