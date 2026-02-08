@@ -55,13 +55,7 @@ def main():
     packages = get_updates()
     updates = len(packages)
     if updates < THRESHOLD:
-        print(
-            json.dumps(
-                {
-                    "text": "",
-                }
-            )
-        )
+        print(json.dumps({"text": ""}))
         return
     css_class = get_css_class(updates)
     tooltip = generate_tooltip(packages, MAX_TOOLTIP_LINES, KEYWORDS)

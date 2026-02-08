@@ -43,7 +43,10 @@ def load_credentials():
 def read_last_email():
     try:
         with open(LAST_EMAIL_FILE, "r") as f:
-            return f.read().strip().split("\n", 1)
+            lines = f.read().strip().split("\n", 1)
+            if len(lines) == 1:
+                return lines, ""
+            return lines
     except FileNotFoundError:
         return "", ""
 
@@ -91,8 +94,11 @@ def fetch_last_email_subject(username, password):
 def main():
     if not CREDENTIAL_FILE.exists():
         create_credentials_file()
-    creds = load_credentials()
-    old_sender, old_subject = read_last_email()
+        old_sender = ""
+        old_subject = ""
+    else:
+        creds = load_credentials()
+        old_sender, old_subject = read_last_email()
     subprocess.run(["systemctl", "--user", "start", "protonmail-bridge.service"])
     time.sleep(SLEEP_TIME)
     imap, sender, subject = fetch_last_email_subject(
@@ -116,4 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

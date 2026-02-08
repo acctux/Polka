@@ -1,7 +1,0 @@
-[Nemo Action]
-Name=Open in Baobab
-Comment=Analyze this folder with Disk Usage Analyzer
-Exec=baobab %F
-Icon=baobab
-Selection=any
-Extensions=dir;

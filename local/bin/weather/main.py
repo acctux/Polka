@@ -88,7 +88,6 @@ LATITUDE = 34.1751
 LONGITUDE = -82.024
 HOURLY_STEP = 2
 TIMEZONE = "America/New_York"
-# METRIC = True
 CACHE_FILE = Path(".metric_cache")
 
 

@@ -8,12 +8,7 @@ config_path = Path.home() / ".config" / "fuzzel" / "clipboard.ini"
 
 def run_fuzzel(options: list[str], config: Path) -> str:
     result = subprocess.run(
-        [
-            "fuzzel",
-            "--dmenu",
-            "--config",
-            str(config),
-        ],
+        ["fuzzel", "--dmenu", "--config", str(config)],
         input="\n".join(options),
         text=True,
         capture_output=True,
@@ -46,4 +41,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

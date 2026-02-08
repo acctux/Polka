@@ -2,13 +2,11 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
-      -- Terminal
       terminal = {
         win = {
-          height = 10, -- 👈 terminal height (rows)
+          height = 10,
         },
       },
-      -- Picker
       picker = {
         layout = {
           layout = {
@@ -17,9 +15,7 @@ return {
           },
         },
       },
-      -- Dashboard
       dashboard = {
-        -- Override the preset header
         preset = {
           header = [[
 ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗

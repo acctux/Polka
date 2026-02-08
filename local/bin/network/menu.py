@@ -130,45 +130,25 @@ def handle_wifi(nm: NetworkManager, sleep_time: int, config):
             print("Failed to get password or canceled.")
 
 
-def run_cmd(cmd: list[str], check: bool = False) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, capture_output=True, text=True, check=check)
-
-
-def get_active_interfaces() -> list[str]:
-    result = run_cmd(["wg", "show"])
-    if result.returncode != 0:
-        return []
-    interfaces = []
-    for line in result.stdout.splitlines():
-        line = line.strip()
-        if line.startswith("interface:"):
-            iface = line.split(":", 1)[1].strip()
-            interfaces.append(iface)
-    return interfaces
-
-
 def handle_vpn(config):
-    connections_file = Path("/run/wireguard/connections.list")
-    if not connections_file.exists():
-        print(f"{connections_file} does not exist.")
-        sys.exit(1)
-    with connections_file.open() as f:
-        vpns = [line.strip() for line in f if line.strip()]
-    vpns.append("Back")
-    vpn_choice = run_fuzzel(vpns, config)
-    if vpn_choice and vpn_choice != "Back":
-        current = [name for name in get_active_interfaces()]
-        if current:
-            for iface in current:
-                run_cmd(["wg-quick", "down", iface], check=True)
-                print(f"\nDisconnected successfully from {iface}")
-        if len(sys.argv) != 2:
-            return
-        config = sys.argv[1]
-        result = run_cmd(["wg-quick", "up", config])
-        if result.returncode != 0:
+    list_path = Path("/run/wireguard/connections.list")
+    if list_path.exists():
+        with open(list_path, "r") as f:
+            vpns = f.read().strip().splitlines()
+        vpns = ["Disconnect"] + vpns
+        choice = run_fuzzel(vpns, config)
+        if not choice:
             sys.exit(1)
-        print(f"\nConnected to {config}")
+        if choice == "Back":
+            return
+        elif choice == "Disconnect":
+            subprocess.run(
+                ["sudo", "-A", f"{HOME}/.local/bin/protonvpn/protonconnect.py"]
+            )
+        else:
+            subprocess.run(
+                ["sudo", "-A", f"{HOME}/.local/bin/protonvpn/protonconnect.py", choice]
+            )
 
 
 def main():
