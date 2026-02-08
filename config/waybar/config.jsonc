@@ -231,10 +231,10 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/.local/bin/kdeconnect/kdewaybar.py",
+    "exec": "~/.local/bin/android/kdewaybar.py",
     "interval": 30,
     "hide-empty-text": true,
-    "on-click": "~/.local/bin/kdeconnect/mountkde.py",
+    "on-click": "~/.local/bin/android/mountkde.py",
     "on-click-middle": "kdeconnect-app",
     "on-click-right": "kdeconnect-sms"
   },
@@ -242,8 +242,8 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/.local/bin/steam/steam.py",
-    "interval": 20,
+    "exec": "~/.local/bin/steam/steam.sh",
+    "interval": 10,
     "hide-empty-text": true,
     "on-click": "steam"
   },

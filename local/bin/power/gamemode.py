@@ -3,16 +3,12 @@ import subprocess
 from pathlib import Path
 
 SERVICES = ["kdeconnectd", "waybar", "swaync", "swww-daemon"]
-HYPRLAND_CONF = Path.home() / ".config/hypr/hyprland.conf"
+HYPRLAND_CONF = Path.home() / ".config/hypr/gamemode/init.conf"
 ORIGINAL_TEXT = """\
-source = always.conf
-source = default.conf
-source = power.conf
+source = ~/.config/hypr/gamemode/default.conf
 """
 GAMEMODE_TEXT = """\
-source = always.conf
-source = gamemode.conf
-source = power.conf
+source = ~/.config/hypr/gamemode/gamemode.conf
 """
 
 

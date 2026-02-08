@@ -59,13 +59,12 @@ class NetworkManager:
                 if parts:
                     if parts[0] == "\x1b[0m":
                         if parts[1] == "\x1b[1;90m>":
+                            print("current")
                             networks.append((parts[3], parts[5]))
                         else:
                             networks.append((parts[1], parts[3]))
                     else:
                         networks.append((parts[0], parts[2]))
-        networks.insert(0, ("Scan", ""))
-        networks.append(("Back", ""))
         return networks
 
     def connect_to_network(self, ssid: str, password: str):
@@ -83,7 +82,7 @@ def run_fuzzel(options: list[str], config: Path) -> str:
             "fuzzel",
             "--dmenu",
             "--hide-prompt",
-            f"--width={max_chars + 2}",
+            f"--width={max_chars + 1}",
             "--lines",
             str(lines),
             "--config",
@@ -97,16 +96,24 @@ def run_fuzzel(options: list[str], config: Path) -> str:
 
 
 def get_wifi_password_via_zenity(ssid: str) -> str:
-    try:
-        result = subprocess.run(
-            ["zenity", f"--title=Enter password for {ssid}"],
-            capture_output=True,
-            text=True,
-        )
-        return result.stdout.strip() if result.returncode == 0 else ""
-    except FileNotFoundError:
-        print("Zenity is not installed.")
-        return ""
+    result = subprocess.run(
+        ["zenity", f"--title=Enter password for {ssid}"],
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def handle_strength(strength_str: str):
+    if strength_str == "****":
+        return "󰤨"
+    elif strength_str == "***\x1b[1;90m*\x1b[0m":
+        return "󰤥"
+    elif strength_str == "**\x1b[1;90m**\x1b[0m":
+        return "󰤟"
+    elif strength_str == "*\x1b[1;90m***\x1b[0m":
+        return "󰤯"
+    return strength_str
 
 
 def handle_wifi(nm: NetworkManager, sleep_time: int, config):
@@ -114,8 +121,14 @@ def handle_wifi(nm: NetworkManager, sleep_time: int, config):
         nm.find_device()
         networks_raw = nm.get_networks()
         networks = nm.filter_valid_networks(networks_raw)
-        options = [network[0] for network in networks]
-        selected_network = run_fuzzel(options, config)
+        options = []
+        for network in networks:
+            sig_strength = handle_strength(network[1])
+            options.append(f"{network[0]} {sig_strength}")
+        max_length = max(len(option) for option in options)
+        separator = "_" * (max_length + 3)
+        lines = options + [separator, "Scan", "Back"]
+        selected_network = run_fuzzel(lines, config)
         if selected_network in ("Back", ""):
             break
         if selected_network == "Scan":
@@ -130,25 +143,56 @@ def handle_wifi(nm: NetworkManager, sleep_time: int, config):
             print("Failed to get password or canceled.")
 
 
+def run_cmd(cmd: list[str], use_sudo: bool = False) -> subprocess.CompletedProcess:
+    if use_sudo:
+        cmd = ["sudo", "-A"] + cmd
+    return subprocess.run(cmd, capture_output=True, text=True)
+
+
+def get_active_interfaces() -> list[str]:
+    result = run_cmd(["wg", "show"], use_sudo=True)
+    if result.returncode != 0:
+        return []
+    interfaces = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if line.startswith("interface:"):
+            iface = line.split(":", 1)[1].strip()
+            interfaces.append(iface)
+    return interfaces
+
+
+def disconnect_current_interface() -> None:
+    current = [name for name in get_active_interfaces()]
+    if current:
+        for iface in current:
+            run_cmd(["wg-quick", "down", iface], use_sudo=True)
+            print(f"\nDisconnected successfully from {iface}")
+    else:
+        print("No active interfaces found to disconnect.")
+
+
 def handle_vpn(config):
     list_path = Path("/run/wireguard/connections.list")
     if list_path.exists():
         with open(list_path, "r") as f:
             vpns = f.read().strip().splitlines()
-        vpns = ["Disconnect"] + vpns
+        vpns = vpns + ["──────", "Disconnect"]
         choice = run_fuzzel(vpns, config)
         if not choice:
             sys.exit(1)
         if choice == "Back":
             return
         elif choice == "Disconnect":
-            subprocess.run(
-                ["sudo", "-A", f"{HOME}/.local/bin/network/protonconnect.py"]
-            )
+            disconnect_current_interface()
+            sys.exit(0)
         else:
-            subprocess.run(
-                ["sudo", "-A", f"{HOME}/.local/bin/network/protonconnect.py", choice]
-            )
+            disconnect_current_interface()
+            result = run_cmd(["wg-quick", "up", choice], use_sudo=True)
+            if result.returncode != 0:
+                sys.exit(1)
+            print(f"\nConnected to {choice}")
+            sys.exit(0)
 
 
 def main():

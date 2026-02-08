@@ -64,7 +64,7 @@ def main():
             {
                 "text": str(updates),
                 "alt": str(updates),
-                "tooltip": tooltip or "Click to update your system",
+                "tooltip": tooltip or "Click to update",
                 "class": css_class,
             }
         )
