@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Clipboard manager
-GenericName=nwg-shell clipboard manager
-Comment=Clipboard history search and management tool
-Exec=nwg-clipman
-Icon=copyq
-Terminal=false
-Categories=Utility;
