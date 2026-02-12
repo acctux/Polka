@@ -29,7 +29,7 @@ def get_pending_tasks(data: list[dict]) -> tuple[list[tuple[str, float]], bool]:
         description = task.get("description", "")
         urgency = float(task.get("urgency", 0))
         tasks.append((description, urgency))
-        if urgency >= 9:
+        if urgency >= 7:
             urgent = True
     tasks.sort(key=lambda x: x[1], reverse=True)
     return tasks, urgent
@@ -37,7 +37,7 @@ def get_pending_tasks(data: list[dict]) -> tuple[list[tuple[str, float]], bool]:
 
 def build_message(tasks: list[tuple[str, float]]) -> str:
     if not tasks:
-        return "You have no pending tasks."
+        return ""
     return "\n".join(f"• {desc}" for desc, _ in tasks)
 
 
@@ -48,8 +48,9 @@ def main() -> None:
         return
     tasks, urgent = get_pending_tasks(data)
     body = build_message(tasks)
-    urgency_flag = "critical" if urgent else "normal"
-    notify("To-Do Reminder", body, urgency=urgency_flag)
+    if body:
+        urgency_flag = "critical" if urgent else "normal"
+        notify("To-Do Reminder", body, urgency=urgency_flag)
 
 
 if __name__ == "__main__":

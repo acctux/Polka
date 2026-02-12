@@ -4,15 +4,14 @@ require("recycle-bin"):setup({
 
 -- You can configure your bookmarks by lua language
 local bookmarks = {
-	{ tag = "Desktop", path = os.getenv("HOME") .. "/Desktop/", key = "d" },
+	{ tag = "Home", path = os.getenv("HOME"), key = "h" },
+	{ tag = "Etc", path = "/etc", key = "e" },
 	{ tag = "Mounted", path = "/run/media/nick/", key = "m" },
 }
 require("yamb"):setup({
-	bookmarks = bookmarks, -- Direct assignment of bookmarks
-	jump_notify = true,
+	bookmarks = bookmarks,
 	cli = "fzf",
 	keys = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	path = os.getenv("HOME") .. "/.config/yazi/bookmark",
 })
 
 require("gvfs"):setup({

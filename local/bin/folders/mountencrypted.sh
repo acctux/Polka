@@ -21,18 +21,13 @@ mount_fs() {
   xdg-open "$PLAIN"
 }
 
-unmount_fs() {
-  fusermount3 -u "$PLAIN"
-  rmdir "$PLAIN"
-}
-
 main() {
   if [ ! -f "$CIPHER/gocryptfs.conf" ]; then
     initialize_gocrypt
   fi
   if mountpoint -q "$PLAIN"; then
-    # xdg-open "$PLAIN"
-    unmount_fs
+    fusermount3 -u "$PLAIN"
+    rmdir "$PLAIN"
   else
     mount_fs
   fi

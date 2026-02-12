@@ -231,7 +231,7 @@
     "format": "{}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/.local/bin/android/kdewaybar.py",
+    "exec": "~/.local/bin/android/kdewaybar.sh",
     "interval": 30,
     "hide-empty-text": true,
     "on-click": "~/.local/bin/android/mountkde.py",

@@ -14,13 +14,13 @@ SHARE_DIR = HOME / ".local" / "share"
 DOTS_P = HOME / "Lit" / "polka"
 BASE = HOME / "Lit/Docs/base"
 ##########################################
-dirs_to_link = ["config/systemd/user", "local/bin"]
+dirs_to_link = ["local/bin"]
 ind_dirs = [
     ((BASE / "fonts"), (SHARE_DIR / "fonts")),
     ((BASE / "task"), (CONFIG_DIR / "task")),
     ((BASE / "zsh"), (CONFIG_DIR / "zsh")),
     ((BASE / "git"), (CONFIG_DIR / "git")),
-    ((BASE / "gh"), (CONFIG_DIR / "git")),
+    ((BASE / "gh"), (CONFIG_DIR / "gh")),
 ]
 
 
@@ -32,7 +32,6 @@ class ColorFormatter(logging.Formatter):
         logging.INFO: "\033[34m",
         logging.WARNING: "\033[33m",
         logging.ERROR: "\033[31m",
-        logging.CRITICAL: "\033[31m",
     }
     RESET = "\033[0m"
 
@@ -66,6 +65,8 @@ def link_path(src: Path, dst: Path) -> bool:
     rel = src.relative_to(dst.parent, walk_up=True)
     if dst.is_symlink() and dst.readlink() == rel:
         return False
+    else:
+        dst.unlink(missing_ok=True)
     if dst.exists():
         if dst.is_dir() and not dst.is_symlink():
             shutil.rmtree(dst)

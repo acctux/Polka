@@ -6,33 +6,8 @@ import sys
 
 HOME = Path.home()
 STATE_FILE = HOME / ".cache" / "hyprsunset_state"
-PROFILE_DIR = HOME / "Polka" / "local" / "bin" / "hyprsunset"
+PROFILE_DIR = HOME / ".local" / "bin" / "hyprsunset"
 ACTIVE_CONF = HOME / ".config" / "hypr" / "hyprsunset.conf"
-
-
-def get_profiles(directory: Path):
-    profiles = sorted(directory.glob("*.conf"))
-    if not profiles:
-        sys.exit(f"No profiles found in {directory}")
-    return profiles
-
-
-def load_state(file: Path, max_index: int) -> int:
-    if file.exists():
-        try:
-            return (int(file.read_text().strip()) + 1) % (max_index + 1)
-        except ValueError:
-            pass
-    return 0
-
-
-def save_state(file: Path, state: int):
-    file.parent.mkdir(parents=True, exist_ok=True)
-    file.write_text(str(state))
-
-
-def apply_profile(profile: Path):
-    shutil.copy2(profile, ACTIVE_CONF)
 
 
 def run_cmd(cmd: list[str], check=True):
@@ -49,10 +24,17 @@ def restart_hyprsunset():
 
 
 def main():
-    profiles = get_profiles(PROFILE_DIR)
-    state = load_state(STATE_FILE, len(profiles) - 1)
-    apply_profile(profiles[state])
-    save_state(STATE_FILE, state)
+    profiles = sorted(PROFILE_DIR.glob("*.conf"))
+    if not profiles:
+        sys.exit(f"No profiles found in {PROFILE_DIR}")
+    if STATE_FILE.exists():
+        current = int(STATE_FILE.read_text().strip())
+        state = (current + 1) % len(profiles)
+    else:
+        state = 0
+    shutil.copy2(profiles[state], ACTIVE_CONF)
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(str(state))
     restart_hyprsunset()
     print(f"Applied profile: {profiles[state].name}")
 
